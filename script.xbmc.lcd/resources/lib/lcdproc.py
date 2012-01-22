@@ -25,7 +25,6 @@ import re
 import telnetlib
 import time
 
-from elementtree import ElementTree as xmltree
 from socket import *
 
 __scriptname__ = sys.modules[ "__main__" ].__scriptname__

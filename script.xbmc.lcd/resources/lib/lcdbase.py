@@ -25,7 +25,7 @@ import re
 import telnetlib
 import time
 
-from elementtree import ElementTree as xmltree
+from xml.etree import ElementTree as xmltree
 from array import array
 
 __scriptname__ = sys.modules[ "__main__" ].__scriptname__
