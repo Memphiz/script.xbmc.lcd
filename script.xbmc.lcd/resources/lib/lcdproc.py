@@ -180,8 +180,8 @@ class LCDProc(LcdBase):
       if i < len(reply):
         tmparray = re.findall(r'\d+',reply[i:])
         if len(tmparray) >= 2:
-          self.m_iColumns = tmparray[0]
-          self.m_iRows  = tmparray[1]
+          self.m_iColumns = int(tmparray[0])
+          self.m_iRows  = int(tmparray[1])
           log(xbmc.LOGDEBUG, "LCDproc data: Columns %s - Rows %s." % (str(self.m_iColumns), str(self.m_iRows)))
     except:
       log(xbmc.LOGERROR,"Connect: Telnet exception.")
@@ -189,6 +189,7 @@ class LCDProc(LcdBase):
 
     # Build command to setup screen
     cmd = "screen_add xbmc\n"
+    cmd += "screen_set xbmc -priority info\n"
     if not settings_getHeartBeat():
       cmd += "screen_set xbmc -heartbeat off\n"
  
@@ -295,16 +296,16 @@ class LCDProc(LcdBase):
       self.CloseSocket()
 
   def GetColumns(self):
-    return self.m_iColumns
+    return int(self.m_iColumns)
 
   def GetRows(self):
-    return self.m_iRows
+    return int(self.m_iRows)
 
   def SetLine(self, iLine, strLine, bForce):
     if self.m_bStop or self.tn.get_socket() == None:
       return
 
-    if iLine < 0 or iLine >= self.m_iRows:
+    if iLine < 0 or iLine >= int(self.m_iRows):
       return
 
     strLineLong = strLine
@@ -334,5 +335,5 @@ class LCDProc(LcdBase):
         log(xbmc.LOGERROR, "Unable to write to socket - SetLine")
         self.CloseSocket()
 
-    self.m_strLine[iLine] = strLineLong
+      self.m_strLine[iLine] = strLineLong
 

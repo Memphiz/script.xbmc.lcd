@@ -515,14 +515,16 @@ class LcdBase():
         line = self.GetProgressBar(currentSecs,durationSecs)
       else:
         line = xbmc.getInfoLabel(self.m_lcdMode[mode][inLine])
-     
+
       inLine += 1
       if len(line) > 0:
+#        log(xbmc.LOGDEBUG, "Request write of line" + str(outLine) + ": " + str(line))
         self.SetLine(outLine, line, bForce)
         outLine += 1
 
     # fill remainder with empty space
     while outLine < int(self.GetRows()):
+#      log(xbmc.LOGDEBUG, "Request write of emptyline" + str(outLine))
       self.SetLine(outLine, "", bForce)
       outLine += 1
 
