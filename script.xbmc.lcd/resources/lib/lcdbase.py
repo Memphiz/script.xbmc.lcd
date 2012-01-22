@@ -506,7 +506,7 @@ class LcdBase():
     outLine = 0
     inLine = 0
 
-    while (outLine < 4 and inLine < len(self.m_lcdMode[mode])):
+    while (outLine < int(self.GetRows()) and inLine < len(self.m_lcdMode[mode])):
       #parse the progressbar infolabel by ourselfs!
       if self.m_lcdMode[mode][inLine] == "$INFO[LCD.ProgressBar]":
       	# get playtime and duration and convert into seconds
@@ -522,7 +522,7 @@ class LcdBase():
         outLine += 1
 
     # fill remainder with empty space
-    while outLine < 4:
+    while outLine < int(self.GetRows()):
       self.SetLine(outLine, "", bForce)
       outLine += 1
 

@@ -58,8 +58,6 @@ def initGlobals():
 #returns "movie" if a movies is played, "musicvideo" if a musicvideo is played", "other" else
 def getLcdMode():                 
   ret = LCD_MODE.LCD_MODE_GENERAL
-#  LCD_MODE_NAVIGATION  = 3
-#  LCD_MODE_SCREENSAVER = 4
 #  LCD_MODE_XBE_LAUNCH  = 5
   screenSaver = xbmc.getCondVisibility("System.ScreenSaverActive")
   playingVideo = xbmc.getCondVisibility("Player.HasVideo")

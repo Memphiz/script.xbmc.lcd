@@ -193,20 +193,16 @@ class LCDProc(LcdBase):
       cmd += "screen_set xbmc -heartbeat off\n"
  
     if settings_getScrollDelay():
-      cmd += "widget_add xbmc line1 scroller\n"
-      cmd += "widget_add xbmc line2 scroller\n"
-      cmd += "widget_add xbmc line3 scroller\n"
-      cmd += "widget_add xbmc line4 scroller\n"
+      for i in range(1,int(self.m_iRows)+1):
+        cmd += "widget_add xbmc line" + str(i) + " scroller\n"
     else:
-      cmd += "widget_add xbmc line1 string\n"
-      cmd += "widget_add xbmc line2 string\n"
-      cmd += "widget_add xbmc line3 string\n"
-      cmd += "widget_add xbmc line4 string\n"
+      for i in range(1,int(self.m_iRows)+1):
+        cmd += "widget_add xbmc line" + str(i) + " string\n"
 
     try:
       #Send to server
       self.tn.write(cmd)
-#      self.tn.read_until("\n",3)            
+      self.tn.read_until("\n",3)            
     except:
       log(xbmc.LOGERROR, "Connect: Telnet exception - send")
       return False
@@ -223,7 +219,7 @@ class LCDProc(LcdBase):
       
     try:
       self.tn.write("noop\n")
-#      self.tn.read_until("\n",3)      
+      self.tn.read_until("\n",3)      
     except:
       log(xbmc.LOGERROR, "Unable to write to socket - IsConnected")
       self.CloseSocket()
@@ -240,28 +236,22 @@ class LCDProc(LcdBase):
     if iLight == 0:
       self.m_bStop = True
       cmd += "screen_set xbmc -backlight off\n"
-      cmd += "widget_del xbmc line1\n"
-      cmd += "widget_del xbmc line2\n"
-      cmd += "widget_del xbmc line3\n"
-      cmd += "widget_del xbmc line4\n"
+      for i in range(1,int(self.m_iRows)+1):
+        cmd += "widget_del xbmc line" + str(i) + "\n"      
     elif iLight > 0:
       self.m_bStop = False
       cmd += "screen_set xbmc -backlight on\n"
       if settings_getScrollDelay() != 0:
-        cmd += "widget_add xbmc line1 scroller\n"
-        cmd += "widget_add xbmc line2 scroller\n"
-        cmd += "widget_add xbmc line3 scroller\n"
-        cmd += "widget_add xbmc line4 scroller\n"
+        for i in range(1,int(self.m_iRows)+1):
+          cmd += "widget_add xbmc line" + str(i) + " scroller\n"      
       else:
-        cmd += "widget_add xbmc line1 string\n"
-        cmd += "widget_add xbmc line2 string\n"
-        cmd += "widget_add xbmc line3 string\n"
-        cmd += "widget_add xbmc line4 string\n"
+        for i in range(1,int(self.m_iRows)+1):
+          cmd += "widget_add xbmc line" + str(i) + " string\n"      
 
     # Send to server
     try:
       self.tn.write(cmd)
-#      self.tn.read_until("\n",3)      
+      self.tn.read_until("\n",3)      
     except:
       log(xbmc.LOGERROR, "Unable to write to socket - SetBackLight")
       self.CloseSocket()
@@ -284,7 +274,7 @@ class LCDProc(LcdBase):
     # Send to server
     try:
       self.tn.write(cmd)
-#      self.tn.read_until("\n",3)            
+      self.tn.read_until("\n",3)            
     except:
       log(xbmc.LOGERROR, "Unable to write to socket - Suspend")
       self.CloseSocket()
@@ -299,7 +289,7 @@ class LCDProc(LcdBase):
     # Send to server
     try:
       self.tn.write(cmd)
-#      self.tn.read_until("\n",3)           
+      self.tn.read_until("\n",3)           
     except:
       log(xbmc.LOGERROR, "Unable to write to socket - Resume")
       self.CloseSocket()
@@ -308,7 +298,7 @@ class LCDProc(LcdBase):
     return self.m_iColumns
 
   def GetRows(self):
-    return self.m_iColumns
+    return self.m_iRows
 
   def SetLine(self, iLine, strLine, bForce):
     if self.m_bStop or self.tn.get_socket() == None:
@@ -339,7 +329,7 @@ class LCDProc(LcdBase):
       # Send to server
       try:
         self.tn.get_socket().send(cmd)	#use the socket here for getting the special chars over the wire
-#        self.tn.read_until("\n",3)           
+        self.tn.read_until("\n",3)           
       except:
         log(xbmc.LOGERROR, "Unable to write to socket - SetLine")
         self.CloseSocket()
