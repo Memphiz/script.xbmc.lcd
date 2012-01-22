@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+  <category label="100">
+    <setting id="remotelcdproc" type="bool" label="101" default="false" />
+    <setting id="hostip" enable="eq(-1,true)" type="ipaddress" label="102" default="127.0.0.1" />
+    <setting id="sep1" type="sep" />
+    <setting id="heartbeat" type="bool" label="103" default="false" />
+    <setting id="scrolldelay" type="slider" label="104" option="int" default="1" range="0,10" />
+    <setting id="dimonscreensaver" type="bool" label="105" default="false" />
+    <setting id="navtimeout" type="slider" label="106" option="int" default="2" range="1,10" />    
+  </category>
+</settings>
