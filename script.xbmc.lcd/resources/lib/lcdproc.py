@@ -120,6 +120,8 @@ class LCDProc(LcdBase):
     self.m_used = True
     self.tn = telnetlib.Telnet()
     self.m_strLine = [None]*MAX_ROWS
+    self.m_iProgressBarWidth = 0
+    self.m_iProgressBarLine = -1
     LcdBase.__init__(self)
 
   def Initialize(self):
@@ -182,7 +184,9 @@ class LCDProc(LcdBase):
         if len(tmparray) >= 2:
           self.m_iColumns = int(tmparray[0])
           self.m_iRows  = int(tmparray[1])
-          log(xbmc.LOGDEBUG, "LCDproc data: Columns %s - Rows %s." % (str(self.m_iColumns), str(self.m_iRows)))
+          self.m_iCellWidth = int(tmparray[2])
+          self.m_iCellHeight = int(tmparray[3])
+          log(xbmc.LOGDEBUG, "LCDproc data: Columns %s - Rows %s - CellWidth %s." % (str(self.m_iColumns), str(self.m_iRows), str(self.m_iCellWidth)))
     except:
       log(xbmc.LOGERROR,"Connect: Telnet exception.")
       return False
@@ -193,12 +197,7 @@ class LCDProc(LcdBase):
     if not settings_getHeartBeat():
       cmd += "screen_set xbmc -heartbeat off\n"
  
-    if settings_getScrollDelay():
-      for i in range(1,int(self.m_iRows)+1):
-        cmd += "widget_add xbmc line" + str(i) + " scroller\n"
-    else:
-      for i in range(1,int(self.m_iRows)+1):
-        cmd += "widget_add xbmc line" + str(i) + " string\n"
+    cmd += self.GetWidgetsCmd()
 
     try:
       #Send to server
@@ -227,6 +226,16 @@ class LCDProc(LcdBase):
       return False
     return True
 
+  def GetWidgetsCmd(self):
+    cmd = ""
+    for i in range(1,int(self.m_iRows)+1):
+      cmd += "widget_add xbmc lineScroller" + str(i) + " scroller\n"      
+    for i in range(1,int(self.m_iRows)+1):
+      cmd += "widget_add xbmc lineString" + str(i) + " string\n"      
+#    for i in range(1,int(self.m_iRows)+1):
+#      cmd += "widget_add xbmc lineProgress" + str(i) + " hbar\n"
+    return cmd
+
   def SetBackLight(self, iLight):
     if self.tn.get_socket() == None:
       return
@@ -237,17 +246,10 @@ class LCDProc(LcdBase):
     if iLight == 0:
       self.m_bStop = True
       cmd += "screen_set xbmc -backlight off\n"
-      for i in range(1,int(self.m_iRows)+1):
-        cmd += "widget_del xbmc line" + str(i) + "\n"      
     elif iLight > 0:
       self.m_bStop = False
       cmd += "screen_set xbmc -backlight on\n"
-      if settings_getScrollDelay() != 0:
-        for i in range(1,int(self.m_iRows)+1):
-          cmd += "widget_add xbmc line" + str(i) + " scroller\n"      
-      else:
-        for i in range(1,int(self.m_iRows)+1):
-          cmd += "widget_add xbmc line" + str(i) + " string\n"      
+    cmd += self.GetWidgetsCmd()
 
     # Send to server
     try:
@@ -298,6 +300,13 @@ class LCDProc(LcdBase):
   def GetColumns(self):
     return int(self.m_iColumns)
 
+  def SetProgressBar(self, percent, lineIdx):
+    iColumns = int(self.m_iColumns) - 2 # -2 because of [surroundings]
+    iNumHorPixels = int(self.m_iCellWidth) * int(iColumns)
+    self.m_iProgressBarWidth = int(float(percent) * iNumHorPixels)   
+    self.m_iProgressBarLine = lineIdx
+    return self.m_iProgressBarWidth
+
   def GetRows(self):
     return int(self.m_iRows)
 
@@ -310,7 +319,6 @@ class LCDProc(LcdBase):
 
     strLineLong = strLine
     strLineLong.strip()
-    strLineLong = StringToLCDCharSet(strLineLong)
 
     # make string fit the display if it's smaller than the width
     if len(strLineLong) < int(self.m_iColumns):
@@ -322,10 +330,25 @@ class LCDProc(LcdBase):
     if strLineLong != self.m_strLine[iLine] or bForce:
       ln = iLine + 1
       cmd = ""
-      if settings_getScrollDelay() != 0:
-        cmd = "widget_set xbmc line%i 1 %i %i %i m %i \"%s\"\n" % (ln, ln, int(self.m_iColumns), ln, settings_getScrollDelay(), strLineLong)
+      if int(self.m_iProgressBarLine) >= 0 and self.m_iProgressBarLine == iLine:
+      	cmd = "widget_add xbmc lineProgress%i hbar\n" % (ln)
+      	cmd += "widget_set xbmc lineProgress%i 2 %i %i\n" % (ln, ln, self.m_iProgressBarWidth)
+        if settings_getScrollDelay() != 0:
+      	  cmd += "widget_set xbmc lineScroller%i 1 %i %i %i m %i [\n" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay())
+      	  cmd += "widget_add xbmc lineScroller2%i scroller\n" % (ln)
+      	  cmd += "widget_set xbmc lineScroller2%i %i %i %i %i m %i ]\n" % (ln, self.m_iColumns, ln, self.m_iColumns, ln, settings_getScrollDelay())      	      	
+        else:
+      	  cmd += "widget_set xbmc lineString%i 1 %i [\n" % (ln, ln)     	
+      	  cmd += "widget_add xbmc lineString2%i string\n" % (ln)
+      	  cmd += "widget_set xbmc lineString2%i %i %i ]\n" % (ln, self.m_iColumns, ln)     	      	
+      elif settings_getScrollDelay() != 0:
+        cmd = "widget_del xbmc lineScroller2%i\n" % (ln)
+        cmd += "widget_del xbmc lineProgress%i\n" % (ln)        
+        cmd += "widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"\n" % (ln, ln, int(self.m_iColumns), ln, settings_getScrollDelay(), strLineLong)
       else:
-        cmd = "widget_set xbmc line%i 1 %i \"%s\"\n" % (ln, ln, strLineLong)
+        cmd = "widget_del xbmc lineString2%i\n" % (ln)
+        cmd += "widget_del xbmc lineProgress%i\n" % (ln)
+        cmd += "widget_set xbmc lineString%i 1 %i \"%s\"\n" % (ln, ln, strLineLong)
 
       # Send to server
       try:
