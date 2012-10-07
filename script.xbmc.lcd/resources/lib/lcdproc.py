@@ -122,6 +122,12 @@ class LCDProc(LcdBase):
           self.m_iCellWidth = int(tmparray[2])
           self.m_iCellHeight = int(tmparray[3])
           log(xbmc.LOGDEBUG, "LCDproc data: Columns %s - Rows %s - CellWidth %s." % (str(self.m_iColumns), str(self.m_iRows), str(self.m_iCellWidth)))
+
+      # Retrieve driver name for additional functionality
+      self.tn.write("info\n")
+      reply = self.tn.read_until("\n",3)
+      log(xbmc.LOGDEBUG,"info Reply: " + reply)
+
     except:
       log(xbmc.LOGERROR,"Connect: Telnet exception.")
       return False
