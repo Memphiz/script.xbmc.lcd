@@ -33,6 +33,7 @@ from settings import *
 from lcdproc import *
 
 global g_failedConnectionNotified
+global g_initialConnectAttempt
 global g_lcdproc
   
 global g_oldMenu
@@ -41,12 +42,14 @@ global g_timer
 
 def initGlobals():
   global g_failedConnectionNotified
+  global g_initialConnectAttempt
   global g_lcdproc 
   global g_oldMenu
   global g_oldSubMenu
   global g_timer
   
   g_failedConnectionNotified = False   
+  g_initialConnectAttempt = True
   settings_initGlobals()
   g_lcdproc = LCDProc()
   g_oldMenu = ""
@@ -115,6 +118,7 @@ def process_lcd():
 
 def handleConnectLCD():
   global g_failedConnectionNotified
+  global g_initialConnectAttempt
    
   while not xbmc.abortRequested:
     #check for new settings
@@ -137,11 +141,14 @@ def handleConnectLCD():
         xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
     else:
       text = __settings__.getLocalizedString(501)
-      if not g_failedConnectionNotified:
+      if not g_failedConnectionNotified and not g_initialConnectAttempt:
         xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
         g_failedConnectionNotified = True
       print "lcd: connected to LCD"
       break
+
+  # initial connection attempt done, update flag
+  g_initialConnectAttempt = False
   return True
 
 #MAIN - entry point
