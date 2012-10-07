@@ -107,21 +107,21 @@ class LCDProc(LcdBase):
       reply = self.tn.read_until("\n",3)
       log(xbmc.LOGDEBUG,"Reply: " + reply)
       
-      if len(reply) < 5:
+      lcdinfo = re.match("^connect .+ protocol ([0-9\.]+) lcd wid (\d+) hgt (\d+) cellwid (\d+) cellhgt (\d+)$", reply)
+
+      if lcdinfo is None:
         return False
 
-      i = 0
-      while (i < (len(reply)-5)) and reply[i:i+3] != "lcd" and (i+3) < len(reply):
-        i = i + 1
-      
-      if i < len(reply):
-        tmparray = re.findall(r'\d+',reply[i:])
-        if len(tmparray) >= 2:
-          self.m_iColumns = int(tmparray[0])
-          self.m_iRows  = int(tmparray[1])
-          self.m_iCellWidth = int(tmparray[2])
-          self.m_iCellHeight = int(tmparray[3])
-          log(xbmc.LOGDEBUG, "LCDproc data: Columns %s - Rows %s - CellWidth %s." % (str(self.m_iColumns), str(self.m_iRows), str(self.m_iCellWidth)))
+      # protocol version must currently be 0.3
+      if float(lcdinfo.group(1)) != 0.3:
+        log(xbmc.LOGERROR, "Only LCDproc protocol 0.3 supported (got " + lcdinfo.group(1) +")")
+        return False
+
+      self.m_iColumns = int(lcdinfo.group(2))
+      self.m_iRows  = int(lcdinfo.group(3))
+      self.m_iCellWidth = int(lcdinfo.group(4))
+      self.m_iCellHeight = int(lcdinfo.group(5))
+      log(xbmc.LOGDEBUG, "LCDproc data: Columns %s - Rows %s - CellWidth %s - CellHeight %s" % (str(self.m_iColumns), str(self.m_iRows), str(self.m_iCellWidth), str(self.m_iCellHeight)))
 
       # Retrieve driver name for additional functionality
       self.tn.write("info\n")
