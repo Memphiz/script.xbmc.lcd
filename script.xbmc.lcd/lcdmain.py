@@ -158,6 +158,3 @@ initGlobals()
 while not xbmc.abortRequested:
   settings_setup()
   process_lcd()    #lcd loop
-
-#lcd_initGlobals() #clears lists - for skin doesn't show the old values
-#fhem_updateInfoWindow() #push cleared values to the skin
