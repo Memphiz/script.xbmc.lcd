@@ -208,14 +208,11 @@ class LCDProc(LcdBase):
   def IsConnected(self):
     if self.tn.get_socket() == None:
       return False
-      
-    try:
-      self.tn.write("noop\n")
-      self.tn.read_until("\n",3)      
-    except:
-      log(xbmc.LOGERROR, "Unable to write to socket - IsConnected")
-      self.CloseSocket()
+
+    if not self.SendCommand("noop", True):
+      log(xbmc.LOGERROR, "noop failed in IsConnected(), aborting!")
       return False
+
     return True
 
   def SetBackLight(self, iLight):
