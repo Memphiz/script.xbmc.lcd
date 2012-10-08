@@ -114,7 +114,7 @@ def process_lcd():
     else:
       g_lcdproc.DisableOnPlayback(False, False)
 
-    time.sleep(1)			#refresh every second
+    time.sleep(1.0 / float(settings_getRefreshRate()))	#refresh after configured rate
 
 def handleConnectLCD():
   global g_failedConnectionNotified

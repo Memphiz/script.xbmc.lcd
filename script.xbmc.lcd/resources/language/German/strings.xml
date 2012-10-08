@@ -12,6 +12,7 @@
   <string id="104">Geschwindigkeit fuer gescrollten Text</string>
   <string id="105">Hintergrundbeleuchtung ausschalten, wenn Bildschirmschoner laeuft</string>  
   <string id="106">Anzeigedauer der Navigationsansicht (s)</string>
+  <string id="107">Display-Aktualisierungsrate (Hz)</string>
 
   <!--Notifications-->                                                                                                                                                                                           
   <string id="500">Fehler beim Verbinden zu LCDProc!</string>

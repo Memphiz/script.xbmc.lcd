@@ -12,7 +12,7 @@
   <string id="104">Delay for scrolling text</string>
   <string id="105">Dim backlight on screensaver</string>
   <string id="106">Navigation display duration (s)</string>
-
+  <string id="107">Display refresh rate (Hz)</string>
 
   <!--Notifications-->
   <string id="500">Failed to connect to LCDProc!</string>

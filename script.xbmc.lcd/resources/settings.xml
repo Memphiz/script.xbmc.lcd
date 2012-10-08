@@ -8,5 +8,6 @@
     <setting id="scrolldelay" type="slider" label="104" option="int" default="1" range="0,10" />
     <setting id="dimonscreensaver" type="bool" label="105" default="false" />
     <setting id="navtimeout" type="slider" label="106" option="int" default="2" range="1,10" />    
+    <setting id="refreshrate" type="slider" label="107" option="int" default="1" range="1,20" />    
   </category>
 </settings>

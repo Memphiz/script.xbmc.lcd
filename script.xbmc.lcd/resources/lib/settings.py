@@ -16,6 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import string
 import sys
 import time
 import xbmc
@@ -36,6 +37,7 @@ global g_scrolldelay
 global g_settingsChanged
 global g_dimonscreensaver
 global g_navtimeout
+global g_refreshrate
 
 #init globals with defaults
 def settings_initGlobals():
@@ -47,8 +49,7 @@ def settings_initGlobals():
   global g_settingsChanged
   global g_dimonscreensaver
   global g_navtimeout
-  
-
+  global g_refreshrate
 
   g_hostip           = "127.0.0.1"
   g_hostport         = 13666
@@ -58,7 +59,7 @@ def settings_initGlobals():
   g_settigsChanged   = True
   g_dimonscreensaver = False
   g_navtimeout       = 3
-
+  g_refreshrate      = 1
 
    
 def settings_getHostIp():
@@ -70,20 +71,24 @@ def settings_getHostPort():
   return g_hostport 
 
 def settings_getHeartBeat():
-	global g_heartbeat
-	return g_heartbeat
+  global g_heartbeat
+  return g_heartbeat
 	
 def settings_getScrollDelay():
-	global g_scrolldelay
-	return g_scrolldelay
+  global g_scrolldelay
+  return g_scrolldelay
 
 def settings_getDimOnScreensaver():
-	global g_dimonscreensaver
-	return g_dimonscreensaver
+  global g_dimonscreensaver
+  return g_dimonscreensaver
 
 def settings_getNavTimeout():
-	global g_navtimeout
-	return g_navtimeout
+  global g_navtimeout
+  return g_navtimeout
+
+def settings_getRefreshRate():
+  global g_refreshrate
+  return g_refreshrate
 
 #check for new settings and handle them if anything changed
 #only checks if the last check is 5 secs old
@@ -135,12 +140,15 @@ def settings_handleLcdSettings():
   global g_settingsChanged
   global g_dimonscreensaver
   global g_navtimeout
+  global g_refreshrate
+
   g_settingsChanged = False
-  
-  scrolldelay = int(float(__settings__.getSetting("scrolldelay")))
+
+  scrolldelay = int(float(string.replace(__settings__.getSetting("scrolldelay"), ",", ".")))
   heartbeat = __settings__.getSetting("heartbeat") == "true"
   dimonscreensaver = __settings__.getSetting("dimonscreensver") == "true"
-  navtimeout = int(float(__settings__.getSetting("navtimeout")))
+  navtimeout = int(float(string.replace(__settings__.getSetting("navtimeout"), ",", ".")))
+  refreshrate = int(float(string.replace(__settings__.getSetting("refreshrate"), ",", ".")))
  
   if g_scrolldelay != scrolldelay:
     g_scrolldelay = scrolldelay
@@ -156,6 +164,14 @@ def settings_handleLcdSettings():
     
   if g_navtimeout != navtimeout:
     g_navtimeout = navtimeout
+    g_settingsChanged = True    
+
+  if g_refreshrate != refreshrate:
+    g_refreshrate = refreshrate
+
+    if refreshrate < 1:
+      g_refreshrate = 1
+
     g_settingsChanged = True    
 
 #handles all settings of boblight and applies them as needed
