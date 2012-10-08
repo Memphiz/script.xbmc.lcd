@@ -311,7 +311,7 @@ class LCDProc(LcdBase):
 
       if int(self.m_iProgressBarLine) >= 0 and self.m_iProgressBarLine == iLine:
         barborder = "[" + " " * (self.m_iColumns - 2) + "]"
-        self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"" + barborder +"\"" % (ln, ln, self.m_iColumns, ln), False)
+        self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"" % (ln, ln, self.m_iColumns, ln, barborder), False)
         self.SendCommand("widget_set xbmc lineProgress%i 2 %i %i" % (ln, ln, self.m_iProgressBarWidth), False)
       else:
         self.SendCommand("widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED" % (ln), False)
