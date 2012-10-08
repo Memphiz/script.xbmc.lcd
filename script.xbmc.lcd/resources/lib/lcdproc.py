@@ -117,6 +117,10 @@ class LCDProc(LcdBase):
       if not self.SendCommand("widget_add xbmc lineIcon" + str(i) + " icon", True):
         return False
 
+      # Default icon
+      if not self.SendCommand("widget_set xbmc lineIcon" + str(i) + " 0 0 BLOCK_FILLED", True):
+        return False
+
     return True
 
   def Initialize(self):
@@ -307,34 +311,23 @@ class LCDProc(LcdBase):
 
     if strLineLong != self.m_strLine[iLine] or bForce:
       ln = iLine + 1
-      cmd = ""
+
       if int(self.m_iProgressBarLine) >= 0 and self.m_iProgressBarLine == iLine:
-      	cmd = "widget_add xbmc lineProgress%i hbar\n" % (ln)
-      	cmd += "widget_set xbmc lineProgress%i 2 %i %i\n" % (ln, ln, self.m_iProgressBarWidth)
-        if settings_getScrollDelay() != 0:
-      	  cmd += "widget_set xbmc lineScroller%i 1 %i %i %i m %i [\n" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay())
-      	  cmd += "widget_add xbmc lineScroller2%i scroller\n" % (ln)
-      	  cmd += "widget_set xbmc lineScroller2%i %i %i %i %i m %i ]\n" % (ln, self.m_iColumns, ln, self.m_iColumns, ln, settings_getScrollDelay())      	      	
-        else:
-      	  cmd += "widget_set xbmc lineString%i 1 %i [\n" % (ln, ln)     	
-      	  cmd += "widget_add xbmc lineString2%i string\n" % (ln)
-      	  cmd += "widget_set xbmc lineString2%i %i %i ]\n" % (ln, self.m_iColumns, ln)     	      	
-      elif settings_getScrollDelay() != 0:
-        cmd = "widget_del xbmc lineScroller2%i\n" % (ln)
-        cmd += "widget_del xbmc lineProgress%i\n" % (ln)        
-        cmd += "widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"\n" % (ln, ln, int(self.m_iColumns), ln, settings_getScrollDelay(), strLineLong)
+        barborder = "[" + " " * (self.m_iColumns - 2) + "]"
+        self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"" + barborder +"\"" % (ln, ln, self.m_iColumns, ln), False)
+        self.SendCommand("widget_set xbmc lineProgress%i 2 %i %i" % (ln, ln, self.m_iProgressBarWidth), False)
       else:
-        cmd = "widget_del xbmc lineString2%i\n" % (ln)
-        cmd += "widget_del xbmc lineProgress%i\n" % (ln)
-        cmd += "widget_set xbmc lineString%i 1 %i \"%s\"\n" % (ln, ln, strLineLong)
+        self.SendCommand("widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED" % (ln), False)
+        self.SendCommand("widget_set xbmc lineProgress%i 0 0 0" % (ln), False)
+        self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), strLineLong), False)
 
       # Send to server
-      try:
-        self.tn.get_socket().send(cmd)	#use the socket here for getting the special chars over the wire
-        self.tn.read_until("\n",3)           
-      except:
-        log(xbmc.LOGERROR, "Unable to write to socket - SetLine")
-        self.CloseSocket()
+      #try:
+      #  self.tn.get_socket().send(cmd)	#use the socket here for getting the special chars over the wire
+      #  self.tn.read_until("\n",3)           
+      #except:
+      #  log(xbmc.LOGERROR, "Unable to write to socket - SetLine")
+      #  self.CloseSocket()
 
       self.m_strLine[iLine] = strLineLong
 
