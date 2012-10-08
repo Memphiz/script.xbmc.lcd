@@ -59,6 +59,66 @@ class LCDProc(LcdBase):
     self.m_iProgressBarLine = -1
     LcdBase.__init__(self)
 
+  def SendCommand(self, strCmd, bCheckRet):
+    try:
+      # Send to server and read reply
+      self.tn.write(strCmd + "\n")
+      reply = self.tn.read_until("\n",3)            
+    except:
+      # Something bad happened, abort
+      log(xbmc.LOGERROR, "SendCommand: Telnet exception - send")
+      return False
+
+    if not bCheckRet:
+      return True # no return checking desired, so be fine
+
+    if reply[:6] == 'listen' or reply[:6] == 'ignore':
+      try:
+        reply = self.tn.read_until("\n",3)            
+      except:
+        # Reread failed, abort
+        log(xbmc.LOGERROR, "SendCommand: Telnet exception - reread")
+        return False
+
+    if strCmd == 'noop' and reply == 'noop complete\n':
+      return True # noop has special reply
+
+    if reply == 'success\n':
+      return True
+
+    log(xbmc.LOGWARNING, "Reply to '" + strCmd +"' was '" + reply)
+    return False
+
+  def SetupScreen(self):
+    # Add screen first
+    if not self.SendCommand("screen_add xbmc", True):
+      return False
+
+    # Set screen priority
+    if not self.SendCommand("screen_set xbmc -priority info", True):
+      return False
+
+    # Turn off heartbeat if desired
+    if not settings_getHeartBeat():
+      if not self.SendCommand("screen_set xbmc -heartbeat off", True):
+        return False
+
+    # Setup widgets
+    for i in range(1,int(self.m_iRows)+1):
+      # Text widgets
+      if not self.SendCommand("widget_add xbmc lineScroller" + str(i) + " scroller", True):
+        return False
+
+      # Progress bars
+      if not self.SendCommand("widget_add xbmc lineProgress" + str(i) + " hbar", True):
+        return False
+
+      # Icons
+      if not self.SendCommand("widget_add xbmc lineIcon" + str(i) + " icon", True):
+        return False
+
+    return True
+
   def Initialize(self):
     connected = False
     if not self.m_used:
@@ -132,24 +192,11 @@ class LCDProc(LcdBase):
       log(xbmc.LOGERROR,"Connect: Telnet exception.")
       return False
 
-    # Build command to setup screen
-    cmd = "screen_add xbmc\n"
-    cmd += "screen_set xbmc -priority info\n"
-    if not settings_getHeartBeat():
-      cmd += "screen_set xbmc -heartbeat off\n"
- 
-    cmd += self.GetWidgetsCmd()
-
-    try:
-      #Send to server
-      self.tn.write(cmd)
-      self.tn.read_until("\n",3)            
-    except:
-      log(xbmc.LOGERROR, "Connect: Telnet exception - send")
-      return False
+    if not self.SetupScreen():
+      log(xbmc.LOGERROR, "Screen setup failed!")
+      return False      
 
     return True
-
 
   def CloseSocket(self):
     self.tn.close()
@@ -166,16 +213,6 @@ class LCDProc(LcdBase):
       self.CloseSocket()
       return False
     return True
-
-  def GetWidgetsCmd(self):
-    cmd = ""
-    for i in range(1,int(self.m_iRows)+1):
-      cmd += "widget_add xbmc lineScroller" + str(i) + " scroller\n"      
-    for i in range(1,int(self.m_iRows)+1):
-      cmd += "widget_add xbmc lineString" + str(i) + " string\n"      
-#    for i in range(1,int(self.m_iRows)+1):
-#      cmd += "widget_add xbmc lineProgress" + str(i) + " hbar\n"
-    return cmd
 
   def SetBackLight(self, iLight):
     if self.tn.get_socket() == None:
