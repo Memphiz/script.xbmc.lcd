@@ -316,7 +316,7 @@ class LCDProc(LcdBase):
       else:
         self.SendCommand("widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED" % (ln), False)
         self.SendCommand("widget_set xbmc lineProgress%i 0 0 0" % (ln), False)
-        self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), strLineLong), False)
+        self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong)), False)
 
       # Send to server
       #try:
