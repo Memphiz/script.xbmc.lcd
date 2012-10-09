@@ -236,21 +236,16 @@ class LCDProc(LcdBase):
     log(xbmc.LOGDEBUG, "Switch Backlight to: " + str(iLight))
 
     # Build command
-    cmd = ""
     if iLight == 0:
       self.m_bStop = True
-      cmd += "screen_set xbmc -backlight off\n"
+      cmd = "screen_set xbmc -backlight off\n"
     elif iLight > 0:
       self.m_bStop = False
-      cmd += "screen_set xbmc -backlight on\n"
-    cmd += self.GetWidgetsCmd()
+      cmd = "screen_set xbmc -backlight on\n"
 
     # Send to server
-    try:
-      self.tn.write(cmd)
-      self.tn.read_until("\n",3)      
-    except:
-      log(xbmc.LOGERROR, "Unable to write to socket - SetBackLight")
+    if not self.SendCommand(cmd, True):
+      log(xbmc.LOGERROR, "SetBackLight(): Cannot change backlight state")
       self.CloseSocket()
 
   def SetContrast(self, iContrast):
@@ -269,11 +264,8 @@ class LCDProc(LcdBase):
     cmd = "screen_set xbmc -priority hidden\n"
 
     # Send to server
-    try:
-      self.tn.write(cmd)
-      self.tn.read_until("\n",3)            
-    except:
-      log(xbmc.LOGERROR, "Unable to write to socket - Suspend")
+    if not self.SendCommand(cmd, True):
+      log(xbmc.LOGERROR, "Suspend(): Cannot suspend")
       self.CloseSocket()
 
   def Resume(self):
@@ -284,11 +276,8 @@ class LCDProc(LcdBase):
     cmd = "screen_set xbmc -priority info\n"
 
     # Send to server
-    try:
-      self.tn.write(cmd)
-      self.tn.read_until("\n",3)           
-    except:
-      log(xbmc.LOGERROR, "Unable to write to socket - Resume")
+    if not self.SendCommand(cmd, True):
+      log(xbmc.LOGERROR, "Resume(): Cannot resume")
       self.CloseSocket()
 
   def GetColumns(self):
@@ -334,4 +323,3 @@ class LCDProc(LcdBase):
         self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong)), False)
 
       self.m_strLine[iLine] = strLineLong
-
