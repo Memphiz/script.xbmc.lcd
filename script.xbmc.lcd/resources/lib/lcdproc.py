@@ -62,6 +62,13 @@ class LCDProc(LcdBase):
     LcdBase.__init__(self)
 
   def SendCommand(self, strCmd, bCheckRet):
+    numcmds = string.count(strCmd, '\n')
+    ret = True
+
+    # Single command without lf
+    if numcmds < 1:
+      numcmds = 1
+
     try:
       # Send to server
       self.tn.write(strCmd + "\n")
@@ -73,41 +80,47 @@ class LCDProc(LcdBase):
     # Update last socketaction timestamp
     self.m_timeLastSockAction = time.time()
     
-    # Read in (multiple) responses
-    while True:
-      try:
-        # Read server reply
-        reply = self.tn.read_until("\n",3)            
-      except:
-        # (Re)read failed, abort
-        log(xbmc.LOGERROR, "SendCommand: Telnet exception - reread")
-        return False
+    # Repeat for number of found commands
+    for i in range(1, (numcmds + 1)):
+      # Read in (multiple) responses
+      while True:
+        try:
+          # Read server reply
+          reply = self.tn.read_until("\n",3)            
+        except:
+          # (Re)read failed, abort
+          log(xbmc.LOGERROR, "SendCommand: Telnet exception - reread")
+          return False
 
-      # Skip these messages
-      if reply[:6] == 'listen':
-        continue
-      elif reply[:6] == 'ignore':
-        continue
-      elif reply[:3] == 'key':
-        continue
-      elif reply[:9] == 'menuevent':
-        continue
+        # Skip these messages
+        if reply[:6] == 'listen':
+          continue
+        elif reply[:6] == 'ignore':
+          continue
+        elif reply[:3] == 'key':
+          continue
+        elif reply[:9] == 'menuevent':
+          continue
 
-      # Response seems interesting, so stop here      
-      break
+        # Response seems interesting, so stop here      
+        break
       
-    if not bCheckRet:
-      return True # no return checking desired, so be fine
+      if not bCheckRet:
+        continue # no return checking desired, so be fine
 
-    if strCmd == 'noop' and reply == 'noop complete\n':
-      return True # noop has special reply
+      if strCmd == 'noop' and reply == 'noop complete\n':
+        continue # noop has special reply
 
-    if reply == 'success\n':
-      return True
+      if reply == 'success\n':
+        continue
+      
+      ret = False
 
     # Leave information something undesired happened
-    log(xbmc.LOGWARNING, "Reply to '" + strCmd +"' was '" + reply)
-    return False
+    if ret is False:
+      log(xbmc.LOGWARNING, "Reply to '" + strCmd +"' was '" + reply)
+
+    return ret
 
   def SetupScreen(self):
     # Add screen first
@@ -322,13 +335,18 @@ class LCDProc(LcdBase):
     if strLineLong != self.m_strLine[iLine] or bForce:
       ln = iLine + 1
 
+      cmdlist = ""
+
       if int(self.m_iProgressBarLine) >= 0 and self.m_iProgressBarLine == iLine:
         barborder = "[" + " " * (self.m_iColumns - 2) + "]"
-        self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"" % (ln, ln, self.m_iColumns, ln, barborder), False)
-        self.SendCommand("widget_set xbmc lineProgress%i 2 %i %i" % (ln, ln, self.m_iProgressBarWidth), False)
+        cmdlist += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, barborder)
+        cmdlist += "widget_set xbmc lineProgress%i 2 %i %i\n" % (ln, ln, self.m_iProgressBarWidth)
       else:
-        self.SendCommand("widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED" % (ln), False)
-        self.SendCommand("widget_set xbmc lineProgress%i 0 0 0" % (ln), False)
-        self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong)), False)
+        cmdlist += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (ln)
+        cmdlist += "widget_set xbmc lineProgress%i 0 0 0\n" % (ln)
+        cmdlist += "widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"\n" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong))
+
+      # Send complete command package
+      self.SendCommand(cmdlist, False)
 
       self.m_strLine[iLine] = strLineLong
