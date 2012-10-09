@@ -54,6 +54,8 @@ class LCDProc(LcdBase):
     self.m_initRetryInterval = INIT_RETRY_INTERVAL
     self.m_used = True
     self.tn = telnetlib.Telnet()
+    self.m_timeLastSockAction = time.time()
+    self.m_timeSocketIdleTimeout = 2
     self.m_strLine = [None]*MAX_ROWS
     self.m_iProgressBarWidth = 0
     self.m_iProgressBarLine = -1
@@ -68,6 +70,9 @@ class LCDProc(LcdBase):
       log(xbmc.LOGERROR, "SendCommand: Telnet exception - send")
       return False
 
+    # Update last socketaction timestamp
+    self.m_timeLastSockAction = time.time()
+    
     # Read in (multiple) responses
     while True:
       try:
@@ -223,6 +228,10 @@ class LCDProc(LcdBase):
   def IsConnected(self):
     if self.tn.get_socket() == None:
       return False
+
+    # Ping only every SocketIdleTimeout seconds
+    if (self.m_timeLastSockAction + self.m_timeSocketIdleTimeout) > time.time():
+      return True
 
     if not self.SendCommand("noop", True):
       log(xbmc.LOGERROR, "noop failed in IsConnected(), aborting!")
