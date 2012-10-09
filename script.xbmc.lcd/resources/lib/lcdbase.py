@@ -68,6 +68,10 @@ class LcdBase():
     self.m_eCurrentCharset = CUSTOM_CHARSET.CUSTOM_CHARSET_DEFAULT
     self.m_lcdMode = [None] * LCD_MODE.LCD_MODE_MAX
     self.m_bDimmedOnPlayback = False
+    self.m_strInfoLabelEncoding = sys.getfilesystemencoding()
+    self.m_strLCDEncoding = "iso-8859-1"
+
+    log(xbmc.LOGDEBUG, "Determined InfoLabelEncoding: " + self.m_strInfoLabelEncoding)
 
 #  @abstractmethod
   def _concrete_method(self):
@@ -366,6 +370,8 @@ class LcdBase():
         line = "p" + str(pixelsWidth)
       else:
         line = xbmc.getInfoLabel(self.m_lcdMode[mode][inLine])
+        if self.m_strInfoLabelEncoding != self.m_strLCDEncoding:
+          line = line.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
         self.SetProgressBar(0, -1)
 
       inLine += 1
