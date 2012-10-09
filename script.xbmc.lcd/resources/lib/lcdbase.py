@@ -1,6 +1,6 @@
 '''
-    LCD/VFD for XBMC
-    Copyright (C) 2011 Team XBMC
+    XBMC LCDproc addon
+    Copyright (C) 2012 Team XBMC
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -362,7 +362,7 @@ class LcdBase():
     while (outLine < int(self.GetRows()) and inLine < len(self.m_lcdMode[mode])):
       #parse the progressbar infolabel by ourselfs!
       if self.m_lcdMode[mode][inLine] == "$INFO[LCD.ProgressBar]":
-      	# get playtime and duration and convert into seconds
+        # get playtime and duration and convert into seconds
         currentSecs = self.getCurrentTimeSecs()
         durationSecs = self.getCurrentDurationSecs()
         percent = self.GetProgressBarPercent(currentSecs,durationSecs)

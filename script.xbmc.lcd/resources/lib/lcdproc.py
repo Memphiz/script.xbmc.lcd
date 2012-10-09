@@ -1,6 +1,6 @@
 '''
-    LCD/VFD for XBMC
-    Copyright (C) 2011 Team XBMC
+    XBMC LCDproc addon
+    Copyright (C) 2012 Team XBMC
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -317,14 +317,6 @@ class LCDProc(LcdBase):
         self.SendCommand("widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED" % (ln), False)
         self.SendCommand("widget_set xbmc lineProgress%i 0 0 0" % (ln), False)
         self.SendCommand("widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong)), False)
-
-      # Send to server
-      #try:
-      #  self.tn.get_socket().send(cmd)	#use the socket here for getting the special chars over the wire
-      #  self.tn.read_until("\n",3)           
-      #except:
-      #  log(xbmc.LOGERROR, "Unable to write to socket - SetLine")
-      #  self.CloseSocket()
 
       self.m_strLine[iLine] = strLineLong
 

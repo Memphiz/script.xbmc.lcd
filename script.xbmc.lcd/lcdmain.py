@@ -1,6 +1,6 @@
 '''
-    FHEM for XBMC
-    Copyright (C) 2011 Team XBMC
+    XBMC LCDproc addon
+    Copyright (C) 2012 Team XBMC
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -89,8 +89,8 @@ def process_lcd():
     subMenu = xbmc.getInfoLabel("$INFO[System.CurrentControl]")
     settingsChanged = settings_didSettingsChange()
     mode = getLcdMode()
-	
-	#handle navigation
+
+    #handle navigation
     if menu != g_oldMenu or subMenu != g_oldSubMenu or (g_timer + navtimeout) > time.time():
       g_lcdproc.Render(LCD_MODE.LCD_MODE_NAVIGATION,settingsChanged)
       if menu != g_oldMenu or subMenu != g_oldSubMenu:
@@ -102,7 +102,7 @@ def process_lcd():
         g_lcdproc.SetBackLight(0)
         bBacklightDimmed = True
       g_lcdproc.Render(getLcdMode(),settingsChanged)
-  	#turn the backlight on when leaving screensaver and it was dimmed
+    #turn the backlight on when leaving screensaver and it was dimmed
     if mode != LCD_MODE.LCD_MODE_SCREENSAVER and bBacklightDimmed:
       g_lcdproc.SetBackLight(1)
       bBacklightDimmed = False
