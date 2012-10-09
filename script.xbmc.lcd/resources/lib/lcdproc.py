@@ -59,19 +59,22 @@ class LCDProc(LcdBase):
     self.m_strLine = [None]*MAX_ROWS
     self.m_iProgressBarWidth = 0
     self.m_iProgressBarLine = -1
+    self.m_strSetLineCmds = ""
     LcdBase.__init__(self)
 
   def SendCommand(self, strCmd, bCheckRet):
-    numcmds = string.count(strCmd, '\n')
+    countcmds = string.count(strCmd, '\n')
+    sendcmd = strCmd
     ret = True
 
     # Single command without lf
-    if numcmds < 1:
-      numcmds = 1
+    if countcmds < 1:
+      #countcmds = 1
+      sendcmd += "\n"
 
     try:
       # Send to server
-      self.tn.write(strCmd + "\n")
+      self.tn.write(sendcmd)
     except:
       # Something bad happened, abort
       log(xbmc.LOGERROR, "SendCommand: Telnet exception - send")
@@ -81,7 +84,7 @@ class LCDProc(LcdBase):
     self.m_timeLastSockAction = time.time()
     
     # Repeat for number of found commands
-    for i in range(1, (numcmds + 1)):
+    for i in range(1, (countcmds + 1)):
       # Read in (multiple) responses
       while True:
         try:
@@ -335,18 +338,22 @@ class LCDProc(LcdBase):
     if strLineLong != self.m_strLine[iLine] or bForce:
       ln = iLine + 1
 
-      cmdlist = ""
-
       if int(self.m_iProgressBarLine) >= 0 and self.m_iProgressBarLine == iLine:
         barborder = "[" + " " * (self.m_iColumns - 2) + "]"
-        cmdlist += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, barborder)
-        cmdlist += "widget_set xbmc lineProgress%i 2 %i %i\n" % (ln, ln, self.m_iProgressBarWidth)
+        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, barborder)
+        self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 2 %i %i\n" % (ln, ln, self.m_iProgressBarWidth)
       else:
-        cmdlist += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (ln)
-        cmdlist += "widget_set xbmc lineProgress%i 0 0 0\n" % (ln)
-        cmdlist += "widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"\n" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong))
-
-      # Send complete command package
-      self.SendCommand(cmdlist, False)
+        self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (ln)
+        self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (ln)
+        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"\n" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong))
 
       self.m_strLine[iLine] = strLineLong
+
+  def FlushLines(self):
+      #log(xbmc.LOGDEBUG, "Flushing Command List:" + self.m_strSetLineCmds)
+
+      if len(self.m_strSetLineCmds) > 0:
+        # Send complete command package
+        self.SendCommand(self.m_strSetLineCmds, False)
+
+        self.m_strSetLineCmds = ""

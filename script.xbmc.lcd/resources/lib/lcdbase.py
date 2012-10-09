@@ -99,6 +99,10 @@ class LcdBase():
 #  @abstractmethod     
   def SetLine(self, iLine, strLine):
     pass
+
+#  @abstractmethod     
+  def FlushLines(self):
+    pass
     
 #  @abstractmethod	
   def GetColumns(self):
@@ -224,6 +228,8 @@ class LcdBase():
 #      log(xbmc.LOGDEBUG, "Request write of emptyline" + str(outLine))
       self.SetLine(outLine, "", bForce)
       outLine += 1
+
+    self.FlushLines()
 
   def DisableOnPlayback(self, playingVideo, playingAudio):
     if (playingVideo and (self.m_disableOnPlay & DISABLE_ON_PLAY.DISABLE_ON_PLAY_VIDEO)) or (playingAudio and (self.m_disableOnPlay & DISABLE_ON_PLAY.DISABLE_ON_PLAY_MUSIC)):
