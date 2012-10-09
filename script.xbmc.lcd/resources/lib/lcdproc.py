@@ -61,24 +61,38 @@ class LCDProc(LcdBase):
 
   def SendCommand(self, strCmd, bCheckRet):
     try:
-      # Send to server and read reply
+      # Send to server
       self.tn.write(strCmd + "\n")
-      reply = self.tn.read_until("\n",3)            
     except:
       # Something bad happened, abort
       log(xbmc.LOGERROR, "SendCommand: Telnet exception - send")
       return False
 
-    if not bCheckRet:
-      return True # no return checking desired, so be fine
-
-    if reply[:6] == 'listen' or reply[:6] == 'ignore':
+    # Read in (multiple) responses
+    while True:
       try:
+        # Read server reply
         reply = self.tn.read_until("\n",3)            
       except:
-        # Reread failed, abort
+        # (Re)read failed, abort
         log(xbmc.LOGERROR, "SendCommand: Telnet exception - reread")
         return False
+
+      # Skip these messages
+      if reply[:6] == 'listen':
+        continue
+      elif reply[:6] == 'ignore':
+        continue
+      elif reply[:3] == 'key':
+        continue
+      elif reply[:9] == 'menuevent':
+        continue
+
+      # Response seems interesting, so stop here      
+      break
+      
+    if not bCheckRet:
+      return True # no return checking desired, so be fine
 
     if strCmd == 'noop' and reply == 'noop complete\n':
       return True # noop has special reply
@@ -86,6 +100,7 @@ class LCDProc(LcdBase):
     if reply == 'success\n':
       return True
 
+    # Leave information something undesired happened
     log(xbmc.LOGWARNING, "Reply to '" + strCmd +"' was '" + reply)
     return False
 
