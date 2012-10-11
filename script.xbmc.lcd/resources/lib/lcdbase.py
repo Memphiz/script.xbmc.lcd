@@ -117,6 +117,9 @@ class LcdBase():
     pass
 
   def GetProgressBarPercent(self, tCurrent, tTotal):
+    if float(tTotal) == 0.0:
+      return 0
+
     return float(tCurrent)/float(tTotal)
 
   def SetCharset(self,_nCharset):
@@ -192,10 +195,16 @@ class LcdBase():
 
   def getCurrentTimeSecs(self):
     currentTimeAr = xbmc.getInfoLabel("Player.Time").split(":")
+    if currentTimeAr[0] == "":
+      return 0
+
     return self.timeToSecs(currentTimeAr)
  
   def getCurrentDurationSecs(self):
     currentDurationAr = xbmc.getInfoLabel("Player.Duration").split(":")
+    if currentDurationAr[0] == "":
+      return 0
+
     return self.timeToSecs(currentDurationAr)
 
   def Render(self, mode, bForce):
