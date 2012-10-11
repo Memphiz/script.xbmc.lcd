@@ -35,7 +35,13 @@ __icon__ = sys.modules[ "__main__" ].__icon__
 __lcdxml__ = xbmc.translatePath( os.path.join("special://masterprofile","LCD.xml"))
 
 from settings import *
- 
+
+g_dictEmptyLineDescriptor = {} 
+g_dictEmptyLineDescriptor['type'] = str("text")
+g_dictEmptyLineDescriptor['startx'] = int(0)
+g_dictEmptyLineDescriptor['text'] = str("")
+g_dictEmptyLineDescriptor['endx'] = int(0)
+
 # global functions
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,),level=loglevel ) 
@@ -98,7 +104,7 @@ class LcdBase():
     pass
 
 #  @abstractmethod     
-  def SetLine(self, iLine, strLine):
+  def SetLine(self, iLine, strLine, dictDescriptor, bForce):
     pass
 
 #  @abstractmethod     
@@ -164,6 +170,13 @@ class LcdBase():
           if str(scrollSeparator.text).strip() != "":
             self.m_strScrollSeparator = " " + scrollSeparator.text + " "
 
+        self.m_bProgressbarSurroundings = False
+
+        progressbarSurroundings = element.find("progressbarsurroundings")
+        if progressbarSurroundings != None:
+          if str(progressbarSurroundings.text) == "on":
+            self.m_bProgressbarSurroundings = True
+
         #load modes
         tmpMode = element.find("music")
         self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_MUSIC)
@@ -187,8 +200,29 @@ class LcdBase():
   def LoadMode(self, node, mode):
     if node == None:
       return
+
     for line in node.findall("line"):
-      self.m_lcdMode[mode].append(str(line.text))
+      linedescriptor = {}
+      linetext = line.text
+
+      if str(linetext).find("$INFO[LCD.ProgressBar]") >= 0:
+        linedescriptor['type'] = str("progressbar")
+        linedescriptor['startx'] = int(1)
+        linedescriptor['text'] = ""
+        linedescriptor['endx'] = int(self.m_iCellWidth) * int(self.m_iColumns)
+
+        if self.m_bProgressbarSurroundings == True:
+          linedescriptor['startx'] = int(2)
+          linedescriptor['text'] = "[" + " " * (self.m_iColumns - 2) + "]"
+          linedescriptor['endx'] = int(self.m_iCellWidth) * (int(self.GetColumns()) - 2)
+
+      else:
+        linedescriptor['type'] = str("text")
+        linedescriptor['startx'] = int(1)
+        linedescriptor['text'] = str(linetext)
+        linedescriptor['endx'] = int(self.GetColumns())
+
+      self.m_lcdMode[mode].append(linedescriptor)
 
   def Reset(self):
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
@@ -225,29 +259,28 @@ class LcdBase():
 
     while (outLine < int(self.GetRows()) and inLine < len(self.m_lcdMode[mode])):
       #parse the progressbar infolabel by ourselfs!
-      if self.m_lcdMode[mode][inLine] == "$INFO[LCD.ProgressBar]":
+      if self.m_lcdMode[mode][inLine]['type'] == "progressbar":
         # get playtime and duration and convert into seconds
         currentSecs = self.getCurrentTimeSecs()
         durationSecs = self.getCurrentDurationSecs()
         percent = self.GetProgressBarPercent(currentSecs,durationSecs)
-        pixelsWidth = self.SetProgressBar(percent, outLine)
+        pixelsWidth = self.SetProgressBar(percent, self.m_lcdMode[mode][inLine]['endx'])
         line = "p" + str(pixelsWidth)
       else:
-        line = xbmc.getInfoLabel(self.m_lcdMode[mode][inLine])
+        line = xbmc.getInfoLabel(self.m_lcdMode[mode][inLine]['text'])
         if self.m_strInfoLabelEncoding != self.m_strLCDEncoding:
           line = line.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
         self.SetProgressBar(0, -1)
 
-      inLine += 1
       if len(line) > 0:
-#        log(xbmc.LOGDEBUG, "Request write of line" + str(outLine) + ": " + str(line))
-        self.SetLine(outLine, line, bForce)
+        self.SetLine(outLine, line, self.m_lcdMode[mode][inLine], bForce)
         outLine += 1
+
+      inLine += 1
 
     # fill remainder with empty space
     while outLine < int(self.GetRows()):
-#      log(xbmc.LOGDEBUG, "Request write of emptyline" + str(outLine))
-      self.SetLine(outLine, "", bForce)
+      self.SetLine(outLine, "", g_dictEmptyLineDescriptor, bForce)
       outLine += 1
 
     self.FlushLines()

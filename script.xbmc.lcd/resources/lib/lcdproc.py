@@ -170,8 +170,6 @@ class LCDProc(LcdBase):
       return False
     self.m_lastInitAttempt = now
 
-    LcdBase.Initialize(self)
-
     if self.Connect():
       # reset the retry interval after a successful connect
       self.m_initRetryInterval = INIT_RETRY_INTERVAL
@@ -188,6 +186,8 @@ class LCDProc(LcdBase):
       else:
         self.m_initRetryInterval = self.m_initRetryInterval * 2
         log(xbmc.LOGERROR,"Connect failed. Retry in %d seconds." % self.m_initRetryInterval)
+
+    LcdBase.Initialize(self)
 
     return connected
 
@@ -308,17 +308,14 @@ class LCDProc(LcdBase):
   def GetColumns(self):
     return int(self.m_iColumns)
 
-  def SetProgressBar(self, percent, lineIdx):
-    iColumns = int(self.m_iColumns) - 2 # -2 because of [surroundings]
-    iNumHorPixels = int(self.m_iCellWidth) * int(iColumns)
-    self.m_iProgressBarWidth = int(float(percent) * iNumHorPixels)   
-    self.m_iProgressBarLine = lineIdx
+  def SetProgressBar(self, percent, pxWidth):
+    self.m_iProgressBarWidth = int(float(percent) * pxWidth)
     return self.m_iProgressBarWidth
 
   def GetRows(self):
     return int(self.m_iRows)
 
-  def SetLine(self, iLine, strLine, bForce):
+  def SetLine(self, iLine, strLine, dictDescriptor, bForce):
     if self.m_bStop or self.tn.get_socket() == None:
       return
 
@@ -338,14 +335,13 @@ class LCDProc(LcdBase):
     if strLineLong != self.m_strLine[iLine] or bForce:
       ln = iLine + 1
 
-      if int(self.m_iProgressBarLine) >= 0 and self.m_iProgressBarLine == iLine:
-        barborder = "[" + " " * (self.m_iColumns - 2) + "]"
-        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, barborder)
-        self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 2 %i %i\n" % (ln, ln, self.m_iProgressBarWidth)
+      if dictDescriptor['type'] == "progressbar":
+        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, dictDescriptor['text'])
+        self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, dictDescriptor['startx'], ln, self.m_iProgressBarWidth)
       else:
         self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (ln)
         self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (ln)
-        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m %i \"%s\"\n" % (ln, ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong))
+        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i m %i \"%s\"\n" % (ln, dictDescriptor['startx'], ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong))
 
       self.m_strLine[iLine] = strLineLong
 
