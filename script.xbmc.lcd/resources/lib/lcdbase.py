@@ -101,6 +101,10 @@ class LcdBase():
     pass
 
 #  @abstractmethod     
+  def ClearDisplay(self):
+    pass
+
+#  @abstractmethod     
   def FlushLines(self):
     pass
     
@@ -245,6 +249,7 @@ class LcdBase():
       if not self.m_bDimmedOnPlayback:
         self.SetBackLight(0)
         self.m_bDimmedOnPlayback = True
+        self.ClearDisplay()
     elif self.m_bDimmedOnPlayback:
       self.SetBackLight(1)
       self.m_bDimmedOnPlayback = False

@@ -349,6 +349,21 @@ class LCDProc(LcdBase):
 
       self.m_strLine[iLine] = strLineLong
 
+  def ClearDisplay(self):
+    log(xbmc.LOGDEBUG, "Clearing display contents")
+
+    # clear line buffer first
+    self.FlushLines()
+
+    # set all widgets to empty stuff and/or offscreen
+    for i in range(1,int(self.m_iRows)+1):
+      self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"\"\n" % (i, i, self.m_iColumns, i)
+      self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (i)
+      self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (i)
+
+    # send to display
+    self.FlushLines()
+
   def FlushLines(self):
       #log(xbmc.LOGDEBUG, "Flushing Command List:" + self.m_strSetLineCmds)
 
