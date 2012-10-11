@@ -333,7 +333,7 @@ class LCDProc(LcdBase):
       numSpaces = int(self.m_iColumns) - len(strLineLong)
       strLineLong.ljust(numSpaces) #pad with spaces
     elif len(strLineLong) > int(self.m_iColumns): #else if the string doesn't fit the display, lcdproc will scroll it, so we need a space
-      strLineLong += " "
+      strLineLong += self.m_strScrollSeparator
 
     if strLineLong != self.m_strLine[iLine] or bForce:
       ln = iLine + 1

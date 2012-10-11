@@ -70,6 +70,7 @@ class LcdBase():
     self.m_bDimmedOnPlayback = False
     self.m_strInfoLabelEncoding = sys.getfilesystemencoding()
     self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
+    self.m_strScrollSeparator = " "
 
     log(xbmc.LOGDEBUG, "Determined InfoLabelEncoding: " + self.m_strInfoLabelEncoding)
 
@@ -156,7 +157,14 @@ class LcdBase():
             self.m_disableOnPlay += DISABLE_ON_PLAY.DISABLE_ON_PLAY_VIDEO
           if str(disableOnPlay.text).find("music") >= 0:
             self.m_disableOnPlay += DISABLE_ON_PLAY.DISABLE_ON_PLAY_MUSIC
-        #load moads
+
+        scrollSeparator = element.find("scrollseparator")
+        if scrollSeparator != None:
+
+          if str(scrollSeparator.text).strip() != "":
+            self.m_strScrollSeparator = " " + scrollSeparator.text + " "
+
+        #load modes
         tmpMode = element.find("music")
         self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_MUSIC)
 
