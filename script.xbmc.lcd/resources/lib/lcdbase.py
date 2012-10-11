@@ -69,7 +69,7 @@ class LcdBase():
     self.m_lcdMode = [None] * LCD_MODE.LCD_MODE_MAX
     self.m_bDimmedOnPlayback = False
     self.m_strInfoLabelEncoding = sys.getfilesystemencoding()
-    self.m_strLCDEncoding = "iso-8859-1"
+    self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
 
     log(xbmc.LOGDEBUG, "Determined InfoLabelEncoding: " + self.m_strInfoLabelEncoding)
 
@@ -149,7 +149,7 @@ class LcdBase():
       #PARSE LCD infos
       if element.tag == "lcd":
         # load our settings  
-        disableOnPlay = element.find("disableonplay") 
+        disableOnPlay = element.find("disableonplay")
         if disableOnPlay != None:
           self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
           if str(disableOnPlay.text).find("video") >= 0:
