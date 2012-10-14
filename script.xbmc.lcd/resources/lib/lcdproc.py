@@ -40,6 +40,7 @@ def log(loglevel, msg):
   
 SCROLL_SPEED_IN_MSEC = 250
 MAX_ROWS = 20
+MAX_BIGDIGITS = 20
 INIT_RETRY_INTERVAL = 2
 INIT_RETRY_INTERVAL_MAX = 60000
 
@@ -59,6 +60,7 @@ class LCDProc(LcdBase):
     self.m_strLineText = [None]*MAX_ROWS
     self.m_strLineType = [None]*MAX_ROWS
     self.m_strLineIcon = [None]*MAX_ROWS
+    self.m_strDigits = [None]*MAX_BIGDIGITS
     self.m_iProgressBarWidth = 0
     self.m_iProgressBarLine = -1
     self.m_strIconName = "BLOCK_FILLED"
@@ -363,17 +365,21 @@ class LCDProc(LcdBase):
       return
 
     ln = iLine + 1
-    bIconForce = False
+    bExtraForce = False
 
     if self.m_strLineType[iLine] != dictDescriptor['type']:
       self.ClearLine(int(iLine + 1))
       self.m_strLineType[iLine] = dictDescriptor['type']
-      bIconForce = True
+      bExtraForce = True
 
       if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS and dictDescriptor['text'] != "":
         self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, dictDescriptor['text'])
 
-    strLineLong = strLine
+    if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
+      strLineLong = xbmc.getInfoLabel("Player.Time")
+    else:
+      strLineLong = strLine
+
     strLineLong.strip()
 
     # make string fit the display if it's smaller than the width
@@ -396,7 +402,7 @@ class LCDProc(LcdBase):
       self.m_strLineText[iLine] = strLineLong
 
     if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_ICONTEXT:
-      if self.m_strLineIcon[iLine] != self.m_strIconName or bIconForce:
+      if self.m_strLineIcon[iLine] != self.m_strIconName or bExtraForce:
         self.m_strLineIcon[iLine] = self.m_strIconName
         
         self.m_strSetLineCmds += "widget_set xbmc lineIcon%i %i 1 %s\n" % (ln, ln, self.m_strIconName)
