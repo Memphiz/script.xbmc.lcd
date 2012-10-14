@@ -186,8 +186,8 @@ class LCDProc(LcdBase):
       else:
         self.m_initRetryInterval = self.m_initRetryInterval * 2
         log(xbmc.LOGERROR,"Connect failed. Retry in %d seconds." % self.m_initRetryInterval)
-
-    LcdBase.Initialize(self)
+    else:
+      LcdBase.Initialize(self)
 
     return connected
 
