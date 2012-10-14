@@ -329,6 +329,13 @@ class LCDProc(LcdBase):
     if iLine < 0 or iLine >= int(self.m_iRows):
       return
 
+    if self.m_strLineType[iLine] != dictDescriptor['type']:
+      self.ClearLine(int(iLine + 1))
+      self.m_strLineType[iLine] = dictDescriptor['type']
+
+      if dictDescriptor['type'] == "progressbar" and dictDescriptor['text'] != "":
+        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, dictDescriptor['text'])
+
     strLineLong = strLine
     strLineLong.strip()
 
@@ -343,11 +350,8 @@ class LCDProc(LcdBase):
       ln = iLine + 1
 
       if dictDescriptor['type'] == "progressbar":
-        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, dictDescriptor['text'])
         self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, dictDescriptor['startx'], ln, self.m_iProgressBarWidth)
       else:
-        self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (ln)
-        self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (ln)
         self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i m %i \"%s\"\n" % (ln, dictDescriptor['startx'], ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong))
 
       self.m_strLineText[iLine] = strLineLong
@@ -360,7 +364,7 @@ class LCDProc(LcdBase):
 
     # set all widgets to empty stuff and/or offscreen
     for i in range(1,int(self.m_iRows)+1):
-      ClearLine(i)
+      self.ClearLine(i)
 
     # send to display
     self.FlushLines()
