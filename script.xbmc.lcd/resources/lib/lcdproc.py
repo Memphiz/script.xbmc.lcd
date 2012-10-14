@@ -345,16 +345,19 @@ class LCDProc(LcdBase):
     if len(strLineLong) < int(self.m_iColumns):
       numSpaces = int(self.m_iColumns) - len(strLineLong)
       strLineLong.ljust(numSpaces) #pad with spaces
-    elif len(strLineLong) > int(self.m_iColumns): #else if the string doesn't fit the display, lcdproc will scroll it, so we need a space
+    elif len(strLineLong) > int(self.m_iColumns): #else if the string doesn't fit the display, lcdproc will scroll it, so add separator
       strLineLong += self.m_strScrollSeparator
 
+    # check if update is required
     if strLineLong != self.m_strLineText[iLine] or bForce:
-
+      # progressbar line
       if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS:
         self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, dictDescriptor['startx'], ln, self.m_iProgressBarWidth)
+      # everything else (text, icontext)
       else:
         self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i m %i \"%s\"\n" % (ln, dictDescriptor['startx'], ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong))
 
+      # cache contents
       self.m_strLineText[iLine] = strLineLong
 
   def ClearDisplay(self):
