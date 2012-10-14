@@ -314,6 +314,9 @@ class LCDProc(LcdBase):
     self.m_iProgressBarWidth = int(float(percent) * pxWidth)
     return self.m_iProgressBarWidth
 
+  def SetPlayingStateIcon(self):
+    return True
+
   def GetRows(self):
     return int(self.m_iRows)
 

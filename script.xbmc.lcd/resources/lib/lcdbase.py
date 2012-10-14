@@ -133,6 +133,10 @@ class LcdBase():
     pass
 
 #  @abstractmethod
+  def SetPlayingStateIcon(self):
+    pass
+
+#  @abstractmethod
   def SetProgressBar(self, percent, lineIdx):
     pass
 
@@ -156,7 +160,6 @@ class LcdBase():
 
   def IsConnected(self):
     return True
-
 
   def LoadSkin(self, xmlFile):
     self.Reset()
@@ -225,6 +228,11 @@ class LcdBase():
           linedescriptor['text'] = "[" + " " * (self.m_iColumns - 2) + "]"
           linedescriptor['endx'] = int(self.m_iCellWidth) * (int(self.GetColumns()) - 2)
 
+      elif str(linetext).find("$INFO[LCD.PlayIcon]") >= 0:
+        linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_ICONTEXT
+        linedescriptor['startx'] = int(3) # icon widgets take 2 chars, so shift text offset to 3
+        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext), flags=re.IGNORECASE)).strip()
+        linedescriptor['endx'] = int(self.GetColumns())
       else:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_TEXT
         linedescriptor['startx'] = int(1)
@@ -276,6 +284,9 @@ class LcdBase():
         pixelsWidth = self.SetProgressBar(percent, self.m_lcdMode[mode][inLine]['endx'])
         line = "p" + str(pixelsWidth)
       else:
+        if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_ICONTEXT:
+          self.SetPlayingStateIcon()
+
         line = xbmc.getInfoLabel(self.m_lcdMode[mode][inLine]['text'])
         if self.m_strInfoLabelEncoding != self.m_strLCDEncoding:
           line = line.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
