@@ -268,7 +268,7 @@ class LcdBase():
 
     while (outLine < int(self.GetRows()) and inLine < len(self.m_lcdMode[mode])):
       #parse the progressbar infolabel by ourselfs!
-      if self.m_lcdMode[mode][inLine]['type'] == "progressbar":
+      if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS:
         # get playtime and duration and convert into seconds
         currentSecs = self.getCurrentTimeSecs()
         durationSecs = self.getCurrentDurationSecs()
