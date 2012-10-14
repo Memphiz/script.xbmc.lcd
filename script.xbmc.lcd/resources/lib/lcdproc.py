@@ -56,7 +56,9 @@ class LCDProc(LcdBase):
     self.tn = telnetlib.Telnet()
     self.m_timeLastSockAction = time.time()
     self.m_timeSocketIdleTimeout = 2
-    self.m_strLine = [None]*MAX_ROWS
+    self.m_strLineText = [None]*MAX_ROWS
+    self.m_strLineType = [None]*MAX_ROWS
+    self.m_strLineIcon = [None]*MAX_ROWS
     self.m_iProgressBarWidth = 0
     self.m_iProgressBarLine = -1
     self.m_strSetLineCmds = ""
@@ -337,7 +339,7 @@ class LCDProc(LcdBase):
     elif len(strLineLong) > int(self.m_iColumns): #else if the string doesn't fit the display, lcdproc will scroll it, so we need a space
       strLineLong += self.m_strScrollSeparator
 
-    if strLineLong != self.m_strLine[iLine] or bForce:
+    if strLineLong != self.m_strLineText[iLine] or bForce:
       ln = iLine + 1
 
       if dictDescriptor['type'] == "progressbar":
@@ -348,7 +350,7 @@ class LCDProc(LcdBase):
         self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (ln)
         self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i m %i \"%s\"\n" % (ln, dictDescriptor['startx'], ln, self.m_iColumns, ln, settings_getScrollDelay(), re.escape(strLineLong))
 
-      self.m_strLine[iLine] = strLineLong
+      self.m_strLineText[iLine] = strLineLong
 
   def ClearDisplay(self):
     log(xbmc.LOGDEBUG, "Clearing display contents")
