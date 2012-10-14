@@ -328,6 +328,43 @@ class LCDProc(LcdBase):
   def GetColumns(self):
     return int(self.m_iColumns)
 
+  def SetBigDigits(self, strTimeString, bForceUpdate):
+    iOffset = 1
+    iDigitCount = 1
+    iStringOffset = 0
+    strRealTimeString = ""
+
+    if strTimeString == "" or strTimeString == None:
+      return
+
+    iStringLength = int(len(strTimeString))
+
+    if iStringLength > self.m_iBigDigits:
+      iStringOffset = len(strTimeString) - self.m_iBigDigits
+
+    for i in range(int(iStringOffset), int(iStringLength)):
+      if self.m_strDigits[iDigitCount] != strTimeString[i] or bForceUpdate:
+        self.m_strDigits[iDigitCount] = strTimeString[i]
+        
+        if strTimeString[i] == ":":
+          self.m_strSetLineCmds += "widget_set xbmc lineBigDigit%i %i 10\n" % (iDigitCount, iOffset)
+        else:
+          self.m_strSetLineCmds += "widget_set xbmc lineBigDigit%i %i %s\n" % (iDigitCount, iOffset, strTimeString[i])
+
+      if strTimeString[i] == ":":
+        iOffset += 1
+      else:
+        iOffset += 3
+
+      iDigitCount += 1
+
+    for j in range(i + 2, int(self.m_iBigDigits + 1)):
+      if self.m_strDigits[iDigitCount] != "" or bForceUpdate:
+        self.m_strDigits[iDigitCount] = ""
+        self.m_strSetLineCmds += "widget_set xbmc lineBigDigit" + str(j) + " 0 0\n"
+      
+      iDigitCount += 1
+
   def SetProgressBar(self, percent, pxWidth):
     self.m_iProgressBarWidth = int(float(percent) * pxWidth)
     return self.m_iProgressBarWidth
@@ -352,6 +389,15 @@ class LCDProc(LcdBase):
   def GetRows(self):
     return int(self.m_iRows)
 
+  def ClearBigDigits(self):
+    for i in range(1,int(self.m_iBigDigits + 1)):
+      # Clear Digit
+      self.m_strSetLineCmds += "widget_set xbmc lineBigDigit" + str(i) + " 0 0\n"
+
+    # make sure all widget get redrawn by resetting their type
+    for i in range(0, int(self.GetRows())):
+      self.m_strLineType[i] = ""
+
   def ClearLine(self, iLine):
     self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (iLine)
     self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (iLine)
@@ -368,7 +414,14 @@ class LCDProc(LcdBase):
     bExtraForce = False
 
     if self.m_strLineType[iLine] != dictDescriptor['type']:
-      self.ClearLine(int(iLine + 1))
+      if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
+        self.ClearDisplay()
+      else:
+        if self.m_strLineType[iLine] == LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
+          self.ClearBigDigits()
+        else:
+          self.ClearLine(int(iLine + 1))
+
       self.m_strLineType[iLine] = dictDescriptor['type']
       bExtraForce = True
 
@@ -391,8 +444,11 @@ class LCDProc(LcdBase):
 
     # check if update is required
     if strLineLong != self.m_strLineText[iLine] or bForce:
+      # bigscreen
+      if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
+        self.SetBigDigits(strLineLong, bExtraForce)
       # progressbar line
-      if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS:
+      elif dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS:
         self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, dictDescriptor['startx'], ln, self.m_iProgressBarWidth)
       # everything else (text, icontext)
       else:
@@ -416,6 +472,9 @@ class LCDProc(LcdBase):
     # set all widgets to empty stuff and/or offscreen
     for i in range(1,int(self.m_iRows)+1):
       self.ClearLine(i)
+
+    # add commands to clear big digits
+    self.ClearBigDigits()
 
     # send to display
     self.FlushLines()

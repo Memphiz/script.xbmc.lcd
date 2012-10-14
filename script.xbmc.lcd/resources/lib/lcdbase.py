@@ -109,6 +109,10 @@ class LcdBase():
   def SetContrast(self, iContrast):
     pass
 
+#  @abstractmethod  
+  def SetBigDigits(self, strTimeString, bForceUpdate):
+    pass
+
 #  @abstractmethod   
   def ClearLine(self, iLine):
     pass
@@ -227,7 +231,7 @@ class LcdBase():
 
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN
         linedescriptor['startx'] = int(1)
-        linedescriptor['text'] = ""
+        linedescriptor['text'] = "Time"
         linedescriptor['endx'] = int(self.GetColumns())
 
         self.m_lcdMode[mode].append(linedescriptor)
@@ -240,7 +244,7 @@ class LcdBase():
       if str(linetext).find("$INFO[LCD.ProgressBar]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_PROGRESS
         linedescriptor['startx'] = int(1)
-        linedescriptor['text'] = "Time"
+        linedescriptor['text'] = ""
         linedescriptor['endx'] = int(self.m_iCellWidth) * int(self.m_iColumns)
 
         if self.m_bProgressbarSurroundings == True:
@@ -318,10 +322,11 @@ class LcdBase():
 
       inLine += 1
 
-    # fill remainder with empty space
-    while outLine < int(self.GetRows()):
-      self.SetLine(outLine, "", g_dictEmptyLineDescriptor, bForce)
-      outLine += 1
+    # fill remainder with empty space if not bigscreen
+    if self.m_lcdMode[mode][0]['type'] != LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
+      while outLine < int(self.GetRows()):
+        self.SetLine(outLine, "", g_dictEmptyLineDescriptor, bForce)
+        outLine += 1
 
     self.FlushLines()
 
