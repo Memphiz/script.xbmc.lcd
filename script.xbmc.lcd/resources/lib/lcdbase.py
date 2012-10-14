@@ -61,6 +61,11 @@ class LCD_MODE:
   LCD_MODE_XBE_LAUNCH  = 5
   LCD_MODE_MAX         = 6
 
+class LCD_LINETYPE:
+  LCD_LINETYPE_TEXT     = "text"
+  LCD_LINETYPE_PROGRESS = "progressbar"
+  LCD_LINETYPE_ICONTEXT = "icontext"
+
 class CUSTOM_CHARSET:
   CUSTOM_CHARSET_DEFAULT      = 0
   CUSTOM_CHARSET_SMALLCHAR    = 1
@@ -206,7 +211,7 @@ class LcdBase():
       linetext = line.text
 
       if str(linetext).find("$INFO[LCD.ProgressBar]") >= 0:
-        linedescriptor['type'] = str("progressbar")
+        linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_PROGRESS
         linedescriptor['startx'] = int(1)
         linedescriptor['text'] = ""
         linedescriptor['endx'] = int(self.m_iCellWidth) * int(self.m_iColumns)
@@ -217,7 +222,7 @@ class LcdBase():
           linedescriptor['endx'] = int(self.m_iCellWidth) * (int(self.GetColumns()) - 2)
 
       else:
-        linedescriptor['type'] = str("text")
+        linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_TEXT
         linedescriptor['startx'] = int(1)
         linedescriptor['text'] = str(linetext)
         linedescriptor['endx'] = int(self.GetColumns())
