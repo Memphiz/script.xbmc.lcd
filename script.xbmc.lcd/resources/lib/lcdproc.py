@@ -61,6 +61,7 @@ class LCDProc(LcdBase):
     self.m_strLineIcon = [None]*MAX_ROWS
     self.m_iProgressBarWidth = 0
     self.m_iProgressBarLine = -1
+    self.m_strIconName = "BLOCK_FILLED"
     self.m_strSetLineCmds = ""
     LcdBase.__init__(self)
 
@@ -315,7 +316,21 @@ class LCDProc(LcdBase):
     return self.m_iProgressBarWidth
 
   def SetPlayingStateIcon(self):
-    return True
+    bPlaying = xbmc.getCondVisibility("Player.Playing")
+    bPaused = xbmc.getCondVisibility("Player.Paused")
+    bForwarding = xbmc.getCondVisibility("Player.Forwarding")
+    bRewinding = xbmc.getCondVisibility("Player.Rewinding")
+
+    self.m_strIconName = "STOP"
+
+    if bForwarding:
+      self.m_strIconName = "FF"
+    elif bRewinding:
+      self.m_strIconName = "FR"
+    elif bPaused:
+      self.m_strIconName = "PAUSE"
+    elif bPlaying:
+      self.m_strIconName = "PLAY"
 
   def GetRows(self):
     return int(self.m_iRows)
@@ -333,10 +348,12 @@ class LCDProc(LcdBase):
       return
 
     ln = iLine + 1
+    bIconForce = False
 
     if self.m_strLineType[iLine] != dictDescriptor['type']:
       self.ClearLine(int(iLine + 1))
       self.m_strLineType[iLine] = dictDescriptor['type']
+      bIconForce = True
 
       if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS and dictDescriptor['text'] != "":
         self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, dictDescriptor['text'])
@@ -362,6 +379,12 @@ class LCDProc(LcdBase):
 
       # cache contents
       self.m_strLineText[iLine] = strLineLong
+
+    if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_ICONTEXT:
+      if self.m_strLineIcon[iLine] != self.m_strIconName or bIconForce:
+        self.m_strLineIcon[iLine] = self.m_strIconName
+        
+        self.m_strSetLineCmds += "widget_set xbmc lineIcon%i %i 1 %s\n" % (ln, ln, self.m_strIconName)
 
   def ClearDisplay(self):
     log(xbmc.LOGDEBUG, "Clearing display contents")
