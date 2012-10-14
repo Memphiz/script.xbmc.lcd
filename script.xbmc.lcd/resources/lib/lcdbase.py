@@ -62,9 +62,10 @@ class LCD_MODE:
   LCD_MODE_MAX         = 6
 
 class LCD_LINETYPE:
-  LCD_LINETYPE_TEXT     = "text"
-  LCD_LINETYPE_PROGRESS = "progressbar"
-  LCD_LINETYPE_ICONTEXT = "icontext"
+  LCD_LINETYPE_TEXT      = "text"
+  LCD_LINETYPE_PROGRESS  = "progressbar"
+  LCD_LINETYPE_ICONTEXT  = "icontext"
+  LCD_LINETYPE_BIGSCREEN = "bigscreen"
 
 class CUSTOM_CHARSET:
   CUSTOM_CHARSET_DEFAULT      = 0
@@ -212,6 +213,25 @@ class LcdBase():
   def LoadMode(self, node, mode):
     if node == None:
       return
+
+    timeregex = r'' + re.escape('$INFO[LCD.') + 'Time((Wide)?\d?\d?)' + re.escape(']')
+
+    for line in node.findall("line"):
+      linetext = str(line.text).strip()
+      if linetext == "" or linetext == None:
+        continue
+
+      timematch = re.match(timeregex, linetext, flags=re.IGNORECASE)
+      if timematch != None:
+        linedescriptor = {}
+
+        linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN
+        linedescriptor['startx'] = int(1)
+        linedescriptor['text'] = ""
+        linedescriptor['endx'] = int(self.GetColumns())
+
+        self.m_lcdMode[mode].append(linedescriptor)
+        return
 
     for line in node.findall("line"):
       linedescriptor = {}
