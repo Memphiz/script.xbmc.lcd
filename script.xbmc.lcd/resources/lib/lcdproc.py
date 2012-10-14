@@ -315,6 +315,12 @@ class LCDProc(LcdBase):
   def GetRows(self):
     return int(self.m_iRows)
 
+  def ClearLine(self, iLine):
+    ln = iLine + 1
+    self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (ln)
+    self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (ln)
+    self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"\"\n" % (ln, ln, self.m_iColumns, ln)
+    
   def SetLine(self, iLine, strLine, dictDescriptor, bForce):
     if self.m_bStop or self.tn.get_socket() == None:
       return
