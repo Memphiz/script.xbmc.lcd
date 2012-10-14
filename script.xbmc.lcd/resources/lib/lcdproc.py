@@ -62,6 +62,7 @@ class LCDProc(LcdBase):
     self.m_iProgressBarWidth = 0
     self.m_iProgressBarLine = -1
     self.m_strIconName = "BLOCK_FILLED"
+    self.m_iBigDigits = int(8) # 12:45:78 / colons count as digit
     self.m_strSetLineCmds = ""
     LcdBase.__init__(self)
 
@@ -160,6 +161,15 @@ class LCDProc(LcdBase):
       if not self.SendCommand("widget_set xbmc lineIcon" + str(i) + " 0 0 BLOCK_FILLED", True):
         return False
 
+    for i in range(1,int(self.m_iBigDigits + 1)):
+      # Big Digit
+      if not self.SendCommand("widget_add xbmc lineBigDigit" + str(i) + " num", True):
+        return False
+
+      # Set Digit
+      if not self.SendCommand("widget_set xbmc lineBigDigit" + str(i) + " 0 0", True):
+        return False
+
     return True
 
   def Initialize(self):
@@ -230,6 +240,11 @@ class LCDProc(LcdBase):
       self.tn.write("info\n")
       reply = self.tn.read_until("\n",3)
       log(xbmc.LOGDEBUG,"info Reply: " + reply)
+
+      if self.m_iColumns < 16:
+        self.m_iBigDigits = 5
+      elif self.m_iColumns < 20:
+        self.m_iBigDigits = 7
 
     except:
       log(xbmc.LOGERROR,"Connect: Telnet exception.")
