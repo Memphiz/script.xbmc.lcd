@@ -59,7 +59,9 @@ class LCD_MODE:
   LCD_MODE_NAVIGATION  = 3
   LCD_MODE_SCREENSAVER = 4
   LCD_MODE_XBE_LAUNCH  = 5
-  LCD_MODE_MAX         = 6
+  LCD_MODE_PVRTV       = 6
+  LCD_MODE_PVRRADIO    = 7
+  LCD_MODE_MAX         = 8
 
 class LCD_LINETYPE:
   LCD_LINETYPE_TEXT      = "text"
@@ -213,6 +215,11 @@ class LcdBase():
         tmpMode = element.find("xbelaunch")
         self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_XBE_LAUNCH)
 
+        tmpMode = element.find("pvrtv")
+        self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_PVRTV)
+
+        tmpMode = element.find("pvrradio")
+        self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_PVRRADIO)
 
   def LoadMode(self, node, mode):
     if node == None:

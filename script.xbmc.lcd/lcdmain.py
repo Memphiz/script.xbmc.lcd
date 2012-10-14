@@ -65,9 +65,15 @@ def getLcdMode():
   screenSaver = xbmc.getCondVisibility("System.ScreenSaverActive")
   playingVideo = xbmc.getCondVisibility("Player.HasVideo")
   playingMusic = xbmc.getCondVisibility("Player.HasAudio")
+  playingPVRTV = xbmc.getCondVisibility("PVR.IsPlayingTV")
+  playingPVRRadio = xbmc.getCondVisibility("PVR.IsPlayingRadio")
 
   if screenSaver:
     ret = LCD_MODE.LCD_MODE_SCREENSAVER
+  elif playingPVRTV:
+    ret = LCD_MODE.LCD_MODE_PVRTV
+  elif playingPVRRadio:
+    ret = LCD_MODE.LCD_MODE_PVRRADIO
   elif playingVideo:           #we play something
     ret = LCD_MODE.LCD_MODE_VIDEO
   elif playingMusic:
