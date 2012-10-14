@@ -316,10 +316,9 @@ class LCDProc(LcdBase):
     return int(self.m_iRows)
 
   def ClearLine(self, iLine):
-    ln = iLine + 1
-    self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (ln)
-    self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (ln)
-    self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"\"\n" % (ln, ln, self.m_iColumns, ln)
+    self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (iLine)
+    self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (iLine)
+    self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"\"\n" % (iLine, iLine, self.m_iColumns, iLine)
     
   def SetLine(self, iLine, strLine, dictDescriptor, bForce):
     if self.m_bStop or self.tn.get_socket() == None:
@@ -359,9 +358,7 @@ class LCDProc(LcdBase):
 
     # set all widgets to empty stuff and/or offscreen
     for i in range(1,int(self.m_iRows)+1):
-      self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"\"\n" % (i, i, self.m_iColumns, i)
-      self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (i)
-      self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (i)
+      ClearLine(i)
 
     # send to display
     self.FlushLines()
