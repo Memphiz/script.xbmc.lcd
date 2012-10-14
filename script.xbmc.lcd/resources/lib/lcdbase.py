@@ -108,6 +108,10 @@ class LcdBase():
   def SetContrast(self, iContrast):
     pass
 
+#  @abstractmethod   
+  def ClearLine(self, iLine):
+    pass
+
 #  @abstractmethod     
   def SetLine(self, iLine, strLine, dictDescriptor, bForce):
     pass
