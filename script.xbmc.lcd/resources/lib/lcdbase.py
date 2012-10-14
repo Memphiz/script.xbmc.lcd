@@ -240,7 +240,7 @@ class LcdBase():
       if str(linetext).find("$INFO[LCD.ProgressBar]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_PROGRESS
         linedescriptor['startx'] = int(1)
-        linedescriptor['text'] = ""
+        linedescriptor['text'] = "Time"
         linedescriptor['endx'] = int(self.m_iCellWidth) * int(self.m_iColumns)
 
         if self.m_bProgressbarSurroundings == True:
