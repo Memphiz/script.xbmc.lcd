@@ -393,6 +393,7 @@ class LCDProc(LcdBase):
     for i in range(1,int(self.m_iBigDigits + 1)):
       # Clear Digit
       self.m_strSetLineCmds += "widget_set xbmc lineBigDigit" + str(i) + " 0 0\n"
+      self.m_strDigits[i] = ""
 
     # make sure all widget get redrawn by resetting their type
     for i in range(0, int(self.GetRows())):
