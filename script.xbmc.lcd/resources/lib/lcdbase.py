@@ -82,7 +82,7 @@ class LcdBase():
     self.m_eCurrentCharset = CUSTOM_CHARSET.CUSTOM_CHARSET_DEFAULT
     self.m_lcdMode = [None] * LCD_MODE.LCD_MODE_MAX
     self.m_bDimmedOnPlayback = False
-    self.m_strInfoLabelEncoding = sys.getfilesystemencoding()
+    self.m_strInfoLabelEncoding = "utf-8" # Assume InfoLabel is UTF-8 encoded
     self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
     self.m_strScrollSeparator = " "
 
