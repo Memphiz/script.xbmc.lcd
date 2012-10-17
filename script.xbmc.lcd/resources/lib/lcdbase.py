@@ -147,9 +147,6 @@ class LcdBase():
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
     self.LoadSkin(__lcdxml__)
 
-    # Big number blocks, used for screensaver clock
-    # Note, the big block isn't here, it's in the LCD's ROM
-
   def IsConnected(self):
     return True
 
