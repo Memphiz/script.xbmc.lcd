@@ -69,24 +69,14 @@ class LCD_LINETYPE:
   LCD_LINETYPE_ICONTEXT  = "icontext"
   LCD_LINETYPE_BIGSCREEN = "bigscreen"
 
-class CUSTOM_CHARSET:
-  CUSTOM_CHARSET_DEFAULT      = 0
-  CUSTOM_CHARSET_SMALLCHAR    = 1
-  CUSTOM_CHARSET_MEDIUMCHAR   = 2
-  CUSTOM_CHARSET_BIGCHAR      = 3
-  CUSTOM_CHARSET_MAX          = 4
-
 class LcdBase():
   def __init__(self):
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
-    self.m_eCurrentCharset = CUSTOM_CHARSET.CUSTOM_CHARSET_DEFAULT
     self.m_lcdMode = [None] * LCD_MODE.LCD_MODE_MAX
     self.m_bDimmedOnPlayback = False
-    self.m_strInfoLabelEncoding = "utf-8" # Assume InfoLabel is UTF-8 encoded
+    self.m_strInfoLabelEncoding = "utf-8" # http://forum.xbmc.org/showthread.php?tid=125492&pid=1045926#pid1045926
     self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
     self.m_strScrollSeparator = " "
-
-    log(xbmc.LOGDEBUG, "Determined InfoLabelEncoding: " + self.m_strInfoLabelEncoding)
 
 #  @abstractmethod
   def _concrete_method(self):
@@ -153,12 +143,7 @@ class LcdBase():
 
     return float(tCurrent)/float(tTotal)
 
-  def SetCharset(self,_nCharset):
-    if _nCharset < CUSTOM_CHARSET.CUSTOM_CHARSET_MAX:
-      self.m_eCurrentCharset = _nCharset
-
   def Initialize(self):
-    self.m_eCurrentCharset = CUSTOM_CHARSET.CUSTOM_CHARSET_DEFAULT
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
     self.LoadSkin(__lcdxml__)
 
