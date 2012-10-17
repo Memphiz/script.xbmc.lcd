@@ -56,18 +56,40 @@ def initGlobals():
   g_oldSubMenu = ""
   g_timer = time.time()
 
+def isNavigationActive():
+  global g_oldMenu
+  global g_oldSubMenu
+  global g_timer
+
+  ret = False
+
+  navtimeout = settings_getNavTimeout()
+  menu = xbmc.getInfoLabel("$INFO[System.CurrentWindow]")
+  subMenu = xbmc.getInfoLabel("$INFO[System.CurrentControl]")
+
+  if menu != g_oldMenu or subMenu != g_oldSubMenu or (g_timer + navtimeout) > time.time():
+    ret = True
+    if menu != g_oldMenu or subMenu != g_oldSubMenu:
+      g_timer = time.time()      
+    g_oldMenu = menu
+    g_oldSubMenu = subMenu
+
+  return ret
 
 # returns mode identifier based on currently playing media/active navigation
 def getLcdMode():                 
   ret = LCD_MODE.LCD_MODE_GENERAL
 
+  navActive = isNavigationActive()
   screenSaver = xbmc.getCondVisibility("System.ScreenSaverActive")
   playingVideo = xbmc.getCondVisibility("Player.HasVideo")
   playingMusic = xbmc.getCondVisibility("Player.HasAudio")
   playingPVRTV = xbmc.getCondVisibility("PVR.IsPlayingTV")
   playingPVRRadio = xbmc.getCondVisibility("PVR.IsPlayingRadio")
 
-  if screenSaver:
+  if navActive:
+    ret = LCD_MODE.LCD_MODE_NAVIGATION
+  elif screenSaver:
     ret = LCD_MODE.LCD_MODE_SCREENSAVER
   elif playingPVRTV:
     ret = LCD_MODE.LCD_MODE_PVRTV
@@ -81,32 +103,19 @@ def getLcdMode():
   return ret
 
 def process_lcd():
-  global g_oldMenu
-  global g_oldSubMenu
-  global g_timer
-  
   bBacklightDimmed = False
 
   while not xbmc.abortRequested:
     handleConnectLCD()
-    navtimeout = settings_getNavTimeout()
-    menu = xbmc.getInfoLabel("$INFO[System.CurrentWindow]")
-    subMenu = xbmc.getInfoLabel("$INFO[System.CurrentControl]")
     settingsChanged = settings_didSettingsChange()
     mode = getLcdMode()
 
-    #handle navigation
-    if menu != g_oldMenu or subMenu != g_oldSubMenu or (g_timer + navtimeout) > time.time():
-      g_lcdproc.Render(LCD_MODE.LCD_MODE_NAVIGATION,settingsChanged)
-      if menu != g_oldMenu or subMenu != g_oldSubMenu:
-        g_timer = time.time()      
-      g_oldMenu = menu
-      g_oldSubMenu = subMenu
-    else:#handle all other lcd modes
-      if mode == LCD_MODE.LCD_MODE_SCREENSAVER and settings_getDimOnScreensaver():
-        g_lcdproc.SetBackLight(0)
-        bBacklightDimmed = True
-      g_lcdproc.Render(getLcdMode(),settingsChanged)
+    if mode == LCD_MODE.LCD_MODE_SCREENSAVER and settings_getDimOnScreensaver():
+      g_lcdproc.SetBackLight(0)
+      bBacklightDimmed = True
+
+    g_lcdproc.Render(getLcdMode(), settingsChanged)
+
     #turn the backlight on when leaving screensaver and it was dimmed
     if mode != LCD_MODE.LCD_MODE_SCREENSAVER and bBacklightDimmed:
       g_lcdproc.SetBackLight(1)
@@ -130,7 +139,7 @@ def handleConnectLCD():
     if settings_checkForNewSettings() or not g_lcdproc.IsConnected():    #networksettings changed?
       g_failedConnectionNotified = False  #reset notification flag
     else:
-     return True
+      return True
 
     ret = g_lcdproc.Initialize()
 
