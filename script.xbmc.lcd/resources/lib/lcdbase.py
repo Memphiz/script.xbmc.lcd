@@ -210,29 +210,29 @@ class LcdBase():
     if node == None:
       return
 
+    # regex to determine any of $INFO[LCD.Time(Wide)21-44]
     timeregex = r'' + re.escape('$INFO[LCD.') + 'Time((Wide)?\d?\d?)' + re.escape(']')
 
     for line in node.findall("line"):
-      linetext = str(line.text).strip()
-      if linetext == "" or linetext == None:
-        continue
-
-      timematch = re.match(timeregex, linetext, flags=re.IGNORECASE)
-      if timematch != None:
-        linedescriptor = {}
-
-        linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN
-        linedescriptor['startx'] = int(1)
-        linedescriptor['text'] = "Time"
-        linedescriptor['endx'] = int(self.GetColumns())
-
-        self.m_lcdMode[mode].append(linedescriptor)
-        return
-
-    for line in node.findall("line"):
       linedescriptor = {}
-      linetext = line.text
+      linetext = str(line.text).strip()
+      
+      # make sure linetext has something so re.match won't fail
+      if linetext != "" and linetext != None:
+        timematch = re.match(timeregex, linetext, flags=re.IGNORECASE)
 
+        # if line matches, throw away mode, add BigDigit descriptor and end processing for this mode
+        if timematch != None:
+          linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN
+          linedescriptor['startx'] = int(1)
+          linedescriptor['text'] = "Time"
+          linedescriptor['endx'] = int(self.GetColumns())
+
+          self.m_lcdMode[mode] = []
+          self.m_lcdMode[mode].append(linedescriptor)
+          return
+
+      # progressbar line if InfoLabel exists
       if str(linetext).find("$INFO[LCD.ProgressBar]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_PROGRESS
         linedescriptor['startx'] = int(1)
@@ -244,11 +244,13 @@ class LcdBase():
           linedescriptor['text'] = "[" + " " * (self.m_iColumns - 2) + "]"
           linedescriptor['endx'] = int(self.m_iCellWidth) * (int(self.GetColumns()) - 2)
 
+      # textline with icon in front
       elif str(linetext).find("$INFO[LCD.PlayIcon]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_ICONTEXT
         linedescriptor['startx'] = int(3) # icon widgets take 2 chars, so shift text offset to 3
         linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext), flags=re.IGNORECASE)).strip()
         linedescriptor['endx'] = int(self.GetColumns())
+      # standard (scrolling) text line
       else:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_TEXT
         linedescriptor['startx'] = int(1)
