@@ -57,11 +57,10 @@ def initGlobals():
   g_timer = time.time()
 
 
-#returns the settings category based on the currently played media
-#returns "movie" if a movies is played, "musicvideo" if a musicvideo is played", "other" else
+# returns mode identifier based on currently playing media/active navigation
 def getLcdMode():                 
   ret = LCD_MODE.LCD_MODE_GENERAL
-#  LCD_MODE_XBE_LAUNCH  = 5
+
   screenSaver = xbmc.getCondVisibility("System.ScreenSaverActive")
   playingVideo = xbmc.getCondVisibility("Player.HasVideo")
   playingMusic = xbmc.getCondVisibility("Player.HasAudio")
