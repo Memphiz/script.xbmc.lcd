@@ -36,7 +36,7 @@ from settings import *
 from lcdbase import *
 
 def log(loglevel, msg):
-  xbmc.log("### [%s] - %s" % (__scriptname__,msg,),level=loglevel ) 
+  xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
   
 SCROLL_SPEED_IN_MSEC = 250
 MAX_ROWS = 20
@@ -217,13 +217,15 @@ class LCDProc(LcdBase):
       self.tn.open(ip, port)
       # Start a new session
       self.tn.write("hello\n")
-      # time.sleep(1)
+
       # Receive LCDproc data to determine row and column information
       reply = self.tn.read_until("\n",3)
       log(xbmc.LOGDEBUG,"Reply: " + reply)
       
+      # parse reply by regex
       lcdinfo = re.match("^connect .+ protocol ([0-9\.]+) lcd wid (\d+) hgt (\d+) cellwid (\d+) cellhgt (\d+)$", reply)
 
+      # if regex didn't match, LCDproc is incompatible or something's odd
       if lcdinfo is None:
         return False
 
@@ -243,6 +245,7 @@ class LCDProc(LcdBase):
       reply = self.tn.read_until("\n",3)
       log(xbmc.LOGDEBUG,"info Reply: " + reply)
 
+      # Set up BigNum values based on display geometry
       if self.m_iColumns < 16:
         self.m_iBigDigits = 5
       elif self.m_iColumns < 20:
@@ -481,8 +484,6 @@ class LCDProc(LcdBase):
     self.FlushLines()
 
   def FlushLines(self):
-      #log(xbmc.LOGDEBUG, "Flushing Command List:" + self.m_strSetLineCmds)
-
       if len(self.m_strSetLineCmds) > 0:
         # Send complete command package
         self.SendCommand(self.m_strSetLineCmds, False)

@@ -78,62 +78,67 @@ class LcdBase():
     self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
     self.m_strScrollSeparator = " "
 
-#  @abstractmethod
+# @abstractmethod
   def _concrete_method(self):
-      pass
-#  @abstractmethod
+    pass
+
+# @abstractmethod
+  def IsConnected(self):
+    pass
+
+# @abstractmethod
   def Stop(self):
     pass
 
-#  @abstractmethod
+# @abstractmethod
   def Suspend(self):
     pass
 
-#  @abstractmethod   
+# @abstractmethod   
   def Resume(self):
     pass
 
-#  @abstractmethod   
+# @abstractmethod   
   def SetBackLight(self, iLight):
     pass
 
-#  @abstractmethod  
+# @abstractmethod  
   def SetContrast(self, iContrast):
     pass
 
-#  @abstractmethod  
+# @abstractmethod  
   def SetBigDigits(self, strTimeString, bForceUpdate):
     pass
 
-#  @abstractmethod   
+# @abstractmethod   
   def ClearLine(self, iLine):
     pass
 
-#  @abstractmethod     
+# @abstractmethod     
   def SetLine(self, iLine, strLine, dictDescriptor, bForce):
     pass
 
-#  @abstractmethod     
+# @abstractmethod     
   def ClearDisplay(self):
     pass
 
-#  @abstractmethod     
+# @abstractmethod     
   def FlushLines(self):
     pass
     
-#  @abstractmethod	
+# @abstractmethod	
   def GetColumns(self):
     pass
 
-#  @abstractmethod
+# @abstractmethod
   def GetRows(self):
     pass
 
-#  @abstractmethod
+# @abstractmethod
   def SetPlayingStateIcon(self):
     pass
 
-#  @abstractmethod
+# @abstractmethod
   def SetProgressBar(self, percent, lineIdx):
     pass
 
@@ -146,9 +151,6 @@ class LcdBase():
   def Initialize(self):
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
     self.LoadSkin(__lcdxml__)
-
-  def IsConnected(self):
-    return True
 
   def LoadSkin(self, xmlFile):
     self.Reset()

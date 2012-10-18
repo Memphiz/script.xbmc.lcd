@@ -95,7 +95,7 @@ def getLcdMode():
     ret = LCD_MODE.LCD_MODE_PVRTV
   elif playingPVRRadio:
     ret = LCD_MODE.LCD_MODE_PVRRADIO
-  elif playingVideo:           #we play something
+  elif playingVideo:
     ret = LCD_MODE.LCD_MODE_VIDEO
   elif playingMusic:
     ret = LCD_MODE.LCD_MODE_MUSIC
@@ -116,7 +116,7 @@ def process_lcd():
 
     g_lcdproc.Render(mode, settingsChanged)
 
-    #turn the backlight on when leaving screensaver and it was dimmed
+    # turn the backlight on when leaving screensaver and it was dimmed
     if mode != LCD_MODE.LCD_MODE_SCREENSAVER and bBacklightDimmed:
       g_lcdproc.SetBackLight(1)
       bBacklightDimmed = False
@@ -128,7 +128,7 @@ def process_lcd():
     else:
       g_lcdproc.DisableOnPlayback(False, False)
 
-    time.sleep(1.0 / float(settings_getRefreshRate()))	#refresh after configured rate
+    time.sleep(1.0 / float(settings_getRefreshRate())) # refresh after configured rate
 
 def handleConnectLCD():
   global g_failedConnectionNotified
