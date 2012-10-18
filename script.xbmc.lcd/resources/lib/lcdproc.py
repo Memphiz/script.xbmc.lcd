@@ -234,11 +234,14 @@ class LCDProc(LcdBase):
         log(xbmc.LOGERROR, "Only LCDproc protocol 0.3 supported (got " + lcdinfo.group(1) +")")
         return False
 
+      # set up class vars
       self.m_iColumns = int(lcdinfo.group(2))
       self.m_iRows  = int(lcdinfo.group(3))
       self.m_iCellWidth = int(lcdinfo.group(4))
       self.m_iCellHeight = int(lcdinfo.group(5))
-      log(xbmc.LOGDEBUG, "LCDproc data: Columns %s - Rows %s - CellWidth %s - CellHeight %s" % (str(self.m_iColumns), str(self.m_iRows), str(self.m_iCellWidth), str(self.m_iCellHeight)))
+
+      # tell users what's going on
+      log(xbmc.LOGNOTICE, "Connected to LCDd at %s:%s, Protocol version %s - Geometry %sx%s characters (%sx%s pixels, %sx%s pixels per character)" % (str(ip), str(port), float(lcdinfo.group(1)), str(self.m_iColumns), str(self.m_iRows), str(self.m_iColumns * self.m_iCellWidth), str(self.m_iRows * self.m_iCellHeight), str(self.m_iCellWidth), str(self.m_iCellHeight)))
 
       # Retrieve driver name for additional functionality
       self.tn.write("info\n")

@@ -144,7 +144,6 @@ def handleConnectLCD():
     ret = g_lcdproc.Initialize()
 
     if not ret:
-      print "lcd: connection to LCDProc failed"
       count = 10
       while (not xbmc.abortRequested) and (count > 0):
         time.sleep(1)
@@ -158,7 +157,6 @@ def handleConnectLCD():
       if not g_failedConnectionNotified and not g_initialConnectAttempt:
         xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
         g_failedConnectionNotified = True
-      print "lcd: connected to LCD"
       break
 
   # initial connection attempt done, update flag
