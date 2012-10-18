@@ -114,7 +114,7 @@ def process_lcd():
       g_lcdproc.SetBackLight(0)
       bBacklightDimmed = True
 
-    g_lcdproc.Render(getLcdMode(), settingsChanged)
+    g_lcdproc.Render(mode, settingsChanged)
 
     #turn the backlight on when leaving screensaver and it was dimmed
     if mode != LCD_MODE.LCD_MODE_SCREENSAVER and bBacklightDimmed:
