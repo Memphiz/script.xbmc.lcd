@@ -145,13 +145,14 @@ def handleConnectLCD():
 
     if not ret:
       count = 10
+      if not g_failedConnectionNotified:
+        g_failedConnectionNotified = True
+	g_initialConnectAttempt = False
+        text = __settings__.getLocalizedString(500)
+        xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
       while (not xbmc.abortRequested) and (count > 0):
         time.sleep(1)
         count -= 1
-      if not g_failedConnectionNotified:
-        g_failedConnectionNotified = True
-        text = __settings__.getLocalizedString(500)
-        xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
     else:
       text = __settings__.getLocalizedString(501)
       if not g_failedConnectionNotified and not g_initialConnectAttempt:

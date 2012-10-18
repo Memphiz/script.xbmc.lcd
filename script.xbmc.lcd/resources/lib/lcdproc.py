@@ -167,6 +167,10 @@ class LCDProc(LcdBase):
       if not self.SendCommand("widget_set xbmc lineIcon" + str(i) + " 0 0 BLOCK_FILLED", True):
         return False
 
+      self.m_strLineText[i-1] = ""
+      self.m_strLineType[i-1] = ""
+      self.m_strLineIcon[i-1] = ""
+
     for i in range(1,int(self.m_iBigDigits + 1)):
       # Big Digit
       if not self.SendCommand("widget_add xbmc lineBigDigit" + str(i) + " num", True):
@@ -175,6 +179,8 @@ class LCDProc(LcdBase):
       # Set Digit
       if not self.SendCommand("widget_set xbmc lineBigDigit" + str(i) + " 0 0", True):
         return False
+
+      self.m_strDigits[i] = ""
 
     return True
 
@@ -270,6 +276,8 @@ class LCDProc(LcdBase):
 
   def CloseSocket(self):
     self.tn.close()
+    del self.tn
+    self.tn = telnetlib.Telnet()
 
   def IsConnected(self):
     if self.tn.get_socket() == None:
