@@ -155,6 +155,10 @@ class LCDProc(LcdBase):
       if not self.SendCommand("widget_add xbmc lineProgress" + str(i) + " hbar", True):
         return False
 
+      # Reset bars to zero
+      if not self.SendCommand("widget_set xbmc lineProgress" + str(i) + " 0 0 0", True):
+        return False
+
       # Icons
       if not self.SendCommand("widget_add xbmc lineIcon" + str(i) + " icon", True):
         return False
