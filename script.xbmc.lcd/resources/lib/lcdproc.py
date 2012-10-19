@@ -480,7 +480,7 @@ class LCDProc(LcdBase):
       if self.m_strLineIcon[iLine] != self.m_strIconName or bExtraForce:
         self.m_strLineIcon[iLine] = self.m_strIconName
         
-        self.m_strSetLineCmds += "widget_set xbmc lineIcon%i %i 1 %s\n" % (ln, ln, self.m_strIconName)
+        self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 1 %i %s\n" % (ln, ln, self.m_strIconName)
 
   def ClearDisplay(self):
     log(xbmc.LOGDEBUG, "Clearing display contents")
