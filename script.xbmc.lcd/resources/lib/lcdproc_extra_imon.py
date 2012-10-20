@@ -93,6 +93,7 @@ class LCDproc_extra_imon(LCDproc_extra_base):
 
     LCDproc_extra_base.__init__(self)
 
+  # private
   def _SetBar(self, barnum, value):
     if barnum == 1:
       bitmask = 0x00000FC0
@@ -117,11 +118,16 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     self.m_iOutputValueBars |= IMON_ICONS.BARS
     log(xbmc.LOGNOTICE, "mask")
 
+  # private
   def _SetIconStateDo(self, bitmask, state):
     if state:
       self.m_iOutputValueIcons |= bitmask
     else:
       self.m_iOutputValueIcons &= ~bitmask
+
+  def Initialize(self):
+    for i in range(1, 5):
+      self._SetBar(i, float(0))
 
   def SetOutputIcons(self):
     ret = ""
@@ -145,6 +151,3 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     if icon == LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING:
       self._SetIconStateDo(IMON_ICONS.ICON_SPINDISC, state)
 
-  def Initialize(self):
-    for i in range(1, 5):
-      self._SetBar(i, float(0))

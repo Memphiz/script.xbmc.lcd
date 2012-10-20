@@ -395,3 +395,11 @@ class LcdBase():
                 xbmc.getCondVisibility("Player.Rewinding"))
 
     self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING, bPlaying)
+
+
+
+
+
+
+
+

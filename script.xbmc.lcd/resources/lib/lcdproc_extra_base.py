@@ -32,6 +32,10 @@ class LCDproc_extra_base():
     pass
 
 # @abstractmethod
+  def Initialize(self):
+    pass
+
+# @abstractmethod
   def SetOutputIcons(self):
     pass
 
@@ -43,6 +47,3 @@ class LCDproc_extra_base():
   def SetIconState(self, icon, state):
     pass
 
-# @abstractmethod
-  def Initialize(self):
-    pass
