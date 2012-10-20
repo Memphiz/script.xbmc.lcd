@@ -373,9 +373,8 @@ class LcdBase():
 
     if self.m_cExtraIcons is not None:
       self.SetExtraInformation()
-      self.m_strSetLineCmds += self.m_cExtraIcons.SetOutputIcons()
-      self.m_strSetLineCmds += self.m_cExtraIcons.SetOutputBars()
- 
+      self.m_strSetLineCmds += self.m_cExtraIcons.GetOutputCommands()
+
     self.FlushLines()
 
   def DisableOnPlayback(self, playingVideo, playingAudio):
@@ -429,7 +428,7 @@ class LcdBase():
     iAudioChannels = 0
 
     if isplaying:
-      if xbmc.getCondVisibility("Player.PassThrough"):
+      if xbmc.getCondVisibility("Player.Passthrough"):
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, True)
       else:
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, False)

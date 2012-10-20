@@ -22,6 +22,7 @@
 
 import xbmc
 import sys
+import time
 
 __scriptname__ = sys.modules[ "__main__" ].__scriptname__
 __settings__ = sys.modules[ "__main__" ].__settings__
@@ -32,6 +33,8 @@ from lcdproc import *
 from lcdbase import LCD_EXTRAICONS
 from extraicons import *
 from lcdproc_extra_base import *
+
+IMON_OUTPUT_TIMEOUT = 1
 
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
@@ -81,7 +84,7 @@ class IMON_ICONS:
   # clear masks
   ICON_CLEAR_TOPROW    = 0xffffffff &~ ((0x01 << 1) | (0x01 << 2) | (0x01 << 3))
   ICON_CLEAR_OUTSCALE  = 0xffffffff &~ ((0x01 << 7) | (0x01 << 8) | (0x01 << 9) | (0x01 << 10))
-  ICON_CLEAR_CHANNELS  = 0xffffffff &~ ((0x01 << 4) | (0x01 << 5) | (0x01 << 6))
+  ICON_CLEAR_CHANNELS  = 0xffffffff &~ ((0x01 << 4) | (0x01 << 5))
   ICON_CLEAR_BR        = 0xffffffff &~ ((0x01 << 13) | (0x01 << 14) | (0x01 << 15))
   ICON_CLEAR_BM        = 0xffffffff &~ ((0x01 << 16) | (0x01 << 17) | (0x01 << 18))
   ICON_CLEAR_BL        = 0xffffffff &~ ((0x01 << 19) | (0x01 << 20) | (0x01 << 21))
@@ -92,8 +95,19 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     self.m_iOutputValueOldBars = 1
     self.m_iOutputValueIcons = 0
     self.m_iOutputValueBars = 0
+    self.m_iOutputTimer = time.time()
 
     LCDproc_extra_base.__init__(self)
+
+  # private
+  def _DoOutputCommand(self):
+    ret = False
+
+    if self.m_iOutputTimer < time.time():
+      ret = True
+      self.m_iOutputTimer = time.time()
+
+    return ret
 
   # private
   def _SetBar(self, barnum, value):
@@ -148,6 +162,17 @@ class LCDproc_extra_imon(LCDproc_extra_base):
 
     return ret
 
+  def GetOutputCommands(self):
+    ret = ""
+    
+    if self._DoOutputCommand():
+      ret += self.SetOutputIcons()
+
+    if self._DoOutputCommand() and ret == "":
+      ret += self.SetOutputBars()
+
+    return ret
+
   def SetIconState(self, icon, state):
     if icon == LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING:
       self._SetIconStateDo(IMON_ICONS.ICON_SPINDISC, state)
@@ -193,7 +218,6 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF:
       self._SetIconStateDo(IMON_ICONS.ICON_SPDIF, state)
 
-
     elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_OUT_2_0:
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS
       self._SetIconStateDo(IMON_ICONS.ICON_CH_2_0, state)
@@ -229,6 +253,7 @@ class LCDproc_extra_imon(LCDproc_extra_base):
 
     elif category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_CODECS:
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS
+      self.m_iOutputValueIcons &= ~IMON_ICONS.ICON_SPDIF
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BL
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR

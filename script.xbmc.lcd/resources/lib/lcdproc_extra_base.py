@@ -44,6 +44,10 @@ class LCDproc_extra_base():
     pass
 
 # @abstractmethod
+  def GetOutputCommands(self):
+    pass
+
+# @abstractmethod
   def SetIconState(self, icon, state):
     pass
 
