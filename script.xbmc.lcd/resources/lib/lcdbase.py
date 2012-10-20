@@ -592,6 +592,8 @@ class LcdBase():
           self.m_cExtraIcons.SetBar(i, 0)
         else:
           self.m_cExtraIcons.SetBar(i, 100)
+      else:
+        self.m_cExtraIcons.SetBar(i, 0)
 
   def SetExtraInformation(self):
     # These four states count for "isplayinganything"
