@@ -34,7 +34,7 @@ from lcdbase import LCD_EXTRAICONS
 from extraicons import *
 from lcdproc_extra_base import *
 
-IMON_OUTPUT_INTERVAL = 1 # seconds
+IMON_OUTPUT_INTERVAL = 0.2 # seconds
 
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
