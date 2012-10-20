@@ -540,7 +540,7 @@ class LcdBase():
       self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_CODECS)
 
   def SetExtraInfoGeneric(self, ispaused):
-    if xbmc.getInfoLabel("Player.Volume") == 0.0:
+    if self.GetVolumePercent() == 0.0:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUTE, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUTE, False)
