@@ -34,7 +34,7 @@ from lcdbase import LCD_EXTRAICONS
 from extraicons import *
 from lcdproc_extra_base import *
 
-IMON_OUTPUT_TIMEOUT = 1
+IMON_OUTPUT_INTERVAL = 1 # seconds
 
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
@@ -103,7 +103,7 @@ class LCDproc_extra_imon(LCDproc_extra_base):
   def _DoOutputCommand(self):
     ret = False
 
-    if self.m_iOutputTimer < time.time():
+    if (self.m_iOutputTimer + IMON_OUTPUT_INTERVAL) < time.time():
       ret = True
       self.m_iOutputTimer = time.time()
 
@@ -168,8 +168,8 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     if self._DoOutputCommand():
       ret += self.SetOutputIcons()
 
-    if self._DoOutputCommand() and ret == "":
-      ret += self.SetOutputBars()
+      if ret == "":
+        ret += self.SetOutputBars()
 
     return ret
 
