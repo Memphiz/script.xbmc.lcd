@@ -215,9 +215,65 @@ class LCDproc_extra_imon(LCDproc_extra_base):
       self._SetIconStateDo(IMON_ICONS.ICON_OUT_FIT, state)
 
     # Codec/Channel information
-    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF:
-      self._SetIconStateDo(IMON_ICONS.ICON_SPDIF, state)
+    # Video Codecs
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_MPEG:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BL
+      self._SetIconStateDo(IMON_ICONS.ICON_VCODEC_MPEG, state)
 
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_DIVX:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BL
+      self._SetIconStateDo(IMON_ICONS.ICON_VCODEC_DIVX, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_XVID:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BL
+      self._SetIconStateDo(IMON_ICONS.ICON_VCODEC_XVID, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_WMV:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BL
+      self._SetIconStateDo(IMON_ICONS.ICON_VCODEC_WMV, state)
+
+    # Audio Codecs
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_MPEG:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+      self._SetIconStateDo(IMON_ICONS.ICON_ACODEC_MPEG, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_AC3:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+      self._SetIconStateDo(IMON_ICONS.ICON_ACODEC_AC3, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_DTS:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+      self._SetIconStateDo(IMON_ICONS.ICON_ACODEC_DTS, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_MP3:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+      self._SetIconStateDo(IMON_ICONS.ICON_ACODEC_MP3, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_VWMA:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+      self._SetIconStateDo(IMON_ICONS.ICON_ACODEC_VWMA, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_AWMA:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+      self._SetIconStateDo(IMON_ICONS.ICON_ACODEC_AWMA, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_OGG:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+      self._SetIconStateDo(IMON_ICONS.ICON_ACODEC_OGG, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_WAV:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+      self._SetIconStateDo(IMON_ICONS.ICON_ACODEC_WAV, state)
+
+    # Output channels
     elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_OUT_2_0:
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS
       self._SetIconStateDo(IMON_ICONS.ICON_CH_2_0, state)
@@ -229,6 +285,9 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_OUT_7_1:
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS
       self._SetIconStateDo(IMON_ICONS.ICON_CH_7_1, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF:
+      self._SetIconStateDo(IMON_ICONS.ICON_SPDIF, state)
 
     # Generic application state icons
     elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_RECORD:

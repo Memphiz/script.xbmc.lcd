@@ -423,6 +423,7 @@ class LcdBase():
       ###FIXME###TODO### ID = g_windowManager.GetActiveWindow() translation for navigation
 
   def SetExtraInfoCodecs(self, isplaying, isvideo, isaudio):
+    # initialise stuff to avoid uninitialised var stuff
     strVideoCodec = ""
     strAudioCodec = ""
     iAudioChannels = 0
@@ -434,14 +435,72 @@ class LcdBase():
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, False)
       
       if isvideo:
-        strVideoCodecc = xbmc.getInfoLabel("VideoPlayer.VideoCodec")
-        strAudioCodec = xbmc.getInfoLabel("VideoPlayer.AudioCodec")
+        strVideoCodec = str(xbmc.getInfoLabel("VideoPlayer.VideoCodec")).lower()
+        strAudioCodec = str(xbmc.getInfoLabel("VideoPlayer.AudioCodec")).lower()
         iAudioChannels = xbmc.getInfoLabel("VideoPlayer.AudioChannels")
       elif isaudio:
         strVideoCodec = ""
-        strAudioCodec = xbmc.getInfoLabel("MusicPlayer.Codec")
+        strAudioCodec = str(xbmc.getInfoLabel("MusicPlayer.Codec")).lower()
         iAudioChannels = xbmc.getInfoLabel("MusicPlayer.Channels")
 
+      # check video codec
+      # any mpeg video
+      if strVideoCodec in ["mpg", "mpeg", "mpeg2video", "h264", "x264", "mpeg4"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_MPEG, True)
+
+      # any divx
+      elif strVideoCodec in ["divx", "dx50", "div3"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_DIVX, True)
+
+      # xvid
+      elif strVideoCodec == "xvid":
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_XVID, True)
+
+      # wmv
+      elif strVideoCodec == "wmv":
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_WMV, True)
+
+      # anything else
+      else:
+        self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_VIDEOCODECS)
+
+      # check audio codec
+      # any mpeg audio
+      if strAudioCodec in ["mpga", "mp2"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_MPEG, True)
+
+      # any ac3/dolby digital
+      elif strAudioCodec in ["ac3", "truehd"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_AC3, True)
+
+      # any dts
+      elif strAudioCodec in ["dts", "dca", "dtshd_ma"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_DTS, True)
+
+      # mp3
+      elif strAudioCodec == "mp3":
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_MP3, True)
+
+      # any ogg vorbis
+      elif strAudioCodec in ["ogg", "vorbis"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_OGG, True)
+
+      # any wma        
+      elif strAudioCodec in ["wma", "wmav2"]:
+        if isvideo:
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_VWMA, True)
+        else:
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_AWMA, True)
+
+      # any pcm, wav or flac
+      elif strAudioCodec in ["wav", "pcm", "flac"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_WAV, True)
+
+      # anything else
+      else:
+        self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_AUDIOCODECS)
+
+      # make sure iAudioChannels contains something useful
       if iAudioChannels == "" and strAudioCodec != "":
         iAudioChannels = 2
       elif iAudioChannels == "":
@@ -449,6 +508,7 @@ class LcdBase():
       else:
         iAudioChannels = int(iAudioChannels)
 
+      # decide which icon (set) to activate
       if iAudioChannels > 0 and iAudioChannels <= 3:
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUT_2_0, True)
       elif iAudioChannels <= 6:
