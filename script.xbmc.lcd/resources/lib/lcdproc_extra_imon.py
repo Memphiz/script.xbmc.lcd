@@ -76,10 +76,12 @@ class IMON_ICONS:
   ICON_SHUFFLE         = 0x01 << 27
   BARS                 = 0x01 << 28 # additionally needs bar values in other bits
   ICON_DISC_IN         = 0x01 << 29
+  ICON_DUMMY           = 0x01 << 30 # Dummy icon so bars won't reset
 
   # clear masks
   ICON_CLEAR_TOPROW    = 0xffffffff &~ ((0x01 << 1) | (0x01 << 2) | (0x01 << 3))
-  ICON_CLEAR_CHANNELS  = 0xffffffff &~ ((0x01 << 4) | (0x01 << 5))
+  ICON_CLEAR_OUTSCALE  = 0xffffffff &~ ((0x01 << 7) | (0x01 << 8) | (0x01 << 9) | (0x01 << 10))
+  ICON_CLEAR_CHANNELS  = 0xffffffff &~ ((0x01 << 4) | (0x01 << 5) | (0x01 << 6))
   ICON_CLEAR_BR        = 0xffffffff &~ ((0x01 << 13) | (0x01 << 14) | (0x01 << 15))
   ICON_CLEAR_BM        = 0xffffffff &~ ((0x01 << 16) | (0x01 << 17) | (0x01 << 18))
   ICON_CLEAR_BL        = 0xffffffff &~ ((0x01 << 19) | (0x01 << 20) | (0x01 << 21))
@@ -110,13 +112,9 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     else:
       return
 
-    log(xbmc.LOGNOTICE, "ifdone")
     self.m_iOutputValueBars = (self.m_iOutputValueBars &~ bitmask)
-    log(xbmc.LOGNOTICE, "reset")
     self.m_iOutputValueBars |= (int(32 * (value / 100)) << bitshift) & bitmask
-    log(xbmc.LOGNOTICE, "set")
     self.m_iOutputValueBars |= IMON_ICONS.BARS
-    log(xbmc.LOGNOTICE, "mask")
 
   # private
   def _SetIconStateDo(self, bitmask, state):
@@ -131,6 +129,9 @@ class LCDproc_extra_imon(LCDproc_extra_base):
 
   def SetOutputIcons(self):
     ret = ""
+
+    # Make sure we don't send "0" to LCDproc, this would reset bars
+    self.m_iOutputValueIcons |= IMON_ICONS.ICON_DUMMY
 
     if self.m_iOutputValueIcons != self.m_iOutputValueOldIcons:
       self.m_iOutputValueOldIcons = self.m_iOutputValueIcons
@@ -151,3 +152,93 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     if icon == LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING:
       self._SetIconStateDo(IMON_ICONS.ICON_SPINDISC, state)
 
+    # Icons used for "Modes" category
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_MOVIE:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_TOPROW
+      self._SetIconStateDo(IMON_ICONS.ICON_TOP_MOVIE, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_MUSIC:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_TOPROW
+      self._SetIconStateDo(IMON_ICONS.ICON_TOP_MUSIC, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_WEATHER:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_TOPROW
+      self._SetIconStateDo(IMON_ICONS.ICON_TOP_NEWSWEATHER, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_TV:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_TOPROW
+      self._SetIconStateDo(IMON_ICONS.ICON_TOP_TV, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_PHOTO:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_TOPROW
+      self._SetIconStateDo(IMON_ICONS.ICON_TOP_PHOTO, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_RESOLUTION_SD:
+      self._SetIconStateDo(IMON_ICONS.ICON_OUT_SD, state)
+      self._SetIconStateDo(IMON_ICONS.ICON_OUT_HDTV, False)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_RESOLUTION_HD:
+      self._SetIconStateDo(IMON_ICONS.ICON_OUT_SD, False)
+      self._SetIconStateDo(IMON_ICONS.ICON_OUT_HDTV, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_OUTSOURCE:
+      self._SetIconStateDo(IMON_ICONS.ICON_OUT_SRC, state)
+      self._SetIconStateDo(IMON_ICONS.ICON_OUT_FIT, False)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_OUTFIT:
+      self._SetIconStateDo(IMON_ICONS.ICON_OUT_SRC, False)
+      self._SetIconStateDo(IMON_ICONS.ICON_OUT_FIT, state)
+
+    # Codec/Channel information
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF:
+      self._SetIconStateDo(IMON_ICONS.ICON_SPDIF, state)
+
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_OUT_2_0:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS
+      self._SetIconStateDo(IMON_ICONS.ICON_CH_2_0, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_OUT_5_1:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS
+      self._SetIconStateDo(IMON_ICONS.ICON_CH_5_1, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_OUT_7_1:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS
+      self._SetIconStateDo(IMON_ICONS.ICON_CH_7_1, state)
+
+    # Generic application state icons
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_RECORD:
+      self._SetIconStateDo(IMON_ICONS.ICON_REC, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_SHUFFLE:
+      self._SetIconStateDo(IMON_ICONS.ICON_SHUFFLE, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_REPEAT:
+      self._SetIconStateDo(IMON_ICONS.ICON_REPEAT, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_DISC_IN:
+      self._SetIconStateDo(IMON_ICONS.ICON_DISC_IN, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_TIME:
+      self._SetIconStateDo(IMON_ICONS.ICON_TIME, state)
+
+  def ClearIconStates(self, category):
+    if category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_MODES:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_TOPROW
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_OUTSCALE
+
+    elif category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_CODECS:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BL
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+
+    elif category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_VIDEOCODECS:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BL
+
+    elif category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_AUDIOCODECS:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BM
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_BR
+
+    elif category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_AUDIOCHANNELS:
+      self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS

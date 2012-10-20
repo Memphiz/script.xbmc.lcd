@@ -47,3 +47,6 @@ class LCDproc_extra_base():
   def SetIconState(self, icon, state):
     pass
 
+# @abstractmethod
+  def ClearIconStates(self, category):
+    pass
