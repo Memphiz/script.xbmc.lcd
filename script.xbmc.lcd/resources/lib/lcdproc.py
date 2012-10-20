@@ -38,7 +38,6 @@ from lcdbase import *
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
   
-SCROLL_SPEED_IN_MSEC = 250
 MAX_ROWS = 20
 MAX_BIGDIGITS = 20
 INIT_RETRY_INTERVAL = 2
@@ -46,11 +45,7 @@ INIT_RETRY_INTERVAL_MAX = 60000
 
 class LCDProc(LcdBase):
   def __init__(self):
-    self.m_iActualpos   = 0
-    self.m_iBackLight   = 32
-    self.m_iLCDContrast = 50
     self.m_bStop        = True
-    self.m_sockfd       = -1
     self.m_lastInitAttempt = 0
     self.m_initRetryInterval = INIT_RETRY_INTERVAL
     self.m_used = True
