@@ -40,6 +40,8 @@ __icon__ = sys.modules[ "__main__" ].__icon__
 from settings import *
 from lcdbase import *
 
+from lcdproc_extra_imon import *
+
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
   
@@ -241,9 +243,11 @@ class LCDProc(LcdBase):
 
       if re.match(rematch_imon, reply):
         log(xbmc.LOGNOTICE, "SoundGraph iMON LCD detected")
+        self.m_cExtraIcons = LCDproc_extra_imon()
 
       elif re.match(rematch_mdm166a, reply):
         log(xbmc.LOGNOTICE, "Futaba/Targa USB mdm166a VFD detected")
+
     except:
       pass
 
