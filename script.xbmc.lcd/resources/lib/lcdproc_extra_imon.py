@@ -110,6 +110,12 @@ class LCDproc_extra_imon():
     self.m_iOutputValueBars |= (int(32 * (value / 100)) << bitshift) & bitmask
     self.m_iOutputValueBars |= 1 << IMON_ICONS.BARS
 
+  def __SetIconStateDo(self, bitmask, state):
+    if state:
+      self.m_iOutputValueIcons |= bitmask
+    else:
+      self.m_iOutputValueIcons &= ~bitmask
+
   def SetOutputIcons(self):
     ret = ""
 
@@ -127,3 +133,7 @@ class LCDproc_extra_imon():
       ret += "output %d\n" % (self.m_iOutputValueBars)
 
     return ret
+
+  def SetIconState(self, icon, state):
+    if icon == LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING:
+      self.__SetIconStateDo(IMON_ICONS.ICON_SPINDISC, state)

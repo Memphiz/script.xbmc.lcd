@@ -372,8 +372,10 @@ class LcdBase():
         outLine += 1
 
     if self.m_cExtraIcons is not None:
-      self.RenderExtraIcons()
-
+      self.SetExtraIcons()
+      self.m_strSetLineCmds += self.m_cExtraIcons.SetOutputIcons()
+      self.m_strSetLineCmds += self.m_cExtraIcons.SetOutputBars()
+ 
     self.FlushLines()
 
   def DisableOnPlayback(self, playingVideo, playingAudio):
@@ -386,12 +388,10 @@ class LcdBase():
       self.SetBackLight(1)
       self.m_bDimmedOnPlayback = False
 
-  def RenderExtraIcons(self):
+  def SetExtraIcons(self):
     bPlaying = (xbmc.getCondVisibility("Player.Playing") |
                 xbmc.getCondVisibility("Player.Paused") |
                 xbmc.getCondVisibility("Player.Forwarding") |
                 xbmc.getCondVisibility("Player.Rewinding"))
 
-    if bPlaying:
-      pass
-
+    self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING, bPlaying)
