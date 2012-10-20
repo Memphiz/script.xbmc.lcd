@@ -424,6 +424,10 @@ class LcdBase():
       ###FIXME###TODO### ID = g_windowManager.GetActiveWindow() translation for navigation
 
   def SetExtraInfoCodecs(self, isplaying, isvideo, isaudio):
+    strVideoCodec = ""
+    strAudioCodec = ""
+    iAudioChannels = 0
+
     if isplaying:
       if xbmc.getCondVisibility("Player.PassThrough"):
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, True)
@@ -431,26 +435,26 @@ class LcdBase():
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, False)
       
       if isvideo:
-        videocodec = xbmc.getInfoLabel("VideoPlayer.VideoCodec")
-        audiocodec = xbmc.getInfoLabel("VideoPlayer.AudioCodec")
-        audiochannels = xbmc.getInfoLabel("VideoPlayer.AudioChannels")
+        strVideoCodecc = xbmc.getInfoLabel("VideoPlayer.VideoCodec")
+        strAudioCodec = xbmc.getInfoLabel("VideoPlayer.AudioCodec")
+        iAudioChannels = xbmc.getInfoLabel("VideoPlayer.AudioChannels")
       elif isaudio:
-        videocodec = ""
-        audiocodec = xbmc.getInfoLabel("MusicPlayer.Codec")
-        audiochannels = xbmc.getInfoLabel("MusicPlayer.Channels")
+        strVideoCodec = ""
+        strAudioCodec = xbmc.getInfoLabel("MusicPlayer.Codec")
+        iAudioChannels = xbmc.getInfoLabel("MusicPlayer.Channels")
 
-      if audiochannels == "" and audiocodec != "":
-        audiochannels = 2
-      elif audiochannels == "":
-        audiochannels = 0
+      if iAudioChannels == "" and strAudioCodec != "":
+        iAudioChannels = 2
+      elif iAudioChannels == "":
+        iAudioChannels = 0
       else:
-        audiochannels = int(audiochannels)
+        iAudioChannels = int(iAudioChannels)
 
-      if audiochannels > 0 and audiochannels <= 3:
+      if iAudioChannels > 0 and iAudioChannels <= 3:
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUT_2_0, True)
-      elif audiochannels <= 6:
+      elif iAudioChannels <= 6:
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUT_5_1, True)
-      elif audiochannels <= 8:
+      elif iAudioChannels <= 8:
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUT_7_1, True)
       else:
         self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_AUDIOCHANNELS)
