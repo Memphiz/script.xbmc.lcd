@@ -244,6 +244,7 @@ class LCDProc(LcdBase):
       if re.match(rematch_imon, reply):
         log(xbmc.LOGNOTICE, "SoundGraph iMON LCD detected")
         self.m_cExtraIcons = LCDproc_extra_imon()
+        self.m_cExtraIcons.Initialize()
 
       elif re.match(rematch_mdm166a, reply):
         log(xbmc.LOGNOTICE, "Futaba/Targa USB mdm166a VFD detected")

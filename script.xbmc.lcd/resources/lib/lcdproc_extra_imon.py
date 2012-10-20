@@ -31,6 +31,7 @@ __icon__ = sys.modules[ "__main__" ].__icon__
 from lcdproc import *
 from lcdbase import LCD_EXTRAICONS
 from extraicons import *
+from lcdproc_extra_base import *
 
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
@@ -83,14 +84,16 @@ class IMON_ICONS:
   ICON_CLEAR_BM        = 0xffffffff &~ ((0x01 << 16) | (0x01 << 17) | (0x01 << 18))
   ICON_CLEAR_BL        = 0xffffffff &~ ((0x01 << 19) | (0x01 << 20) | (0x01 << 21))
 
-class LCDproc_extra_imon():
+class LCDproc_extra_imon(LCDproc_extra_base):
   def __init__(self):
     self.m_iOutputValueOldIcons = 1
     self.m_iOutputValueOldBars = 1
     self.m_iOutputValueIcons = 0
     self.m_iOutputValueBars = 0
 
-  def __SetBar(self, barnum, value):
+    LCDproc_extra_base.__init__(self)
+
+  def _SetBar(self, barnum, value):
     if barnum == 1:
       bitmask = 0x00000FC0
       bitshift = 6
@@ -104,13 +107,17 @@ class LCDproc_extra_imon():
       bitmask = 0x0003F000
       bitshift = 12
     else:
-      return self.m_iOutputValueProgress
+      return
 
+    log(xbmc.LOGNOTICE, "ifdone")
     self.m_iOutputValueBars = (self.m_iOutputValueBars &~ bitmask)
+    log(xbmc.LOGNOTICE, "reset")
     self.m_iOutputValueBars |= (int(32 * (value / 100)) << bitshift) & bitmask
-    self.m_iOutputValueBars |= 1 << IMON_ICONS.BARS
+    log(xbmc.LOGNOTICE, "set")
+    self.m_iOutputValueBars |= IMON_ICONS.BARS
+    log(xbmc.LOGNOTICE, "mask")
 
-  def __SetIconStateDo(self, bitmask, state):
+  def _SetIconStateDo(self, bitmask, state):
     if state:
       self.m_iOutputValueIcons |= bitmask
     else:
@@ -136,4 +143,8 @@ class LCDproc_extra_imon():
 
   def SetIconState(self, icon, state):
     if icon == LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING:
-      self.__SetIconStateDo(IMON_ICONS.ICON_SPINDISC, state)
+      self._SetIconStateDo(IMON_ICONS.ICON_SPINDISC, state)
+
+  def Initialize(self):
+    for i in range(1, 5):
+      self._SetBar(i, float(0))

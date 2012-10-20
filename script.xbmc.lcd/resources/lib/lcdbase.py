@@ -111,7 +111,7 @@ class LcdBase():
   def SetBackLight(self, iLight):
     pass
 
-# @abstractmethod  
+# @abstractmethod
   def SetContrast(self, iContrast):
     pass
 
