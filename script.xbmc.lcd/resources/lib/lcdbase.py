@@ -40,6 +40,7 @@ __icon__ = sys.modules[ "__main__" ].__icon__
 __lcdxml__ = xbmc.translatePath( os.path.join("special://masterprofile","LCD.xml"))
 
 from settings import *
+from extraicons import *
 
 g_dictEmptyLineDescriptor = {} 
 g_dictEmptyLineDescriptor['type'] = str("text")
@@ -370,6 +371,9 @@ class LcdBase():
         self.SetLine(outLine, "", g_dictEmptyLineDescriptor, bForce)
         outLine += 1
 
+    if self.m_cExtraIcons is not None:
+      self.RenderExtraIcons()
+
     self.FlushLines()
 
   def DisableOnPlayback(self, playingVideo, playingAudio):
@@ -381,4 +385,13 @@ class LcdBase():
     elif self.m_bDimmedOnPlayback:
       self.SetBackLight(1)
       self.m_bDimmedOnPlayback = False
+
+  def RenderExtraIcons(self):
+    bPlaying = (xbmc.getCondVisibility("Player.Playing") |
+                xbmc.getCondVisibility("Player.Paused") |
+                xbmc.getCondVisibility("Player.Forwarding") |
+                xbmc.getCondVisibility("Player.Rewinding"))
+
+    if bPlaying:
+      pass
 
