@@ -21,6 +21,8 @@ def enum(*sequential, **named):
   enums = dict(zip(sequential, range(len(sequential))), **named)
   return type('Enum', (), enums)
 
+LCD_EXTRABARS_MAX = 4
+
 LCD_EXTRAICONS = enum(
   'LCD_EXTRAICON_NONE',
   'LCD_EXTRAICON_PLAYING',

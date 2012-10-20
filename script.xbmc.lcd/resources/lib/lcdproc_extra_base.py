@@ -48,6 +48,10 @@ class LCDproc_extra_base():
     pass
 
 # @abstractmethod
+  def SetBar(self, barnum, percent):
+    pass
+
+# @abstractmethod
   def SetIconState(self, icon, state):
     pass
 

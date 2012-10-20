@@ -110,7 +110,7 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     return ret
 
   # private
-  def _SetBar(self, barnum, value):
+  def _SetBarDo(self, barnum, percent):
     if barnum == 1:
       bitmask = 0x00000FC0
       bitshift = 6
@@ -126,8 +126,15 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     else:
       return
 
+    if percent < 0:
+      rpercent = 0
+    elif percent > 100:
+      rpercent = 100
+    else:
+      rpercent = percent
+
     self.m_iOutputValueBars = (self.m_iOutputValueBars &~ bitmask)
-    self.m_iOutputValueBars |= (int(32 * (value / 100)) << bitshift) & bitmask
+    self.m_iOutputValueBars |= (int(32 * (rpercent / 100)) << bitshift) & bitmask
     self.m_iOutputValueBars |= IMON_ICONS.BARS
 
   # private
@@ -172,6 +179,9 @@ class LCDproc_extra_imon(LCDproc_extra_base):
         ret += self.SetOutputBars()
 
     return ret
+
+  def SetBar(self, barnum, percent):
+    self._SetBarDo(barnum, percent)
 
   def SetIconState(self, icon, state):
     if icon == LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING:

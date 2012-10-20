@@ -79,6 +79,7 @@ class LcdBase():
   def __init__(self):
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
     self.m_lcdMode = [None] * LCD_MODE.LCD_MODE_MAX
+    self.m_extraBars = [None] * (LCD_EXTRABARS_MAX + 1)
     self.m_bDimmedOnPlayback = False
     self.m_strInfoLabelEncoding = "utf-8" # http://forum.xbmc.org/showthread.php?tid=125492&pid=1045926#pid1045926
     self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
@@ -216,6 +217,16 @@ class LcdBase():
           if str(allowemptylines.text) == "on":
             self.m_bAllowEmptyLines = True
 
+        # extra progress bars
+        for i in range(1, LCD_EXTRABARS_MAX + 1):
+          extrabar = None
+          extrabar = element.find("extrabar%i" % (i))
+          if extrabar != None:
+            if str(extrabar.text).strip() in ["progress", "volume", "menu"]:
+              self.m_extraBars[i] = str(extrabar.text).strip()
+            else:
+              self.m_extraBars[i] = ""
+
         #load modes
         tmpMode = element.find("music")
         self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_MUSIC)
@@ -337,6 +348,15 @@ class LcdBase():
 
     return self.timeToSecs(currentDurationAr)
 
+  def GetProgress(self):
+    currentSecs = self.getCurrentTimeSecs()
+    durationSecs = self.getCurrentDurationSecs()
+    return self.GetProgressBarPercent(currentSecs,durationSecs)
+
+  def GetVolumePercent(self):
+    volumedb = float(string.replace(string.replace(xbmc.getInfoLabel("Player.Volume"), ",", "."), " dB", ""))
+    return (100 * (60.0 + volumedb) / 60)
+
   def Render(self, mode, bForce):
     outLine = 0
     inLine = 0
@@ -345,9 +365,7 @@ class LcdBase():
       #parse the progressbar infolabel by ourselfs!
       if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS:
         # get playtime and duration and convert into seconds
-        currentSecs = self.getCurrentTimeSecs()
-        durationSecs = self.getCurrentDurationSecs()
-        percent = self.GetProgressBarPercent(currentSecs,durationSecs)
+        percent = self.GetProgress()
         pixelsWidth = self.SetProgressBar(percent, self.m_lcdMode[mode][inLine]['endx'])
         line = "p" + str(pixelsWidth)
       else:
@@ -559,7 +577,22 @@ class LcdBase():
       
     ###FIXME###TODO### g_windowManager.IsWindowActive(WINDOW_DIALOG_VOLUME_BAR) : ICON_VOLUME
     ###FIXME###TODO### g_windowManager.IsWindowActive(WINDOW_DIALOG_KAI_TOAST)  : ICON_ALARM
-    
+
+  def SetExtraInfoBars(self, isplaying):
+    for i in range(1, LCD_EXTRABARS_MAX):
+      if self.m_extraBars[i] == "progress":
+        if isplaying:
+          self.m_cExtraIcons.SetBar(i, (self.GetProgress() * 100))
+        else:
+          self.m_cExtraIcons.SetBar(i, 0)
+      elif self.m_extraBars[i] == "volume":
+        self.m_cExtraIcons.SetBar(i, self.GetVolumePercent())
+      elif self.m_extraBars[i] == "menu":
+        if isplaying:
+          self.m_cExtraIcons.SetBar(i, 0)
+        else:
+          self.m_cExtraIcons.SetBar(i, 100)
+
   def SetExtraInformation(self):
     # These four states count for "isplayinganything"
     bPaused = xbmc.getCondVisibility("Player.Paused")
@@ -576,6 +609,7 @@ class LcdBase():
     self.SetExtraInfoPlaying(bPlaying, bIsVideo, bIsAudio)
     self.SetExtraInfoCodecs(bPlaying, bIsVideo, bIsAudio)
     self.SetExtraInfoGeneric(bPaused)
+    self.SetExtraInfoBars(bPlaying)
 
 
 
