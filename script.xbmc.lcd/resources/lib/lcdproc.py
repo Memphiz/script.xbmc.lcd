@@ -66,6 +66,7 @@ class LCDProc(LcdBase):
     self.m_strIconName = "BLOCK_FILLED"
     self.m_iBigDigits = int(8) # 12:45:78 / colons count as digit
     self.m_strSetLineCmds = ""
+    self.m_cExtraIcons = None
     self.m_vPythonVersion = sys.version_info
 
     if self.m_vPythonVersion < (2, 7):
@@ -221,6 +222,31 @@ class LCDProc(LcdBase):
 
     return connected
 
+  def DetermineExtraSupport(self):
+    rematch_imon = "SoundGraph iMON(.*)LCD"
+    rematch_mdm166a = "Targa(.*)mdm166a"
+
+    # Never cause script failure/interruption by this! This is totally optional!
+    try:
+      # Retrieve driver name for additional functionality
+      self.tn.write("info\n")
+      reply = str(self.tn.read_until("\n",3)).strip()
+
+      # When the LCDd driver doesn't supply a valid string, inform and return
+      if reply == "":
+        log(xbmc.LOGNOTICE, "Empty driver information reply")
+        return
+
+      log(xbmc.LOGNOTICE, "Driver information reply: " + reply)
+
+      if re.match(rematch_imon, reply):
+        log(xbmc.LOGNOTICE, "SoundGraph iMON LCD detected")
+
+      elif re.match(rematch_mdm166a, reply):
+        log(xbmc.LOGNOTICE, "Futaba/Targa USB mdm166a VFD detected")
+    except:
+      pass
+
   def Connect(self):
     self.CloseSocket()
 
@@ -258,10 +284,7 @@ class LCDProc(LcdBase):
       # tell users what's going on
       log(xbmc.LOGNOTICE, "Connected to LCDd at %s:%s, Protocol version %s - Geometry %sx%s characters (%sx%s pixels, %sx%s pixels per character)" % (str(ip), str(port), float(lcdinfo.group(1)), str(self.m_iColumns), str(self.m_iRows), str(self.m_iColumns * self.m_iCellWidth), str(self.m_iRows * self.m_iCellHeight), str(self.m_iCellWidth), str(self.m_iCellHeight)))
 
-      # Retrieve driver name for additional functionality
-      self.tn.write("info\n")
-      reply = self.tn.read_until("\n",3)
-      log(xbmc.LOGDEBUG,"info Reply: " + reply)
+      self.DetermineExtraSupport()
 
       # Set up BigNum values based on display geometry
       if self.m_iColumns < 16:
@@ -270,7 +293,7 @@ class LCDProc(LcdBase):
         self.m_iBigDigits = 7
 
     except:
-      log(xbmc.LOGERROR,"Connect: Telnet exception.")
+      log(xbmc.LOGERROR,"Connect: Caught exception, aborting.")
       return False
 
     if not self.SetupScreen():
