@@ -2,9 +2,8 @@
     XBMC LCDproc addon
     Copyright (C) 2012 Team XBMC
 
-    Support for extra symbols on SoundGraph iMON LCD displays
+    Stub class for extra symbol support e.g. on SoundGraph iMON or mdm166a LCDs/VFDs
     Copyright (C) 2012 Daniel Scheller
-    Original C implementation (C) 2010 theonlychrizz
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
