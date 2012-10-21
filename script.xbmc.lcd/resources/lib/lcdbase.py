@@ -247,7 +247,11 @@ class LcdBase():
       elif str(linetext).find("$INFO[LCD.PlayIcon]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_ICONTEXT
         linedescriptor['startx'] = int(3) # icon widgets take 2 chars, so shift text offset to 3
-        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext), flags=re.IGNORECASE)).strip()
+        # support Python < 2.7 (e.g. Debian Squeeze)
+        if self.m_vPythonVersion < (2, 7):
+          linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext))).strip()
+        else:
+          linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext), flags=re.IGNORECASE)).strip()
         linedescriptor['endx'] = int(self.GetColumns())
       # standard (scrolling) text line
       else:

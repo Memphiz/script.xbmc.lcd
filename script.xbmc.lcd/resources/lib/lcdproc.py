@@ -61,6 +61,11 @@ class LCDProc(LcdBase):
     self.m_strIconName = "BLOCK_FILLED"
     self.m_iBigDigits = int(8) # 12:45:78 / colons count as digit
     self.m_strSetLineCmds = ""
+    self.m_vPythonVersion = sys.version_info
+
+    if self.m_vPythonVersion < (2, 7):
+      log(xbmc.LOGWARNING, "Python < 2.7 detected. Upgrade your Python for optimal results.")
+
     LcdBase.__init__(self)
 
   def SendCommand(self, strCmd, bCheckRet):

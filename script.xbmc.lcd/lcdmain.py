@@ -35,7 +35,7 @@ from lcdproc import *
 global g_failedConnectionNotified
 global g_initialConnectAttempt
 global g_lcdproc
-  
+
 global g_oldMenu
 global g_oldSubMenu
 global g_timer
@@ -47,7 +47,7 @@ def initGlobals():
   global g_oldMenu
   global g_oldSubMenu
   global g_timer
-  
+
   g_failedConnectionNotified = False   
   g_initialConnectAttempt = True
   settings_initGlobals()
