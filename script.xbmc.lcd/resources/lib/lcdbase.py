@@ -232,7 +232,7 @@ class LcdBase():
           return
 
       # progressbar line if InfoLabel exists
-      if str(linetext).find("$INFO[LCD.ProgressBar]") >= 0:
+      if str(linetext).lower().find("$info[lcd.progressbar]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_PROGRESS
         linedescriptor['startx'] = int(1)
         linedescriptor['text'] = ""
@@ -244,7 +244,7 @@ class LcdBase():
           linedescriptor['endx'] = int(self.m_iCellWidth) * (int(self.GetColumns()) - 2)
 
       # textline with icon in front
-      elif str(linetext).find("$INFO[LCD.PlayIcon]") >= 0:
+      elif str(linetext).lower().find("$info[lcd.playicon]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_ICONTEXT
         linedescriptor['startx'] = int(3) # icon widgets take 2 chars, so shift text offset to 3
         # support Python < 2.7 (e.g. Debian Squeeze)
