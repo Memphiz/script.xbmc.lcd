@@ -34,6 +34,7 @@ global g_hostport
 global g_timer
 global g_heartbeat
 global g_scrolldelay
+global g_scrollmode
 global g_settingsChanged
 global g_dimonscreensaver
 global g_navtimeout
@@ -46,6 +47,7 @@ def settings_initGlobals():
   global g_timer
   global g_heartbeat
   global g_scrolldelay
+  global g_scrollmode
   global g_settingsChanged
   global g_dimonscreensaver
   global g_navtimeout
@@ -56,6 +58,7 @@ def settings_initGlobals():
   g_timer            = time.time()   
   g_heartbeat	     = False
   g_scrolldelay      = 1
+  g_scrollmode       = "0"
   g_settigsChanged   = True
   g_dimonscreensaver = False
   g_navtimeout       = 3
@@ -73,10 +76,20 @@ def settings_getHostPort():
 def settings_getHeartBeat():
   global g_heartbeat
   return g_heartbeat
-	
+
 def settings_getScrollDelay():
   global g_scrolldelay
   return g_scrolldelay
+
+def settings_getScrollMode():
+  global g_scrollmode
+  return g_scrollmode
+
+def settings_getLCDprocScrollMode():
+  global g_scrollmode
+  if g_scrollmode == "1":
+    return "h"
+  return "m"
 
 def settings_getDimOnScreensaver():
   global g_dimonscreensaver
@@ -136,6 +149,7 @@ def settings_handleNetworkSettings():
 
 def settings_handleLcdSettings():
   global g_scrolldelay
+  global g_scrollmode
   global g_heartbeat
   global g_settingsChanged
   global g_dimonscreensaver
@@ -145,6 +159,7 @@ def settings_handleLcdSettings():
   g_settingsChanged = False
 
   scrolldelay = int(float(string.replace(__settings__.getSetting("scrolldelay"), ",", ".")))
+  scrollmode = __settings__.getSetting("scrollmode")
   heartbeat = __settings__.getSetting("heartbeat") == "true"
   dimonscreensaver = __settings__.getSetting("dimonscreensver") == "true"
   navtimeout = int(float(string.replace(__settings__.getSetting("navtimeout"), ",", ".")))
@@ -152,6 +167,10 @@ def settings_handleLcdSettings():
  
   if g_scrolldelay != scrolldelay:
     g_scrolldelay = scrolldelay
+    g_settingsChanged = True
+
+  if g_scrollmode != scrollmode:
+    g_scrollmode = scrollmode
     g_settingsChanged = True
 
   if g_heartbeat != heartbeat:

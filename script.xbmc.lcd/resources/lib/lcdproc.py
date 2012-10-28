@@ -456,6 +456,7 @@ class LCDProc(LcdBase):
   
     iMaxLineLen = dictDescriptor['endx'] - (int(dictDescriptor['startx']) - 1)
     iScrollSpeed = settings_getScrollDelay()
+    strScrollMode = settings_getLCDprocScrollMode()
 
     # make string fit the display if it's smaller than the width
     if len(strLineLong) < int(self.m_iColumns):
@@ -463,7 +464,8 @@ class LCDProc(LcdBase):
       strLineLong.ljust(numSpaces) #pad with spaces
     elif len(strLineLong) > int(self.m_iColumns): #else if the string doesn't fit the display...
       if iScrollSpeed != 0:          # add separator when scrolling enabled
-        strLineLong += self.m_strScrollSeparator      
+        if strScrollMode == "m":     # and scrollmode is marquee
+          strLineLong += self.m_strScrollSeparator      
       else:                                       # or cut off
         strLineLong = strLineLong[:iMaxLineLen]
         iScrollSpeed = 1
@@ -478,7 +480,7 @@ class LCDProc(LcdBase):
         self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, dictDescriptor['startx'], ln, self.m_iProgressBarWidth)
       # everything else (text, icontext)
       else:
-        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i m %i \"%s\"\n" % (ln, dictDescriptor['startx'], ln, self.m_iColumns, ln, iScrollSpeed, re.escape(strLineLong))
+        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i %s %i \"%s\"\n" % (ln, dictDescriptor['startx'], ln, self.m_iColumns, ln, strScrollMode, iScrollSpeed, re.escape(strLineLong))
 
       # cache contents
       self.m_strLineText[iLine] = strLineLong
