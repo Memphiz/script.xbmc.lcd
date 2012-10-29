@@ -346,6 +346,17 @@ class LCDProc(LcdBase):
   def GetColumns(self):
     return int(self.m_iColumns)
 
+  def GetBigDigitTime(self):
+      ret = xbmc.getInfoLabel("Player.Time")
+
+      if ret == "": # no usable timestring, e.g. not playing anything
+        if self.m_iBigDigits < 8: # return only h:m when display too small
+          ret = time.strftime("%X")[:5] # %X = locale-based currenttime
+        else:
+          ret = time.strftime("%X")[:8]
+
+      return ret
+
   def SetBigDigits(self, strTimeString, bForceUpdate):
     iOffset = 1
     iDigitCount = 1
@@ -448,7 +459,7 @@ class LCDProc(LcdBase):
         self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, dictDescriptor['text'])
 
     if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
-      strLineLong = xbmc.getInfoLabel("Player.Time")
+      strLineLong = self.GetBigDigitTime()
     else:
       strLineLong = strLine
 
