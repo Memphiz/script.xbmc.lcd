@@ -207,6 +207,13 @@ class LcdBase():
 
   def LoadMode(self, node, mode):
     if node == None:
+      log(xbmc.LOGWARNING, "Empty Mode %d, check LCD.xml" % (mode))
+      self.m_lcdMode[mode].append(g_dictEmptyLineDescriptor)
+      return
+
+    if len(node.findall("line")) <= 0:
+      log(xbmc.LOGWARNING, "Mode %d defined without lines, check LCD.xml" % (mode))
+      self.m_lcdMode[mode].append(g_dictEmptyLineDescriptor)
       return
 
     # regex to determine any of $INFO[LCD.Time(Wide)21-44]
