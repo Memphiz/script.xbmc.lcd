@@ -427,6 +427,8 @@ class LCDProc(LcdBase):
     # make sure all widget get redrawn by resetting their type
     for i in range(0, int(self.GetRows())):
       self.m_strLineType[i] = ""
+      self.m_strLineText[i] = ""
+      self.m_strLineIcon[i] = ""
 
   def ClearLine(self, iLine):
     self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 0 0 BLOCK_FILLED\n" % (iLine)
