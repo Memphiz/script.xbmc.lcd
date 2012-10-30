@@ -78,6 +78,7 @@ class LcdBase():
     self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
     self.m_strScrollSeparator = " "
     self.m_bProgressbarSurroundings = False
+    self.m_iIconTextOffset = 2
     self.m_bAllowEmptyLines = False
 
 # @abstractmethod
@@ -184,6 +185,23 @@ class LcdBase():
           if str(progressbarSurroundings.text) == "on":
             self.m_bProgressbarSurroundings = True
 
+        # icontext offset setting
+        self.m_iIconTextOffset = 2
+
+        icontextoffset = element.find("icontextoffset")
+        if icontextoffset != None and icontextoffset.text != None:
+          try:
+            intoffset = int(icontextoffset.text)
+          except ValueError, TypeError:
+            log(xbmc.LOGERROR, "Value for icontextoffset must be integer (got: %s)" % (icontextoffset.text))
+          else:
+            if intoffset <= 0 or intoffset >= self.GetColumns():
+              log(xbmc.LOGERROR, "Value %d for icontextoffset out of range, ignoring" % (intoffset))
+            else:
+              if intoffset < 2:
+                log(xbmc.LOGWARNING, "Value %d for icontextoffset smaller than LCDproc's icon width" % (intoffset))
+              self.m_iIconTextOffset = intoffset
+
         # check for allowemptylines setting
         self.m_bAllowEmptyLines = False
 
@@ -268,7 +286,7 @@ class LcdBase():
       # textline with icon in front
       elif str(linetext).lower().find("$info[lcd.playicon]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_ICONTEXT
-        linedescriptor['startx'] = int(3) # icon widgets take 2 chars, so shift text offset to 3
+        linedescriptor['startx'] = int(1 + self.m_iIconTextOffset) # icon widgets take 2 chars, so shift text offset (default: 2)
         # support Python < 2.7 (e.g. Debian Squeeze)
         if self.m_vPythonVersion < (2, 7):
           linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext))).strip()
