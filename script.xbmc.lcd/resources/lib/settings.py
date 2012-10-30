@@ -161,7 +161,7 @@ def settings_handleLcdSettings():
   scrolldelay = int(float(string.replace(__settings__.getSetting("scrolldelay"), ",", ".")))
   scrollmode = __settings__.getSetting("scrollmode")
   heartbeat = __settings__.getSetting("heartbeat") == "true"
-  dimonscreensaver = __settings__.getSetting("dimonscreensver") == "true"
+  dimonscreensaver = __settings__.getSetting("dimonscreensaver") == "true"
   navtimeout = int(float(string.replace(__settings__.getSetting("navtimeout"), ",", ".")))
   refreshrate = int(float(string.replace(__settings__.getSetting("refreshrate"), ",", ".")))
  

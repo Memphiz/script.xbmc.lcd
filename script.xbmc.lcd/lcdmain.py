@@ -110,7 +110,7 @@ def process_lcd():
     settingsChanged = settings_didSettingsChange()
     mode = getLcdMode()
 
-    if mode == LCD_MODE.LCD_MODE_SCREENSAVER and settings_getDimOnScreensaver():
+    if mode == LCD_MODE.LCD_MODE_SCREENSAVER and settings_getDimOnScreensaver() and not bBacklightDimmed:
       g_lcdproc.SetBackLight(0)
       bBacklightDimmed = True
 
