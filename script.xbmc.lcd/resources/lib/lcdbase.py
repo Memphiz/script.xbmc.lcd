@@ -180,6 +180,13 @@ class LcdBase():
           if str(progressbarSurroundings.text) == "on":
             self.m_bProgressbarSurroundings = True
 
+        self.m_bAllowEmptyLines = False
+
+        allowemptylines = element.find("allowemptylines")
+        if allowemptylines != None:
+          if str(allowemptylines.text) == "on":
+            self.m_bAllowEmptyLines = True
+
         #load modes
         tmpMode = element.find("music")
         self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_MUSIC)
@@ -221,10 +228,13 @@ class LcdBase():
 
     for line in node.findall("line"):
       linedescriptor = {}
-      linetext = str(line.text).strip()
+      if line.text == None:
+        linetext = ""
+      else:
+        linetext = str(line.text).strip()
       
       # make sure linetext has something so re.match won't fail
-      if linetext != "" and linetext != None:
+      if linetext != "":
         timematch = re.match(timeregex, linetext, flags=re.IGNORECASE)
 
         # if line matches, throw away mode, add BigDigit descriptor and end processing for this mode
@@ -320,7 +330,7 @@ class LcdBase():
           line = line.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
         self.SetProgressBar(0, -1)
 
-      if len(line) > 0:
+      if self.m_bAllowEmptyLines or len(line) > 0:
         self.SetLine(outLine, line, self.m_lcdMode[mode][inLine], bForce)
         outLine += 1
 
