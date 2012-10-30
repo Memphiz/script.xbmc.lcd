@@ -300,10 +300,10 @@ class LCDProc(LcdBase):
 
     # Build command
     if iLight == 0:
-      self.m_bStop = True
+      #self.m_bStop = True
       cmd = "screen_set xbmc -backlight off\n"
     elif iLight > 0:
-      self.m_bStop = False
+      #self.m_bStop = False
       cmd = "screen_set xbmc -backlight on\n"
 
     # Send to server
