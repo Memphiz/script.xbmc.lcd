@@ -77,6 +77,8 @@ class LcdBase():
     self.m_strInfoLabelEncoding = "utf-8" # http://forum.xbmc.org/showthread.php?tid=125492&pid=1045926#pid1045926
     self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
     self.m_strScrollSeparator = " "
+    self.m_bProgressbarSurroundings = False
+    self.m_bAllowEmptyLines = False
 
 # @abstractmethod
   def _concrete_method(self):
@@ -167,12 +169,14 @@ class LcdBase():
           if str(disableOnPlay.text).find("music") >= 0:
             self.m_disableOnPlay += DISABLE_ON_PLAY.DISABLE_ON_PLAY_MUSIC
 
+        # apply scrollseparator
         scrollSeparator = element.find("scrollseparator")
         if scrollSeparator != None:
 
           if str(scrollSeparator.text).strip() != "":
             self.m_strScrollSeparator = " " + scrollSeparator.text + " "
 
+        # check for progressbarsurroundings setting
         self.m_bProgressbarSurroundings = False
 
         progressbarSurroundings = element.find("progressbarsurroundings")
@@ -180,6 +184,7 @@ class LcdBase():
           if str(progressbarSurroundings.text) == "on":
             self.m_bProgressbarSurroundings = True
 
+        # check for allowemptylines setting
         self.m_bAllowEmptyLines = False
 
         allowemptylines = element.find("allowemptylines")
