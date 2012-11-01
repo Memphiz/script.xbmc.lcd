@@ -325,6 +325,8 @@ class LcdBase():
       self.m_lcdMode[i] = []			#clear list
 
   def Shutdown(self):
+    from settings import settings_getDimOnShutdown
+
     log(xbmc.LOGNOTICE, "Shutting down")
 
     if settings_getDimOnShutdown():
