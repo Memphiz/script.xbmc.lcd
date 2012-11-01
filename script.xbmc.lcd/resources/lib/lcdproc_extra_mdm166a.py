@@ -86,8 +86,8 @@ class LCDproc_extra_mdm166a(LCDproc_extra_base):
     else:
       rpercent = percent
 
-    self.m_iOutputValueBars = (self.m_iOutputValueBars &~ bitmask)
-    self.m_iOutputValueBars |= (int(scale * (rpercent / 100)) << bitshift) & bitmask
+    self.m_iOutputValueIcons = (self.m_iOutputValueIcons &~ bitmask)
+    self.m_iOutputValueIcons |= (int(scale * (rpercent / 100)) << bitshift) & bitmask
 
   # private
   def _SetIconStateDo(self, bitmask, state):
