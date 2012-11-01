@@ -84,7 +84,7 @@ class LCDProc(LcdBase):
 
     # Single command without lf
     if countcmds < 1:
-      #countcmds = 1
+      countcmds = 1
       sendcmd += "\n"
 
     try:
