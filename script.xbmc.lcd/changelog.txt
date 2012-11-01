@@ -1,2 +1,7 @@
+1.1.0
+- greatly improved client/server communication
+- native widgets for bars, icons and bignumbers
+- character conversion left to be done by LCDproc
+- additional configuration options
 1.0.0
 - initial addon release
