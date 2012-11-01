@@ -12,8 +12,9 @@
   <string id="104">Geschwindigkeit für gescrollten Text</string>
   <string id="105">Scroll-Modus</string>
   <string id="106">Hintergrundbeleuchtung ausschalten, wenn Bildschirmschoner aktiv</string>  
-  <string id="107">Anzeigedauer der Navigationsansicht (s)</string>
-  <string id="108">Display-Aktualisierungsrate (Hz)</string>
+  <string id="107">Hintergrundbeleuchtung beim Herunterfahren ausschalten</string>  
+  <string id="108">Anzeigedauer der Navigationsansicht (s)</string>
+  <string id="109">Display-Aktualisierungsrate (Hz)</string>
 
   <!--Enum values-->
   <string id="401">Durchlaufend</string>

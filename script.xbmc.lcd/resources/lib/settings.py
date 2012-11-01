@@ -42,6 +42,7 @@ global g_scrolldelay
 global g_scrollmode
 global g_settingsChanged
 global g_dimonscreensaver
+global g_dimonshutdown
 global g_navtimeout
 global g_refreshrate
 
@@ -55,6 +56,7 @@ def settings_initGlobals():
   global g_scrollmode
   global g_settingsChanged
   global g_dimonscreensaver
+  global g_dimonshutdown
   global g_navtimeout
   global g_refreshrate
 
@@ -66,6 +68,7 @@ def settings_initGlobals():
   g_scrollmode       = "0"
   g_settigsChanged   = True
   g_dimonscreensaver = False
+  g_dimonshutdown    = False
   g_navtimeout       = 3
   g_refreshrate      = 1
 
@@ -99,6 +102,10 @@ def settings_getLCDprocScrollMode():
 def settings_getDimOnScreensaver():
   global g_dimonscreensaver
   return g_dimonscreensaver
+
+def settings_getDimOnShutdown():
+  global g_dimonshutdown
+  return g_dimonshutdown
 
 def settings_getNavTimeout():
   global g_navtimeout
@@ -158,6 +165,7 @@ def settings_handleLcdSettings():
   global g_heartbeat
   global g_settingsChanged
   global g_dimonscreensaver
+  global g_dimonshutdown
   global g_navtimeout
   global g_refreshrate
 
@@ -167,6 +175,7 @@ def settings_handleLcdSettings():
   scrollmode = __settings__.getSetting("scrollmode")
   heartbeat = __settings__.getSetting("heartbeat") == "true"
   dimonscreensaver = __settings__.getSetting("dimonscreensaver") == "true"
+  dimonshutdown = __settings__.getSetting("dimonshutdown") == "true"
   navtimeout = int(float(string.replace(__settings__.getSetting("navtimeout"), ",", ".")))
   refreshrate = int(float(string.replace(__settings__.getSetting("refreshrate"), ",", ".")))
  
@@ -184,6 +193,10 @@ def settings_handleLcdSettings():
 
   if g_dimonscreensaver != dimonscreensaver:
     g_dimonscreensaver = dimonscreensaver
+    g_settingsChanged = True
+
+  if g_dimonshutdown != dimonshutdown:
+    g_dimonshutdown = dimonshutdown
     g_settingsChanged = True
     
   if g_navtimeout != navtimeout:

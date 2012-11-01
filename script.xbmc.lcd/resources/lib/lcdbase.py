@@ -327,9 +327,14 @@ class LcdBase():
   def Shutdown(self):
     log(xbmc.LOGNOTICE, "Shutting down")
 
+    if settings_getDimOnShutdown():
+      self.SetBackLight(0)
+
     if self.m_cExtraIcons is not None:
       if not self.SendCommand(self.m_cExtraIcons.GetClearAllCmd(), True):
         log(xbmc.LOGERROR, "Shutdown(): Cannot clear extra icons")
+
+    self.CloseSocket()
 
   def timeToSecs(self, timeAr):
     arLen = len(timeAr)
