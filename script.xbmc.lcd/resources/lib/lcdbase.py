@@ -40,6 +40,7 @@ __icon__ = sys.modules[ "__main__" ].__icon__
 __lcdxml__ = xbmc.translatePath( os.path.join("special://masterprofile","LCD.xml"))
 
 from settings import *
+from extraicons import *
 
 g_dictEmptyLineDescriptor = {} 
 g_dictEmptyLineDescriptor['type'] = str("text")
@@ -78,6 +79,7 @@ class LcdBase():
   def __init__(self):
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
     self.m_lcdMode = [None] * LCD_MODE.LCD_MODE_MAX
+    self.m_extraBars = [None] * (LCD_EXTRABARS_MAX + 1)
     self.m_bDimmedOnPlayback = False
     self.m_strInfoLabelEncoding = "utf-8" # http://forum.xbmc.org/showthread.php?tid=125492&pid=1045926#pid1045926
     self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
@@ -110,7 +112,7 @@ class LcdBase():
   def SetBackLight(self, iLight):
     pass
 
-# @abstractmethod  
+# @abstractmethod
   def SetContrast(self, iContrast):
     pass
 
@@ -214,6 +216,16 @@ class LcdBase():
         if allowemptylines != None:
           if str(allowemptylines.text) == "on":
             self.m_bAllowEmptyLines = True
+
+        # extra progress bars
+        for i in range(1, LCD_EXTRABARS_MAX + 1):
+          extrabar = None
+          extrabar = element.find("extrabar%i" % (i))
+          if extrabar != None:
+            if str(extrabar.text).strip() in ["progress", "volume", "menu"]:
+              self.m_extraBars[i] = str(extrabar.text).strip()
+            else:
+              self.m_extraBars[i] = ""
 
         #load modes
         tmpMode = element.find("music")
@@ -336,6 +348,15 @@ class LcdBase():
 
     return self.timeToSecs(currentDurationAr)
 
+  def GetProgress(self):
+    currentSecs = self.getCurrentTimeSecs()
+    durationSecs = self.getCurrentDurationSecs()
+    return self.GetProgressBarPercent(currentSecs,durationSecs)
+
+  def GetVolumePercent(self):
+    volumedb = float(string.replace(string.replace(xbmc.getInfoLabel("Player.Volume"), ",", "."), " dB", ""))
+    return (100 * (60.0 + volumedb) / 60)
+
   def Render(self, mode, bForce):
     outLine = 0
     inLine = 0
@@ -344,9 +365,7 @@ class LcdBase():
       #parse the progressbar infolabel by ourselfs!
       if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS:
         # get playtime and duration and convert into seconds
-        currentSecs = self.getCurrentTimeSecs()
-        durationSecs = self.getCurrentDurationSecs()
-        percent = self.GetProgressBarPercent(currentSecs,durationSecs)
+        percent = self.GetProgress()
         pixelsWidth = self.SetProgressBar(percent, self.m_lcdMode[mode][inLine]['endx'])
         line = "p" + str(pixelsWidth)
       else:
@@ -370,6 +389,10 @@ class LcdBase():
         self.SetLine(outLine, "", g_dictEmptyLineDescriptor, bForce)
         outLine += 1
 
+    if self.m_cExtraIcons is not None:
+      self.SetExtraInformation()
+      self.m_strSetLineCmds += self.m_cExtraIcons.GetOutputCommands()
+
     self.FlushLines()
 
   def DisableOnPlayback(self, playingVideo, playingAudio):
@@ -381,4 +404,220 @@ class LcdBase():
     elif self.m_bDimmedOnPlayback:
       self.SetBackLight(1)
       self.m_bDimmedOnPlayback = False
+
+  def SetExtraInfoPlaying(self, isplaying, isvideo, isaudio):
+    if isplaying:
+      if isvideo:
+        try:
+          iVideoRes = int(xbmc.getInfoLabel("VideoPlayer.VideoResolution"))
+        except:
+          iVideoRes = int(0)
+
+        try:
+          iScreenRes = int(xbmc.getInfoLabel("System.ScreenHeight"))
+        except:
+          iScreenRes = int(0)
+
+        if xbmc.getCondVisibility("PVR.IsPlayingTV"):
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TV, True)
+        else:
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MOVIE, True)
+
+        if iVideoRes < 720:
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_RESOLUTION_SD, True)
+        else:
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_RESOLUTION_HD, True)
+
+        if iScreenRes <= (iVideoRes + (float(iVideoRes) * 0.1)) and iScreenRes >= (iVideoRes - (float(iVideoRes) * 0.1)):
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUTSOURCE, True)
+        else:
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUTFIT, True)
+
+      elif isaudio:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUSIC, True)
+
+    else:
+      self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_MODES)
+      ###FIXME###TODO### ID = g_windowManager.GetActiveWindow() translation for navigation
+
+  def SetExtraInfoCodecs(self, isplaying, isvideo, isaudio):
+    # initialise stuff to avoid uninitialised var stuff
+    strVideoCodec = ""
+    strAudioCodec = ""
+    iAudioChannels = 0
+
+    if isplaying:
+      if xbmc.getCondVisibility("Player.Passthrough"):
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, True)
+      else:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, False)
+      
+      if isvideo:
+        strVideoCodec = str(xbmc.getInfoLabel("VideoPlayer.VideoCodec")).lower()
+        strAudioCodec = str(xbmc.getInfoLabel("VideoPlayer.AudioCodec")).lower()
+        iAudioChannels = xbmc.getInfoLabel("VideoPlayer.AudioChannels")
+      elif isaudio:
+        strVideoCodec = ""
+        strAudioCodec = str(xbmc.getInfoLabel("MusicPlayer.Codec")).lower()
+        iAudioChannels = xbmc.getInfoLabel("MusicPlayer.Channels")
+
+      # check video codec
+      # any mpeg video
+      if strVideoCodec in ["mpg", "mpeg", "mpeg2video", "h264", "x264", "mpeg4"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_MPEG, True)
+
+      # any divx
+      elif strVideoCodec in ["divx", "dx50", "div3"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_DIVX, True)
+
+      # xvid
+      elif strVideoCodec == "xvid":
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_XVID, True)
+
+      # wmv
+      elif strVideoCodec == "wmv":
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_WMV, True)
+
+      # anything else
+      else:
+        self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_VIDEOCODECS)
+
+      # check audio codec
+      # any mpeg audio
+      if strAudioCodec in ["mpga", "mp2"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_MPEG, True)
+
+      # any ac3/dolby digital
+      elif strAudioCodec in ["ac3", "truehd"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_AC3, True)
+
+      # any dts
+      elif strAudioCodec in ["dts", "dca", "dtshd_ma"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_DTS, True)
+
+      # mp3
+      elif strAudioCodec == "mp3":
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_MP3, True)
+
+      # any ogg vorbis
+      elif strAudioCodec in ["ogg", "vorbis"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_OGG, True)
+
+      # any wma        
+      elif strAudioCodec in ["wma", "wmav2"]:
+        if isvideo:
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_VWMA, True)
+        else:
+          self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_AWMA, True)
+
+      # any pcm, wav or flac
+      elif strAudioCodec in ["wav", "pcm", "flac"]:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_WAV, True)
+
+      # anything else
+      else:
+        self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_AUDIOCODECS)
+
+      # make sure iAudioChannels contains something useful
+      if iAudioChannels == "" and strAudioCodec != "":
+        iAudioChannels = 2
+      elif iAudioChannels == "":
+        iAudioChannels = 0
+      else:
+        iAudioChannels = int(iAudioChannels)
+
+      # decide which icon (set) to activate
+      if iAudioChannels > 0 and iAudioChannels <= 3:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUT_2_0, True)
+      elif iAudioChannels <= 6:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUT_5_1, True)
+      elif iAudioChannels <= 8:
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUT_7_1, True)
+      else:
+        self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_AUDIOCHANNELS)
+
+    else:
+      self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_CODECS)
+
+  def SetExtraInfoGeneric(self, ispaused):
+    if self.GetVolumePercent() == 0.0:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUTE, True)
+    else:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUTE, False)
+
+    if xbmc.getCondVisibility("Player.Paused"):
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PAUSE, True)
+    else:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PAUSE, False)
+
+    if xbmc.getCondVisibility("PVR.IsRecording"):
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_RECORD, True)
+    else:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_RECORD, False)
+
+    if xbmc.getCondVisibility("Playlist.IsRandom"):
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SHUFFLE, True)
+    else:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SHUFFLE, False)
+
+    if xbmc.getCondVisibility("Playlist.IsRepeat") or xbmc.getCondVisibility("Playlist.IsRepeatOne"):
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_REPEAT, True)
+    else:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_REPEAT, False)
+
+    if xbmc.getCondVisibility("System.HasMediaDVD"):
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_DISC_IN, True)
+    else:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_DISC_IN, False)
+
+    if xbmc.getCondVisibility("System.ScreenSaverActive"):
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TIME, True)
+    else:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TIME, False)
+      
+    ###FIXME###TODO### g_windowManager.IsWindowActive(WINDOW_DIALOG_VOLUME_BAR) : ICON_VOLUME
+    ###FIXME###TODO### g_windowManager.IsWindowActive(WINDOW_DIALOG_KAI_TOAST)  : ICON_ALARM
+
+  def SetExtraInfoBars(self, isplaying):
+    for i in range(1, LCD_EXTRABARS_MAX):
+      if self.m_extraBars[i] == "progress":
+        if isplaying:
+          self.m_cExtraIcons.SetBar(i, (self.GetProgress() * 100))
+        else:
+          self.m_cExtraIcons.SetBar(i, 0)
+      elif self.m_extraBars[i] == "volume":
+        self.m_cExtraIcons.SetBar(i, self.GetVolumePercent())
+      elif self.m_extraBars[i] == "menu":
+        if isplaying:
+          self.m_cExtraIcons.SetBar(i, 0)
+        else:
+          self.m_cExtraIcons.SetBar(i, 100)
+      else:
+        self.m_cExtraIcons.SetBar(i, 0)
+
+  def SetExtraInformation(self):
+    # These four states count for "isplayinganything"
+    bPaused = xbmc.getCondVisibility("Player.Paused")
+    bPlaying = (xbmc.getCondVisibility("Player.Playing") |
+                bPaused |
+                xbmc.getCondVisibility("Player.Forwarding") |
+                xbmc.getCondVisibility("Player.Rewinding"))
+
+    bIsVideo = xbmc.getCondVisibility("Player.HasVideo")
+    bIsAudio = xbmc.getCondVisibility("Player.HasAudio")
+    
+    self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING, bPlaying)
+
+    self.SetExtraInfoPlaying(bPlaying, bIsVideo, bIsAudio)
+    self.SetExtraInfoCodecs(bPlaying, bIsVideo, bIsAudio)
+    self.SetExtraInfoGeneric(bPaused)
+    self.SetExtraInfoBars(bPlaying)
+
+
+
+
+
+
+
+
 
