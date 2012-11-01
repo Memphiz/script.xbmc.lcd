@@ -154,27 +154,25 @@ class LCDProc(LcdBase):
       if not self.SendCommand("screen_set xbmc -heartbeat off", True):
         return False
 
+    # Initialize command list var
+    strInitCommandList = ""
+
     # Setup widgets
     for i in range(1,int(self.m_iRows)+1):
       # Text widgets
-      if not self.SendCommand("widget_add xbmc lineScroller" + str(i) + " scroller", True):
-        return False
+      strInitCommandList += "widget_add xbmc lineScroller" + str(i) + " scroller\n"
 
       # Progress bars
-      if not self.SendCommand("widget_add xbmc lineProgress" + str(i) + " hbar", True):
-        return False
+      strInitCommandList += "widget_add xbmc lineProgress" + str(i) + " hbar\n"
 
       # Reset bars to zero
-      if not self.SendCommand("widget_set xbmc lineProgress" + str(i) + " 0 0 0", True):
-        return False
+      strInitCommandList += "widget_set xbmc lineProgress" + str(i) + " 0 0 0\n"
 
       # Icons
-      if not self.SendCommand("widget_add xbmc lineIcon" + str(i) + " icon", True):
-        return False
+      strInitCommandList += "widget_add xbmc lineIcon" + str(i) + " icon\n"
 
       # Default icon
-      if not self.SendCommand("widget_set xbmc lineIcon" + str(i) + " 0 0 BLOCK_FILLED", True):
-        return False
+      strInitCommandList += "widget_set xbmc lineIcon" + str(i) + " 0 0 BLOCK_FILLED\n"
 
       self.m_strLineText[i-1] = ""
       self.m_strLineType[i-1] = ""
@@ -182,14 +180,15 @@ class LCDProc(LcdBase):
 
     for i in range(1,int(self.m_iBigDigits + 1)):
       # Big Digit
-      if not self.SendCommand("widget_add xbmc lineBigDigit" + str(i) + " num", True):
-        return False
+      strInitCommandList += "widget_add xbmc lineBigDigit" + str(i) + " num\n"
 
       # Set Digit
-      if not self.SendCommand("widget_set xbmc lineBigDigit" + str(i) + " 0 0", True):
-        return False
+      strInitCommandList += "widget_set xbmc lineBigDigit" + str(i) + " 0 0\n"
 
       self.m_strDigits[i] = ""
+
+    if not self.SendCommand(strInitCommandList, True):
+      return False
 
     return True
 
