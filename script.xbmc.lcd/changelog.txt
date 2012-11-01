@@ -1,3 +1,7 @@
+1.2.0
+- Support for extra stuff (icons, bars) on supporting displays
+- Extra stuff handling for SoundGraph iMON LCD and Futaba/Targa mdm166a VFD
+  devices (presence will be autodetected)
 1.1.0
 - greatly improved client/server communication
 - native widgets for bars, icons and bignumbers
