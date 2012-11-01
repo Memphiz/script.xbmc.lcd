@@ -112,35 +112,36 @@ def process_lcd():
   bBacklightDimmed = False
 
   while not xbmc.abortRequested:
-    handleConnectLCD()
-    settingsChanged = settings_didSettingsChange()
-    mode = getLcdMode()
+    if handleConnectLCD():
+      settingsChanged = settings_didSettingsChange()
+      mode = getLcdMode()
 
-    if mode == LCD_MODE.LCD_MODE_SCREENSAVER and settings_getDimOnScreensaver() and not bBacklightDimmed:
-      g_lcdproc.SetBackLight(0)
-      bBacklightDimmed = True
+      if mode == LCD_MODE.LCD_MODE_SCREENSAVER and settings_getDimOnScreensaver() and not bBacklightDimmed:
+        g_lcdproc.SetBackLight(0)
+        bBacklightDimmed = True
 
-    g_lcdproc.Render(mode, settingsChanged)
+      g_lcdproc.Render(mode, settingsChanged)
 
-    # turn the backlight on when leaving screensaver and it was dimmed
-    if mode != LCD_MODE.LCD_MODE_SCREENSAVER and bBacklightDimmed:
-      g_lcdproc.SetBackLight(1)
-      bBacklightDimmed = False
+      # turn the backlight on when leaving screensaver and it was dimmed
+      if mode != LCD_MODE.LCD_MODE_SCREENSAVER and bBacklightDimmed:
+        g_lcdproc.SetBackLight(1)
+        bBacklightDimmed = False
     
-    if mode == LCD_MODE.LCD_MODE_MUSIC:
-      g_lcdproc.DisableOnPlayback(False, True)
-    elif mode == LCD_MODE.LCD_MODE_VIDEO:
-      g_lcdproc.DisableOnPlayback(True, False)
-    else:
-      g_lcdproc.DisableOnPlayback(False, False)
+      if mode == LCD_MODE.LCD_MODE_MUSIC:
+        g_lcdproc.DisableOnPlayback(False, True)
+      elif mode == LCD_MODE.LCD_MODE_VIDEO:
+        g_lcdproc.DisableOnPlayback(True, False)
+      else:
+        g_lcdproc.DisableOnPlayback(False, False)
 
-    time.sleep(1.0 / float(settings_getRefreshRate())) # refresh after configured rate
+      time.sleep(1.0 / float(settings_getRefreshRate())) # refresh after configured rate
 
   g_lcdproc.Shutdown()
 
 def handleConnectLCD():
   global g_failedConnectionNotified
   global g_initialConnectAttempt
+  ret = True
    
   while not xbmc.abortRequested:
     #check for new settings
@@ -161,6 +162,7 @@ def handleConnectLCD():
       while (not xbmc.abortRequested) and (count > 0):
         time.sleep(1)
         count -= 1
+	ret = False
     else:
       text = __settings__.getLocalizedString(501)
       if not g_failedConnectionNotified and not g_initialConnectAttempt:
@@ -170,7 +172,7 @@ def handleConnectLCD():
 
   # initial connection attempt done, update flag
   g_initialConnectAttempt = False
-  return True
+  return ret
 
 #MAIN - entry point
 initGlobals()
