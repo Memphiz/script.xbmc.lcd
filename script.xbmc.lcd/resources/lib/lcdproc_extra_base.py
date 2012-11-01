@@ -61,3 +61,7 @@ class LCDproc_extra_base():
 # @abstractmethod
   def ClearIconStates(self, category):
     pass
+
+# @abstractmethod
+  def GetClearAllCmd(self):
+    pass

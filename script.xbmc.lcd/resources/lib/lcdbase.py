@@ -324,6 +324,13 @@ class LcdBase():
     for i in range(0,LCD_MODE.LCD_MODE_MAX):
       self.m_lcdMode[i] = []			#clear list
 
+  def Shutdown(self):
+    log(xbmc.LOGNOTICE, "Shutting down")
+
+    if self.m_cExtraIcons is not None:
+      if not self.SendCommand(self.m_cExtraIcons.GetClearAllCmd(), True):
+        log(xbmc.LOGERROR, "Shutdown(): Cannot clear extra icons")
+
   def timeToSecs(self, timeAr):
     arLen = len(timeAr)
     if arLen == 1:

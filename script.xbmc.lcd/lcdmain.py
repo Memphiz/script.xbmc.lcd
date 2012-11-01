@@ -136,6 +136,8 @@ def process_lcd():
 
     time.sleep(1.0 / float(settings_getRefreshRate())) # refresh after configured rate
 
+  g_lcdproc.Shutdown()
+
 def handleConnectLCD():
   global g_failedConnectionNotified
   global g_initialConnectAttempt

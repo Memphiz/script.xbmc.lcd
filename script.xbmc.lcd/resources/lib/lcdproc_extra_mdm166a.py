@@ -157,3 +157,9 @@ class LCDproc_extra_mdm166a(LCDproc_extra_base):
 
     elif category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_AUDIOCHANNELS:
       self.m_iOutputValueIcons &= MDM166A_ICONS.ICON_CLEAR_ANTENNABAR
+
+  def GetClearAllCmd(self):
+    self.m_iOutputValueOldIcons = 0
+    self.m_iOutputValueIcons = 0
+
+    return "output 0\n"

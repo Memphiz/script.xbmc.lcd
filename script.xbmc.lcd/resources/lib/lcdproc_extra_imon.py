@@ -340,3 +340,11 @@ class LCDproc_extra_imon(LCDproc_extra_base):
 
     elif category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_AUDIOCHANNELS:
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_CHANNELS
+
+  def GetClearAllCmd(self):
+    self.m_iOutputValueOldIcons = 0
+    self.m_iOutputValueOldBars = 0
+    self.m_iOutputValueIcons = 0
+    self.m_iOutputValueBars = 0
+
+    return "output 0\n"
