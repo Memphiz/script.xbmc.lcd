@@ -37,61 +37,34 @@ sys.path.append (BASE_RESOURCE_PATH)
 
 from settings import *
 from lcdproc import *
+from infolabels import *
 
 global g_failedConnectionNotified
 global g_initialConnectAttempt
 global g_lcdproc
 
-global g_oldMenu
-global g_oldSubMenu
-global g_timer
-
 def initGlobals():
   global g_failedConnectionNotified
   global g_initialConnectAttempt
   global g_lcdproc 
-  global g_oldMenu
-  global g_oldSubMenu
-  global g_timer
 
   g_failedConnectionNotified = False   
   g_initialConnectAttempt = True
   settings_initGlobals()
   g_lcdproc = LCDProc()
-  g_oldMenu = ""
-  g_oldSubMenu = ""
-  g_timer = time.time()
 
-def isNavigationActive():
-  global g_oldMenu
-  global g_oldSubMenu
-  global g_timer
-
-  ret = False
-
-  navtimeout = settings_getNavTimeout()
-  menu = xbmc.getInfoLabel("$INFO[System.CurrentWindow]")
-  subMenu = xbmc.getInfoLabel("$INFO[System.CurrentControl]")
-
-  if menu != g_oldMenu or subMenu != g_oldSubMenu or (g_timer + navtimeout) > time.time():
-    ret = True
-    if menu != g_oldMenu or subMenu != g_oldSubMenu:
-      g_timer = time.time()      
-    g_oldMenu = menu
-    g_oldSubMenu = subMenu
-
-  return ret
+  InfoLabel_Initialize()
 
 # returns mode identifier based on currently playing media/active navigation
 def getLcdMode():                 
   ret = LCD_MODE.LCD_MODE_GENERAL
 
-  navActive = isNavigationActive()
-  screenSaver = xbmc.getCondVisibility("System.ScreenSaverActive")
-  playingVideo = xbmc.getCondVisibility("Player.HasVideo")
-  playingMusic = xbmc.getCondVisibility("Player.HasAudio")
-  playingPVRTV = xbmc.getCondVisibility("PVR.IsPlayingTV")
-  playingPVRRadio = xbmc.getCondVisibility("PVR.IsPlayingRadio")
+  navActive = InfoLabel_IsNavigationActive()
+  screenSaver = InfoLabel_IsScreenSaverActive()
+  playingVideo = InfoLabel_PlayingVideo()
+  playingMusic = InfoLabel_PlayingAudio()
+  playingPVRTV = InfoLabel_PlayingLiveTV()
+  playingPVRRadio = InfoLabel_PlayingLiveRadio()
 
   if navActive:
     ret = LCD_MODE.LCD_MODE_NAVIGATION

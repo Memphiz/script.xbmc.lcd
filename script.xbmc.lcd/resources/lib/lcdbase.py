@@ -39,7 +39,6 @@ __cwd__ = sys.modules[ "__main__" ].__cwd__
 __icon__ = sys.modules[ "__main__" ].__icon__
 __lcdxml__ = xbmc.translatePath( os.path.join("special://masterprofile","LCD.xml"))
 
-from settings import *
 from extraicons import *
 from infolabels import *
 

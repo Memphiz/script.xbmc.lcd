@@ -25,13 +25,12 @@ import string
 import sys
 import time
 import xbmc
+
 __scriptname__ = sys.modules[ "__main__" ].__scriptname__
 __settings__   = sys.modules[ "__main__" ].__settings__
 __cwd__        = sys.modules[ "__main__" ].__cwd__
 __icon__       = sys.modules[ "__main__" ].__icon__
 sys.path.append (__cwd__)
-
-from lcdbase import LCD_MODE
 
 #general
 global g_hostip
@@ -72,7 +71,6 @@ def settings_initGlobals():
   g_navtimeout       = 3
   g_refreshrate      = 1
 
-   
 def settings_getHostIp():
   global g_hostip
   return g_hostip

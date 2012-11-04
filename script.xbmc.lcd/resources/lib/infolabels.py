@@ -23,10 +23,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import os
 import string
+import sys
+import time
 
 import xbmc
+import xbmcaddon
 import xbmcgui
+
+__settingshandler__ = sys.modules[ "settings" ]
 
 # enum snippet from http://stackoverflow.com/a/1695250 - thanks!
 def enum(*sequential, **named):
@@ -37,6 +43,19 @@ def enum(*sequential, **named):
 class WINDOW_IDS:
   WINDOW_DIALOG_VOLUME_BAR = 10104
   WINDOW_DIALOG_KAI_TOAST  = 10107
+
+global g_InfoLabel_oldMenu
+global g_InfoLabel_oldSubMenu
+global g_InfoLabel_navTimer
+
+def InfoLabel_Initialize():
+  global g_InfoLabel_oldMenu
+  global g_InfoLabel_oldSubMenu
+  global g_InfoLabel_navTimer
+
+  g_InfoLabel_oldMenu = ""
+  g_InfoLabel_oldSubMenu = ""
+  g_InfoLabel_navTimer = time.time()
 
 def InfoLabel_timeToSecs(timeAr):
   arLen = len(timeAr)
@@ -59,6 +78,9 @@ def InfoLabel_PlayingAudio():
 
 def InfoLabel_PlayingLiveTV():
   return xbmc.getCondVisibility("PVR.IsPlayingTV")
+
+def InfoLabel_PlayingLiveRadio():
+  return xbmc.getCondVisibility("PVR.IsPlayingRadio")
 
 def InfoLabel_GetPlayerTime():
   return xbmc.getInfoLabel("Player.Time")
@@ -137,3 +159,25 @@ def InfoLabel_GetProgressPercent():
     return 0
 
   return float(tCurrent)/float(tTotal)
+
+def InfoLabel_IsNavigationActive():
+  global g_InfoLabel_oldMenu
+  global g_InfoLabel_oldSubMenu
+  global g_InfoLabel_navTimer
+
+  #from settings import settings_getNavTimeout
+
+  ret = False
+
+  navtimeout = __settingshandler__.settings_getNavTimeout()
+  menu = InfoLabel_GetInfoLabel("$INFO[System.CurrentWindow]")
+  subMenu = InfoLabel_GetInfoLabel("$INFO[System.CurrentControl]")
+
+  if menu != g_InfoLabel_oldMenu or subMenu != g_InfoLabel_oldSubMenu or (g_InfoLabel_navTimer + navtimeout) > time.time():
+    ret = True
+    if menu != g_InfoLabel_oldMenu or subMenu != g_InfoLabel_oldSubMenu:
+      g_InfoLabel_navTimer = time.time()      
+    g_InfoLabel_oldMenu = menu
+    g_InfoLabel_oldSubMenu = subMenu
+
+  return ret
