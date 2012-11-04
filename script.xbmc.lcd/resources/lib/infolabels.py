@@ -32,6 +32,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
+# wonder why "from settings import *" does not work...
 __settingshandler__ = sys.modules[ "settings" ]
 
 # enum snippet from http://stackoverflow.com/a/1695250 - thanks!
