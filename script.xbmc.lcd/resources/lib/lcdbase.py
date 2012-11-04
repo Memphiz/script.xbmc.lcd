@@ -41,6 +41,7 @@ __lcdxml__ = xbmc.translatePath( os.path.join("special://masterprofile","LCD.xml
 
 from settings import *
 from extraicons import *
+from infolabels import *
 
 g_dictEmptyLineDescriptor = {} 
 g_dictEmptyLineDescriptor['type'] = str("text")
@@ -586,7 +587,7 @@ class LcdBase():
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TIME, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TIME, False)
-      
+
     ###FIXME###TODO### g_windowManager.IsWindowActive(WINDOW_DIALOG_VOLUME_BAR) : ICON_VOLUME
     ###FIXME###TODO### g_windowManager.IsWindowActive(WINDOW_DIALOG_KAI_TOAST)  : ICON_ALARM
 
