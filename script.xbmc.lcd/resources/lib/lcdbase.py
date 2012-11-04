@@ -616,16 +616,12 @@ class LcdBase():
         self.m_cExtraIcons.SetBar(i, 0)
 
   def SetExtraInformation(self):
-    # These four states count for "isplayinganything"
-    bPaused = xbmc.getCondVisibility("Player.Paused")
-    bPlaying = (xbmc.getCondVisibility("Player.Playing") |
-                bPaused |
-                xbmc.getCondVisibility("Player.Forwarding") |
-                xbmc.getCondVisibility("Player.Rewinding"))
+    bPaused = InfoLabel_IsPlayerPaused()
+    bPlaying = InfoLabel_IsPlayingAny()
 
-    bIsVideo = xbmc.getCondVisibility("Player.HasVideo")
-    bIsAudio = xbmc.getCondVisibility("Player.HasAudio")
-    
+    bIsVideo = InfoLabel_PlayingVideo()
+    bIsAudio = InfoLabel_PlayingAudio()
+
     self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING, bPlaying)
 
     self.SetExtraInfoPlaying(bPlaying, bIsVideo, bIsAudio)

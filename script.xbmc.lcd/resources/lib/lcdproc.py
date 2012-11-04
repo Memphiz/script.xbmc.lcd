@@ -43,6 +43,8 @@ from lcdbase import *
 from lcdproc_extra_imon import *
 from lcdproc_extra_mdm166a import *
 
+from infolabels import *
+
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
   
@@ -382,7 +384,7 @@ class LCDProc(LcdBase):
     return int(self.m_iColumns)
 
   def GetBigDigitTime(self):
-      ret = xbmc.getInfoLabel("Player.Time")
+      ret = InfoLabel_GetPlayerTime()
 
       if ret == "": # no usable timestring, e.g. not playing anything
         if self.m_iBigDigits < 8: # return only h:m when display too small
@@ -434,10 +436,10 @@ class LCDProc(LcdBase):
     return self.m_iProgressBarWidth
 
   def SetPlayingStateIcon(self):
-    bPlaying = xbmc.getCondVisibility("Player.Playing")
-    bPaused = xbmc.getCondVisibility("Player.Paused")
-    bForwarding = xbmc.getCondVisibility("Player.Forwarding")
-    bRewinding = xbmc.getCondVisibility("Player.Rewinding")
+    bPlaying = InfoLabel_IsPlayerPlaying()
+    bPaused = InfoLabel_IsPlayerPaused()
+    bForwarding = InfoLabel_IsPlayerForwarding()
+    bRewinding = InfoLabel_IsPlayerRewinding()
 
     self.m_strIconName = "STOP"
 

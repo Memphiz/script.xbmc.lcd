@@ -38,3 +38,30 @@ class WINDOW_IDS:
 
 def InfoLabel_WindowIsActive(WindowID):
   return xbmc.getCondVisibility("Window.IsActive(" + str(WindowID) + ")")
+
+def InfoLabel_PlayingVideo():
+  return xbmc.getCondVisibility("Player.HasVideo")
+
+def InfoLabel_PlayingAudio():
+  return xbmc.getCondVisibility("Player.HasAudio")
+
+def InfoLabel_GetPlayerTime():
+  return xbmc.getInfoLabel("Player.Time")
+
+def InfoLabel_IsPlayerPlaying():
+  return xbmc.getCondVisibility("Player.Playing")
+
+def InfoLabel_IsPlayerPaused():
+  return xbmc.getCondVisibility("Player.Paused")
+
+def InfoLabel_IsPlayerForwarding():
+  return xbmc.getCondVisibility("Player.Forwarding")
+
+def InfoLabel_IsPlayerRewinding():
+  return xbmc.getCondVisibility("Player.Rewinding")
+
+def InfoLabel_IsPlayingAny():
+  return (InfoLabel_IsPlayerPlaying() |
+          InfoLabel_IsPlayerPaused() |
+          InfoLabel_IsPlayerForwarding() |
+          InfoLabel_IsPlayerRewinding())
