@@ -612,12 +612,3 @@ class LcdBase():
     self.SetExtraInfoCodecs(bPlaying, bIsVideo, bIsAudio)
     self.SetExtraInfoGeneric(bPaused)
     self.SetExtraInfoBars(bPlaying)
-
-
-
-
-
-
-
-
-
