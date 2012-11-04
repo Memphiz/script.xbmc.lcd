@@ -588,8 +588,15 @@ class LcdBase():
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TIME, False)
 
-    ###FIXME###TODO### g_windowManager.IsWindowActive(WINDOW_DIALOG_VOLUME_BAR) : ICON_VOLUME
-    ###FIXME###TODO### g_windowManager.IsWindowActive(WINDOW_DIALOG_KAI_TOAST)  : ICON_ALARM
+    if InfoLabel_WindowIsActive(WINDOW_IDS.WINDOW_DIALOG_VOLUME_BAR):
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VOLUME, True)
+    else:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VOLUME, False)
+
+    if InfoLabel_WindowIsActive(WINDOW_IDS.WINDOW_DIALOG_KAI_TOAST):
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ALARM, True)
+    else:
+      self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ALARM, False)
 
   def SetExtraInfoBars(self, isplaying):
     for i in range(1, LCD_EXTRABARS_MAX):

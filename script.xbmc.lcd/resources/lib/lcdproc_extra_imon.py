@@ -319,6 +319,12 @@ class LCDproc_extra_imon(LCDproc_extra_base):
     elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_TIME:
       self._SetIconStateDo(IMON_ICONS.ICON_TIME, state)
 
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_VOLUME:
+      self._SetIconStateDo(IMON_ICONS.ICON_VOLUME, state)
+
+    elif icon == LCD_EXTRAICONS.LCD_EXTRAICON_ALARM:
+      self._SetIconStateDo(IMON_ICONS.ICON_ALARM, state)
+
   def ClearIconStates(self, category):
     if category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_MODES:
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_TOPROW
