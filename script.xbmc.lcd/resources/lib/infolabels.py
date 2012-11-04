@@ -42,9 +42,21 @@ def enum(*sequential, **named):
 
 # interesting XBMC GUI Window IDs (no defines seem to exist for this)
 class WINDOW_IDS:
-  WINDOW_DIALOG_VOLUME_BAR = 10104
-  WINDOW_DIALOG_KAI_TOAST  = 10107
-
+  WINDOW_WEATHER               = 12600
+  WINDOW_PVR                   = 10601
+  WINDOW_PVR_MAX               = 10699
+  WINDOW_VIDEOS                = 10006
+  WINDOW_VIDEO_FILES           = 10024
+  WINDOW_VIDEO_NAV             = 10025
+  WINDOW_VIDEO_PLAYLIST        = 10028
+  WINDOW_MUSIC                 = 10005
+  WINDOW_MUSIC_PLAYLIST        = 10500
+  WINDOW_MUSIC_FILES           = 10501
+  WINDOW_MUSIC_NAV             = 10502
+  WINDOW_MUSIC_PLAYLIST_EDITOR = 10503
+  WINDOW_DIALOG_VOLUME_BAR     = 10104
+  WINDOW_DIALOG_KAI_TOAST      = 10107
+  
 global g_InfoLabel_oldMenu
 global g_InfoLabel_oldSubMenu
 global g_InfoLabel_navTimer
@@ -88,6 +100,9 @@ def InfoLabel_GetPlayerTime():
 
 def InfoLabel_GetPlayerDuration():
   return xbmc.getInfoLabel("Player.Duration")
+
+def InfoLabel_GetActiveWindowID():
+  return int(xbmcgui.getCurrentWindowId())
 
 def InfoLabel_IsPlayerPlaying():
   return xbmc.getCondVisibility("Player.Playing")
@@ -182,3 +197,36 @@ def InfoLabel_IsNavigationActive():
     g_InfoLabel_oldSubMenu = subMenu
 
   return ret
+
+def InfoLabel_IsWindowIDPVR(iWindowID):
+  if iWindowID >= WINDOW_IDS.WINDOW_PVR and iWindowID <= WINDOW_IDS.WINDOW_PVR_MAX:
+    return True
+
+  return False
+
+def InfoLabel_IsWindowIDVideo(iWindowID):
+  if iWindowID in [WINDOW_IDS.WINDOW_VIDEOS, WINDOW_IDS.WINDOW_VIDEO_FILES,
+                   WINDOW_IDS.WINDOW_VIDEO_NAV, WINDOW_IDS.WINDOW_VIDEO_PLAYLIST]:
+    return True
+
+  return False
+
+def InfoLabel_IsWindowIDMusic(iWindowID):
+  if iWindowID in [WINDOW_IDS.WINDOW_MUSIC, WINDOW_IDS.WINDOW_MUSIC_PLAYLIST,
+                   WINDOW_IDS.WINDOW_MUSIC_FILES, WINDOW_IDS.WINDOW_MUSIC_NAV,
+                   WINDOW_IDS.WINDOW_MUSIC_PLAYLIST_EDITOR]:
+    return True
+
+  return False
+
+def InfoLabel_IsWindowIDPictures(iWindowID):
+  if iWindowID == WINDOW_IDS.WINDOW_PICTURES:
+    return True
+
+  return False
+
+def InfoLabel_IsWindowIDWeather(iWindowID):
+  if iWindowID == WINDOW_IDS.WINDOW_WEATHER:
+    return True
+
+  return False

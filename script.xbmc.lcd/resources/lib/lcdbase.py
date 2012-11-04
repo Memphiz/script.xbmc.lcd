@@ -413,9 +413,23 @@ class LcdBase():
       elif isaudio:
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUSIC, True)
 
-    else:
-      self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_MODES)
-      ###FIXME###TODO### ID = g_windowManager.GetActiveWindow() translation for navigation
+    else: # not playing
+
+      # Set active mode indicator based on current active window
+      iWindowID = InfoLabel_GetActiveWindowID()
+
+      if InfoLabel_IsWindowIDPVR(iWindowID):
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TV, True)
+      elif InfoLabel_IsWindowIDVideo(iWindowID):
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MOVIE, True)
+      elif InfoLabel_IsWindowIDMusic(iWindowID):
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUSIC, True)
+      elif InfoLabel_IsWindowIDPictures(iWindowID):
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PHOTO, True)
+      elif InfoLabel_IsWindowIDWeather(iWindowID):
+        self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_WEATHER, True)
+      else:
+        self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_MODES)
 
   def SetExtraInfoCodecs(self, isplaying, isvideo, isaudio):
     # initialise stuff to avoid uninitialised var stuff
