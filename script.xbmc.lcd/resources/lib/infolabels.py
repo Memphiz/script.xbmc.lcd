@@ -23,6 +23,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import string
+
 import xbmc
 import xbmcgui
 
@@ -36,6 +38,16 @@ class WINDOW_IDS:
   WINDOW_DIALOG_VOLUME_BAR = 10104
   WINDOW_DIALOG_KAI_TOAST  = 10107
 
+def InfoLabel_timeToSecs(timeAr):
+  arLen = len(timeAr)
+  if arLen == 1:
+    currentSecs = int(timeAr[0])
+  elif arLen == 2:
+    currentSecs = int(timeAr[0]) * 60 + int(timeAr[1])
+  elif arLen == 3:
+    currentSecs = int(timeAr[0]) * 60 * 60 + int(timeAr[1]) * 60 + int(timeAr[2])
+  return currentSecs
+
 def InfoLabel_WindowIsActive(WindowID):
   return xbmc.getCondVisibility("Window.IsActive(" + str(WindowID) + ")")
 
@@ -45,8 +57,14 @@ def InfoLabel_PlayingVideo():
 def InfoLabel_PlayingAudio():
   return xbmc.getCondVisibility("Player.HasAudio")
 
+def InfoLabel_PlayingLiveTV():
+  return xbmc.getCondVisibility("PVR.IsPlayingTV")
+
 def InfoLabel_GetPlayerTime():
   return xbmc.getInfoLabel("Player.Time")
+
+def InfoLabel_GetPlayerDuration():
+  return xbmc.getInfoLabel("Player.Duration")
 
 def InfoLabel_IsPlayerPlaying():
   return xbmc.getCondVisibility("Player.Playing")
@@ -65,3 +83,57 @@ def InfoLabel_IsPlayingAny():
           InfoLabel_IsPlayerPaused() |
           InfoLabel_IsPlayerForwarding() |
           InfoLabel_IsPlayerRewinding())
+
+def InfoLabel_IsPassthroughAudio():
+  return xbmc.getCondVisibility("Player.Passthrough")
+
+def InfoLabel_IsPVRRecording():
+  return xbmc.getCondVisibility("PVR.IsRecording")
+
+def InfoLabel_IsPlaylistRandom():
+  return xbmc.getCondVisibility("Playlist.IsRandom")
+
+def InfoLabel_IsPlaylistRepeatAll():
+  return xbmc.getCondVisibility("Playlist.IsRepeat")
+
+def InfoLabel_IsPlaylistRepeatOne():
+  return xbmc.getCondVisibility("Playlist.IsRepeatOne")
+
+def InfoLabel_IsPlaylistRepeatAny():
+  return (InfoLabel_IsPlaylistRepeatAll() | InfoLabel_IsPlaylistRepeatOne())
+
+def InfoLabel_IsDiscInDrive():
+  return xbmc.getCondVisibility("System.HasMediaDVD")
+
+def InfoLabel_IsScreenSaverActive():
+  return xbmc.getCondVisibility("System.ScreenSaverActive")
+
+def InfoLabel_GetInfoLabel(strLabel):
+  return xbmc.getInfoLabel(strLabel)
+
+def InfoLabel_GetVolumePercent():
+  volumedb = float(string.replace(string.replace(xbmc.getInfoLabel("Player.Volume"), ",", "."), " dB", ""))
+  return (100 * (60.0 + volumedb) / 60)
+
+def InfoLabel_GetPlayerTimeSecs():
+  currentTimeAr = InfoLabel_GetPlayerTime().split(":")
+  if currentTimeAr[0] == "":
+    return 0
+
+  return InfoLabel_timeToSecs(currentTimeAr)
+
+def InfoLabel_GetPlayerDurationSecs():
+  currentDurationAr = InfoLabel_GetPlayerDuration().split(":")
+  if currentDurationAr[0] == "":
+    return 0
+
+  return InfoLabel_timeToSecs(currentDurationAr)
+
+def InfoLabel_GetProgressPercent():
+  tCurrent = InfoLabel_GetPlayerTimeSecs()
+  tTotal = InfoLabel_GetPlayerDurationSecs()
+
+  if float(tTotal) == 0.0:
+    return 0
+
+  return float(tCurrent)/float(tTotal)
