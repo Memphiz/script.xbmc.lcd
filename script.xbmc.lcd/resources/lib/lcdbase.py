@@ -78,9 +78,11 @@ class LCD_LINETYPE:
 class LcdBase():
   def __init__(self):
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
+    self.m_timeDisableOnPlayTimer = time.time()
     self.m_lcdMode = [None] * LCD_MODE.LCD_MODE_MAX
     self.m_extraBars = [None] * (LCD_EXTRABARS_MAX + 1)
     self.m_bDimmedOnPlayback = False
+    self.m_iDimOnPlayDelay = 0
     self.m_strInfoLabelEncoding = "utf-8" # http://forum.xbmc.org/showthread.php?tid=125492&pid=1045926#pid1045926
     self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
     self.m_strScrollSeparator = " "
@@ -167,6 +169,8 @@ class LcdBase():
       #PARSE LCD infos
       if element.tag == "lcd":
         # load our settings  
+
+        # disable on play
         disableOnPlay = element.find("disableonplay")
         if disableOnPlay != None:
           self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
@@ -174,6 +178,21 @@ class LcdBase():
             self.m_disableOnPlay += DISABLE_ON_PLAY.DISABLE_ON_PLAY_VIDEO
           if str(disableOnPlay.text).find("music") >= 0:
             self.m_disableOnPlay += DISABLE_ON_PLAY.DISABLE_ON_PLAY_MUSIC
+
+        # disable on play delay
+        self.m_iDimOnPlayDelay = 0
+
+        disableonplaydelay = element.find("disableonplaydelay")
+        if disableonplaydelay != None and disableonplaydelay.text != None:
+          try:
+            intdelay = int(disableonplaydelay.text)
+          except ValueError, TypeError:
+            log(xbmc.LOGERROR, "Value for disableonplaydelay must be integer (got: %s)" % (disableonplaydelay.text))
+          else:
+            if intdelay < 0:
+              log(xbmc.LOGERROR, "Value %d for disableonplaydelay smaller than zero, ignoring" % (intdelay))
+            else:
+              self.m_iDimOnPlayDelay = intdelay
 
         # apply scrollseparator
         scrollSeparator = element.find("scrollseparator")
@@ -375,12 +394,14 @@ class LcdBase():
   def DisableOnPlayback(self, playingVideo, playingAudio):
     if (playingVideo and (self.m_disableOnPlay & DISABLE_ON_PLAY.DISABLE_ON_PLAY_VIDEO)) or (playingAudio and (self.m_disableOnPlay & DISABLE_ON_PLAY.DISABLE_ON_PLAY_MUSIC)):
       if not self.m_bDimmedOnPlayback:
-        self.SetBackLight(0)
-        self.m_bDimmedOnPlayback = True
-        self.ClearDisplay()
-    elif self.m_bDimmedOnPlayback:
-      self.SetBackLight(1)
-      self.m_bDimmedOnPlayback = False
+        if (self.m_timeDisableOnPlayTimer + self.m_iDimOnPlayDelay) < time.time():
+          self.SetBackLight(0)
+          self.m_bDimmedOnPlayback = True
+    else:
+      self.m_timeDisableOnPlayTimer = time.time()
+      if self.m_bDimmedOnPlayback:
+        self.SetBackLight(1)
+        self.m_bDimmedOnPlayback = False
 
   def SetExtraInfoPlaying(self, isplaying, isvideo, isaudio):
     if isplaying:
