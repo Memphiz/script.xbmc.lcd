@@ -392,7 +392,14 @@ class LcdBase():
     self.FlushLines()
 
   def DisableOnPlayback(self, playingVideo, playingAudio):
-    if (playingVideo and (self.m_disableOnPlay & DISABLE_ON_PLAY.DISABLE_ON_PLAY_VIDEO)) or (playingAudio and (self.m_disableOnPlay & DISABLE_ON_PLAY.DISABLE_ON_PLAY_MUSIC)):
+    # check if any dimming is requested and matching config
+    dodim = (playingVideo and (self.m_disableOnPlay & DISABLE_ON_PLAY.DISABLE_ON_PLAY_VIDEO)) or (playingAudio and (self.m_disableOnPlay & DISABLE_ON_PLAY.DISABLE_ON_PLAY_MUSIC))
+
+    # if dimrequest matches, check if pause is active (don't dim then)
+    if dodim:
+      dodim = dodim and not InfoLabel_IsPlayerPaused()
+    
+    if dodim:
       if not self.m_bDimmedOnPlayback:
         if (self.m_timeDisableOnPlayTimer + self.m_iDimOnPlayDelay) < time.time():
           self.SetBackLight(0)
