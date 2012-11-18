@@ -55,6 +55,23 @@ def initGlobals():
 
   InfoLabel_Initialize()
 
+# handle dispay of connection notificaiton popups
+def HandleConnectionNotification(bConnectSuccess):
+  global g_failedConnectionNotified
+  global g_initialConnectAttempt
+
+  if not bConnectSuccess:
+    if not g_failedConnectionNotified:
+      g_failedConnectionNotified = True
+      g_initialConnectAttempt = False
+      text = __settings__.getLocalizedString(500)
+      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
+  else:
+    text = __settings__.getLocalizedString(501)
+    if not g_initialConnectAttempt:
+      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
+      g_failedConnectionNotified = True
+
 # returns mode identifier based on currently playing media/active navigation
 def getLcdMode():                 
   ret = LCD_MODE.LCD_MODE_GENERAL
@@ -112,10 +129,8 @@ def process_lcd():
   g_lcdproc.Shutdown(settings_getDimOnShutdown())
 
 def handleConnectLCD():
-  global g_failedConnectionNotified
-  global g_initialConnectAttempt
   ret = True
-   
+
   while not xbmc.abortRequested:
     #check for new settings
     if settings_checkForNewSettings() or not g_lcdproc.IsConnected():    #networksettings changed?
@@ -124,27 +139,8 @@ def handleConnectLCD():
       return True
 
     ret = g_lcdproc.Initialize()
+    HandleConnectionNotification(ret)
 
-    if not ret:
-      count = 10
-      if not g_failedConnectionNotified:
-        g_failedConnectionNotified = True
-	g_initialConnectAttempt = False
-        text = __settings__.getLocalizedString(500)
-        xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
-      while (not xbmc.abortRequested) and (count > 0):
-        time.sleep(1)
-        count -= 1
-	ret = False
-    else:
-      text = __settings__.getLocalizedString(501)
-      if not g_failedConnectionNotified and not g_initialConnectAttempt:
-        xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
-        g_failedConnectionNotified = True
-      break
-
-  # initial connection attempt done, update flag
-  g_initialConnectAttempt = False
   return ret
 
 #MAIN - entry point
