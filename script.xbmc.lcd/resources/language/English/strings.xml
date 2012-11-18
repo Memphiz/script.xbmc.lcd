@@ -15,6 +15,7 @@
   <string id="107">Dim backlight on shutdown</string>
   <string id="108">Navigation display duration (s)</string>
   <string id="109">Display refresh rate (Hz)</string>
+  <string id="110">Hide connection error notifications</string>
 
   <!--Enum values-->
   <string id="401">Marquee</string>

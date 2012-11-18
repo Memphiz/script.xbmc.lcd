@@ -44,6 +44,7 @@ global g_dimonscreensaver
 global g_dimonshutdown
 global g_navtimeout
 global g_refreshrate
+global g_hideconnpopups
 
 #init globals with defaults
 def settings_initGlobals():
@@ -58,6 +59,7 @@ def settings_initGlobals():
   global g_dimonshutdown
   global g_navtimeout
   global g_refreshrate
+  global g_hideconnpopups
 
   g_hostip           = "127.0.0.1"
   g_hostport         = 13666
@@ -70,6 +72,7 @@ def settings_initGlobals():
   g_dimonshutdown    = False
   g_navtimeout       = 3
   g_refreshrate      = 1
+  g_hideconnpopups   = True
 
 def settings_getHostIp():
   global g_hostip
@@ -112,6 +115,10 @@ def settings_getNavTimeout():
 def settings_getRefreshRate():
   global g_refreshrate
   return g_refreshrate
+
+def settings_getHideConnPopups():
+  global g_hideconnpopups
+  return g_hideconnpopups
 
 #check for new settings and handle them if anything changed
 #only checks if the last check is 5 secs old
@@ -166,6 +173,7 @@ def settings_handleLcdSettings():
   global g_dimonshutdown
   global g_navtimeout
   global g_refreshrate
+  global g_hideconnpopups
 
   g_settingsChanged = False
 
@@ -176,6 +184,7 @@ def settings_handleLcdSettings():
   dimonshutdown = __settings__.getSetting("dimonshutdown") == "true"
   navtimeout = int(float(string.replace(__settings__.getSetting("navtimeout"), ",", ".")))
   refreshrate = int(float(string.replace(__settings__.getSetting("refreshrate"), ",", ".")))
+  hideconnpopups = __settings__.getSetting("hideconnpopups") == "true"
  
   if g_scrolldelay != scrolldelay:
     g_scrolldelay = scrolldelay
@@ -208,6 +217,10 @@ def settings_handleLcdSettings():
       g_refreshrate = 1
 
     g_settingsChanged = True    
+
+  if g_hideconnpopups != hideconnpopups:
+    g_hideconnpopups = hideconnpopups
+    g_settingsChanged = True
 
 #handles all settings of boblight and applies them as needed
 #returns if a reconnect is needed due to settings changes

@@ -139,7 +139,8 @@ def handleConnectLCD():
       return True
 
     ret = g_lcdproc.Initialize()
-    HandleConnectionNotification(ret)
+    if not settings_getHideConnPopups():
+      HandleConnectionNotification(ret)
 
   return ret
 

@@ -15,6 +15,7 @@
   <string id="107">Hintergrundbeleuchtung beim Herunterfahren ausschalten</string>  
   <string id="108">Anzeigedauer der Navigationsansicht (s)</string>
   <string id="109">Display-Aktualisierungsrate (Hz)</string>
+  <string id="110">Verbindungsfehler-Benachrichtigung verstecken</string>
 
   <!--Enum values-->
   <string id="401">Durchlaufend</string>

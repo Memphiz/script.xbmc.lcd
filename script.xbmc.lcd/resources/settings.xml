@@ -9,7 +9,8 @@
     <setting id="scrollmode" type="enum" label="105" lvalues="401|402" default="0" />
     <setting id="dimonscreensaver" type="bool" label="106" default="false" />
     <setting id="dimonshutdown" type="bool" label="107" default="false" />
-    <setting id="navtimeout" type="slider" label="108" option="int" default="2" range="1,10" />    
-    <setting id="refreshrate" type="slider" label="109" option="int" default="1" range="1,20" />    
+    <setting id="navtimeout" type="slider" label="108" option="int" default="2" range="1,10" />
+    <setting id="refreshrate" type="slider" label="109" option="int" default="1" range="1,20" />
+    <setting id="hideconnpopups" type="bool" label="110" default="true" />
   </category>
 </settings>
