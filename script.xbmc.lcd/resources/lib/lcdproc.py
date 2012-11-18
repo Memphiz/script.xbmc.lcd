@@ -312,7 +312,17 @@ class LCDProc(LcdBase):
     return True
 
   def CloseSocket(self):
-    self.tn.close()
+    if self.tn.get_socket() != None:
+      # no pyexceptions, please, we're disconnecting anyway
+      try:
+        # do gracefully disconnect (send directly as we won't get any response on this)
+        self.tn.write("bye\n")
+        # and close socket afterwards
+        self.tn.close()
+      except:
+        # exception caught on this, so what? :)
+        pass
+
     del self.tn
     self.tn = telnetlib.Telnet()
 
