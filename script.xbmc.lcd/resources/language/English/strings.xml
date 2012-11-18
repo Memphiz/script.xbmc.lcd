@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
-<!--Common-->
- 
-  
-<!--Settings-->  
-  <!--General-->
-  <string id="100">General</string>
-  <string id="101">Use remote LCDProc</string>
-  <string id="102">LCDd IP</string>
-  <string id="103">Show heartbeat symbol</string>
-  <string id="104">Delay for scrolling text</string>
-  <string id="105">Scroll mode</string>
-  <string id="106">Dim backlight on screensaver</string>
-  <string id="107">Dim backlight on shutdown</string>
-  <string id="108">Navigation display duration (s)</string>
-  <string id="109">Display refresh rate (Hz)</string>
-  <string id="110">Hide connection error notifications</string>
+<!--Settings-->
+  <!--Behaviour-->
+  <string id="100">Behaviour</string>
+  <string id="101">Delay for scrolling text</string>
+  <string id="102">Scroll mode</string>
+  <string id="103">Navigation display duration (s)</string>
+  <string id="104">Display refresh rate (Hz)</string>
+
+  <!--Backlight-->
+  <string id="200">Backlight</string>
+  <string id="201">Dim backlight on screensaver</string>
+  <string id="202">Dim backlight on shutdown</string>
+
+  <!--Connection-->
+  <string id="300">Connection</string>
+  <string id="301">Use remote LCDProc</string>
+  <string id="302">LCDd IP</string>
+  <string id="303">LCDd port</string>
+  <string id="304">Show heartbeat symbol</string>
+  <string id="305">Hide connection error notifications</string>
 
   <!--Enum values-->
   <string id="401">Marquee</string>
@@ -27,5 +31,3 @@
   <string id="502">Settings changed!</string>
 
 </strings>
-
-

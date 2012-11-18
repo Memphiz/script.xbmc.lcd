@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
   <category label="100">
-    <setting id="remotelcdproc" type="bool" label="101" default="false" />
-    <setting id="hostip" enable="eq(-1,true)" type="ipaddress" label="102" default="127.0.0.1" />
-    <setting id="sep1" type="sep" />
-    <setting id="heartbeat" type="bool" label="103" default="false" />
-    <setting id="scrolldelay" type="slider" label="104" option="int" default="1" range="0,10" />
-    <setting id="scrollmode" type="enum" label="105" lvalues="401|402" default="0" />
-    <setting id="dimonscreensaver" type="bool" label="106" default="false" />
-    <setting id="dimonshutdown" type="bool" label="107" default="false" />
-    <setting id="navtimeout" type="slider" label="108" option="int" default="2" range="1,10" />
-    <setting id="refreshrate" type="slider" label="109" option="int" default="1" range="1,20" />
-    <setting id="hideconnpopups" type="bool" label="110" default="true" />
+    <setting id="scrolldelay" type="slider" label="101" option="int" default="1" range="0,10" />
+    <setting id="scrollmode" type="enum" label="102" lvalues="401|402" default="0" />
+    <setting id="navtimeout" type="slider" label="103" option="int" default="2" range="1,10" />
+    <setting id="refreshrate" type="slider" label="104" option="int" default="1" range="1,20" />
+  </category>
+  <category label="200">
+    <setting id="dimonscreensaver" type="bool" label="201" default="false" />
+    <setting id="dimonshutdown" type="bool" label="202" default="false" />
+  </category>
+  <category label="300">
+    <setting id="remotelcdproc" type="bool" label="301" default="false" />
+    <setting id="hostip" enable="eq(-1,true)" type="ipaddress" label="302" default="127.0.0.1" />
+    <setting id="hostport" enable="eq(-2,true)" type="number" label="303" default="13666" />
+    <setting id="sep2" type="sep" />
+    <setting id="heartbeat" type="bool" label="304" default="false" />
+    <setting id="sep3" type="sep" />
+    <setting id="hideconnpopups" type="bool" label="305" default="true" />
   </category>
 </settings>

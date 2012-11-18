@@ -145,23 +145,40 @@ def settings_didSettingsChange():
 def settings_handleNetworkSettings():
   global g_hostip
   global g_hostport
+  global g_heartbeat
+
   reconnect = False
 
-  hostip        = __settings__.getSetting("hostip")
-  hostport      = g_hostport
+  hostip    = __settings__.getSetting("hostip")
+  hostport  = int(__settings__.getSetting("hostport"))
+  heartbeat = __settings__.getSetting("heartbeat") == "true"
 
   #server settings
   #we need to reconnect if networkaccess bool changes
   #or if network access is enabled and ip or port have changed
-  if g_hostip != hostip or g_hostport != hostport:
+  if g_hostip != hostip or g_hostport != hostport or g_heartbeat != heartbeat:
     if g_hostip != hostip:
       print "lcd: changed hostip to " + str(hostip)
       g_hostip = hostip
-    
+      reconnect = True
+
     if g_hostport != hostport:
-      print "lcd: changed hostport to " + str(hostport)
-      g_hostport = hostport
-    reconnect = True
+
+      # make sure valid port number was given
+      if hostport > 0 and hostport < 65536:
+        print "lcd: changed hostport to " + str(hostport)
+        g_hostport = hostport
+        reconnect = True
+      else:
+        print "lcd: invalid hostport value " + str(hostport) + ", resetting to old value " + str(g_hostport)
+
+      __settings__.setSetting("hostport", str(g_hostport))
+
+    if g_heartbeat != heartbeat:
+      print "lcd: toggled heartbeat bool"
+      g_heartbeat = heartbeat
+      reconnect = True
+
   return reconnect
 
 def settings_handleLcdSettings():
@@ -179,7 +196,6 @@ def settings_handleLcdSettings():
 
   scrolldelay = int(float(string.replace(__settings__.getSetting("scrolldelay"), ",", ".")))
   scrollmode = __settings__.getSetting("scrollmode")
-  heartbeat = __settings__.getSetting("heartbeat") == "true"
   dimonscreensaver = __settings__.getSetting("dimonscreensaver") == "true"
   dimonshutdown = __settings__.getSetting("dimonshutdown") == "true"
   navtimeout = int(float(string.replace(__settings__.getSetting("navtimeout"), ",", ".")))
@@ -192,10 +208,6 @@ def settings_handleLcdSettings():
 
   if g_scrollmode != scrollmode:
     g_scrollmode = scrollmode
-    g_settingsChanged = True
-
-  if g_heartbeat != heartbeat:
-    g_heartbeat = heartbeat
     g_settingsChanged = True
 
   if g_dimonscreensaver != dimonscreensaver:
