@@ -2,6 +2,8 @@
 - Support for extra stuff (icons, bars) on supporting displays
 - Extra stuff handling for SoundGraph iMON LCD and Futaba/Targa mdm166a VFD
   devices (presence will be autodetected)
+- Fixed connection problem popup annoyance
+- GUI settings cleanup and some more LCD.xml configurables
 1.1.0
 - greatly improved client/server communication
 - native widgets for bars, icons and bignumbers
