@@ -290,7 +290,12 @@ class LcdBase():
     timeregex = r'' + re.escape('$INFO[LCD.') + 'Time((Wide)?\d?\d?)' + re.escape(']')
 
     for line in node.findall("line"):
-      linedescriptor = {}
+      # initialize line with empty descriptor
+      linedescriptor = g_dictEmptyLineDescriptor.copy()
+
+      linedescriptor['startx'] = int(1)
+      linedescriptor['endx'] = int(self.GetColumns())
+
       if line.text == None:
         linetext = ""
       else:
@@ -303,9 +308,7 @@ class LcdBase():
         # if line matches, throw away mode, add BigDigit descriptor and end processing for this mode
         if timematch != None:
           linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN
-          linedescriptor['startx'] = int(1)
           linedescriptor['text'] = "Time"
-          linedescriptor['endx'] = int(self.GetColumns())
 
           self.m_lcdMode[mode] = []
           self.m_lcdMode[mode].append(linedescriptor)
@@ -314,8 +317,6 @@ class LcdBase():
       # progressbar line if InfoLabel exists
       if str(linetext).lower().find("$info[lcd.progressbar]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_PROGRESS
-        linedescriptor['startx'] = int(1)
-        linedescriptor['text'] = ""
         linedescriptor['endx'] = int(self.m_iCellWidth) * int(self.m_iColumns)
 
         if self.m_bProgressbarSurroundings == True:
@@ -332,13 +333,11 @@ class LcdBase():
           linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext))).strip()
         else:
           linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext), flags=re.IGNORECASE)).strip()
-        linedescriptor['endx'] = int(self.GetColumns())
+
       # standard (scrolling) text line
       else:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_TEXT
-        linedescriptor['startx'] = int(1)
         linedescriptor['text'] = str(linetext)
-        linedescriptor['endx'] = int(self.GetColumns())
 
       self.m_lcdMode[mode].append(linedescriptor)
 
