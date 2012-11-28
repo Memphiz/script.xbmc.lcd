@@ -526,6 +526,8 @@ class LCDProc(LcdBase):
         strLineLong = strLineLong[:iMaxLineLen]
         iScrollSpeed = 1
 
+    iStartX = dictDescriptor['startx']
+
     # check if update is required
     if strLineLong != self.m_strLineText[iLine] or bForce:
       # bigscreen
@@ -533,10 +535,10 @@ class LCDProc(LcdBase):
         self.SetBigDigits(strLineLong, bExtraForce)
       # progressbar line
       elif dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS:
-        self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, dictDescriptor['startx'], ln, self.m_iProgressBarWidth)
+        self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, iStartX, ln, self.m_iProgressBarWidth)
       # everything else (text, icontext)
       else:
-        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i %s %i \"%s\"\n" % (ln, dictDescriptor['startx'], ln, self.m_iColumns, ln, strScrollMode, iScrollSpeed, re.escape(strLineLong))
+        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i %s %i \"%s\"\n" % (ln, iStartX, ln, self.m_iColumns, ln, strScrollMode, iScrollSpeed, re.escape(strLineLong))
 
       # cache contents
       self.m_strLineText[iLine] = strLineLong
