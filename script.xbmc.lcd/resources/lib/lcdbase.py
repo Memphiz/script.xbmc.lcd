@@ -341,9 +341,9 @@ class LcdBase():
 
       # check for alignment pseudo-labels
       if str(linetext).lower().find("$info[lcd.aligncenter]") >= 0:
-        linedescriptor['type'] = LCD_LINEALIGN.LCD_LINEALIGN_CENTER
+        linedescriptor['align'] = LCD_LINEALIGN.LCD_LINEALIGN_CENTER
       if str(linetext).lower().find("$info[lcd.alignright]") >= 0:
-        linedescriptor['type'] = LCD_LINEALIGN.LCD_LINEALIGN_RIGHT
+        linedescriptor['align'] = LCD_LINEALIGN.LCD_LINEALIGN_RIGHT
 
       if self.m_vPythonVersion < (2, 7):
         linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.AlignCenter]") + '\s?', ' ', linedescriptor['text'])).strip()
