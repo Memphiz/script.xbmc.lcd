@@ -339,6 +339,19 @@ class LcdBase():
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_TEXT
         linedescriptor['text'] = str(linetext)
 
+      # check for alignment pseudo-labels
+      if str(linetext).lower().find("$info[lcd.aligncenter]") >= 0:
+        linedescriptor['type'] = LCD_LINEALIGN.LCD_LINEALIGN_CENTER
+      if str(linetext).lower().find("$info[lcd.alignright]") >= 0:
+        linedescriptor['type'] = LCD_LINEALIGN.LCD_LINEALIGN_RIGHT
+
+      if self.m_vPythonVersion < (2, 7):
+        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.AlignCenter]") + '\s?', ' ', linedescriptor['text'])).strip()
+        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.AlignRight]") + '\s?', ' ', linedescriptor['text'])).strip()
+      else:
+        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.AlignCenter]") + '\s?', ' ', linedescriptor['text'], flags=re.IGNORECASE)).strip()
+        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.AlignRight]") + '\s?', ' ', linedescriptor['text'], flags=re.IGNORECASE)).strip()
+
       self.m_lcdMode[mode].append(linedescriptor)
 
   def Reset(self):
