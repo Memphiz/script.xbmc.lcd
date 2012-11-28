@@ -42,12 +42,6 @@ __lcdxml__ = xbmc.translatePath( os.path.join("special://masterprofile","LCD.xml
 from extraicons import *
 from infolabels import *
 
-g_dictEmptyLineDescriptor = {} 
-g_dictEmptyLineDescriptor['type'] = str("text")
-g_dictEmptyLineDescriptor['startx'] = int(0)
-g_dictEmptyLineDescriptor['text'] = str("")
-g_dictEmptyLineDescriptor['endx'] = int(0)
-
 # global functions
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,),level=loglevel ) 
@@ -74,6 +68,18 @@ class LCD_LINETYPE:
   LCD_LINETYPE_PROGRESS  = "progressbar"
   LCD_LINETYPE_ICONTEXT  = "icontext"
   LCD_LINETYPE_BIGSCREEN = "bigscreen"
+
+class LCD_LINEALIGN:
+  LCD_LINEALIGN_LEFT   = 0
+  LCD_LINEALIGN_CENTER = 1
+  LCD_LINEALIGN_RIGHT  = 2
+
+g_dictEmptyLineDescriptor = {} 
+g_dictEmptyLineDescriptor['type'] = str("text")
+g_dictEmptyLineDescriptor['startx'] = int(0)
+g_dictEmptyLineDescriptor['text'] = str("")
+g_dictEmptyLineDescriptor['endx'] = int(0)
+g_dictEmptyLineDescriptor['align'] = LCD_LINEALIGN.LCD_LINEALIGN_LEFT
 
 class LcdBase():
   def __init__(self):
