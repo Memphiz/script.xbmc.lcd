@@ -538,6 +538,13 @@ class LCDProc(LcdBase):
         self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, iStartX, ln, self.m_iProgressBarWidth)
       # everything else (text, icontext)
       else:
+        if len(strLineLong) < iMaxLineLen and dictDescriptor['align'] != LCD_LINEALIGN.LCD_LINEALIGN_LEFT:
+          iSpaces = iMaxLineLen - len(strLineLong)
+          if dictDescriptor['align'] == LCD_LINEALIGN.LCD_LINEALIGN_RIGHT:
+            iStartX += iSpaces
+          elif dictDescriptor['align'] == LCD_LINEALIGN.LCD_LINEALIGN_CENTER:
+            iStartX += int(iSpaces / 2)
+
         self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i %s %i \"%s\"\n" % (ln, iStartX, ln, self.m_iColumns, ln, strScrollMode, iScrollSpeed, re.escape(strLineLong))
 
       # cache contents
