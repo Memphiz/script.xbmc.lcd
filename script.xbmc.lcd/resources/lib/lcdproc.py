@@ -518,7 +518,7 @@ class LCDProc(LcdBase):
     iScrollSpeed = settings_getScrollDelay()
     strScrollMode = settings_getLCDprocScrollMode()
 
-    if len(strLineLong) > int(self.m_iColumns): # if the string doesn't fit the display...
+    if len(strLineLong) > iMaxLineLen: # if the string doesn't fit the display...
       if iScrollSpeed != 0:          # add separator when scrolling enabled
         if strScrollMode == "m":     # and scrollmode is marquee
           strLineLong += self.m_strScrollSeparator      
