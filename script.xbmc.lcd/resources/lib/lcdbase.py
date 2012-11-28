@@ -75,7 +75,7 @@ class LCD_LINEALIGN:
   LCD_LINEALIGN_RIGHT  = 2
 
 g_dictEmptyLineDescriptor = {} 
-g_dictEmptyLineDescriptor['type'] = str("text")
+g_dictEmptyLineDescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_TEXT
 g_dictEmptyLineDescriptor['startx'] = int(0)
 g_dictEmptyLineDescriptor['text'] = str("")
 g_dictEmptyLineDescriptor['endx'] = int(0)
