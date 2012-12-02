@@ -42,12 +42,6 @@ __lcdxml__ = xbmc.translatePath( os.path.join("special://masterprofile","LCD.xml
 from extraicons import *
 from infolabels import *
 
-g_dictEmptyLineDescriptor = {} 
-g_dictEmptyLineDescriptor['type'] = str("text")
-g_dictEmptyLineDescriptor['startx'] = int(0)
-g_dictEmptyLineDescriptor['text'] = str("")
-g_dictEmptyLineDescriptor['endx'] = int(0)
-
 # global functions
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,),level=loglevel ) 
@@ -74,6 +68,18 @@ class LCD_LINETYPE:
   LCD_LINETYPE_PROGRESS  = "progressbar"
   LCD_LINETYPE_ICONTEXT  = "icontext"
   LCD_LINETYPE_BIGSCREEN = "bigscreen"
+
+class LCD_LINEALIGN:
+  LCD_LINEALIGN_LEFT   = 0
+  LCD_LINEALIGN_CENTER = 1
+  LCD_LINEALIGN_RIGHT  = 2
+
+g_dictEmptyLineDescriptor = {} 
+g_dictEmptyLineDescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_TEXT
+g_dictEmptyLineDescriptor['startx'] = int(0)
+g_dictEmptyLineDescriptor['text'] = str("")
+g_dictEmptyLineDescriptor['endx'] = int(0)
+g_dictEmptyLineDescriptor['align'] = LCD_LINEALIGN.LCD_LINEALIGN_LEFT
 
 class LcdBase():
   def __init__(self):
@@ -284,7 +290,12 @@ class LcdBase():
     timeregex = r'' + re.escape('$INFO[LCD.') + 'Time((Wide)?\d?\d?)' + re.escape(']')
 
     for line in node.findall("line"):
-      linedescriptor = {}
+      # initialize line with empty descriptor
+      linedescriptor = g_dictEmptyLineDescriptor.copy()
+
+      linedescriptor['startx'] = int(1)
+      linedescriptor['endx'] = int(self.GetColumns())
+
       if line.text == None:
         linetext = ""
       else:
@@ -297,9 +308,7 @@ class LcdBase():
         # if line matches, throw away mode, add BigDigit descriptor and end processing for this mode
         if timematch != None:
           linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN
-          linedescriptor['startx'] = int(1)
           linedescriptor['text'] = "Time"
-          linedescriptor['endx'] = int(self.GetColumns())
 
           self.m_lcdMode[mode] = []
           self.m_lcdMode[mode].append(linedescriptor)
@@ -308,8 +317,6 @@ class LcdBase():
       # progressbar line if InfoLabel exists
       if str(linetext).lower().find("$info[lcd.progressbar]") >= 0:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_PROGRESS
-        linedescriptor['startx'] = int(1)
-        linedescriptor['text'] = ""
         linedescriptor['endx'] = int(self.m_iCellWidth) * int(self.m_iColumns)
 
         if self.m_bProgressbarSurroundings == True:
@@ -326,13 +333,24 @@ class LcdBase():
           linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext))).strip()
         else:
           linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.PlayIcon]") + '\s?', ' ', str(linetext), flags=re.IGNORECASE)).strip()
-        linedescriptor['endx'] = int(self.GetColumns())
+
       # standard (scrolling) text line
       else:
         linedescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_TEXT
-        linedescriptor['startx'] = int(1)
         linedescriptor['text'] = str(linetext)
-        linedescriptor['endx'] = int(self.GetColumns())
+
+      # check for alignment pseudo-labels
+      if str(linetext).lower().find("$info[lcd.aligncenter]") >= 0:
+        linedescriptor['align'] = LCD_LINEALIGN.LCD_LINEALIGN_CENTER
+      if str(linetext).lower().find("$info[lcd.alignright]") >= 0:
+        linedescriptor['align'] = LCD_LINEALIGN.LCD_LINEALIGN_RIGHT
+
+      if self.m_vPythonVersion < (2, 7):
+        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.AlignCenter]") + '\s?', ' ', linedescriptor['text'])).strip()
+        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.AlignRight]") + '\s?', ' ', linedescriptor['text'])).strip()
+      else:
+        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.AlignCenter]") + '\s?', ' ', linedescriptor['text'], flags=re.IGNORECASE)).strip()
+        linedescriptor['text'] = str(re.sub(r'\s?' + re.escape("$INFO[LCD.AlignRight]") + '\s?', ' ', linedescriptor['text'], flags=re.IGNORECASE)).strip()
 
       self.m_lcdMode[mode].append(linedescriptor)
 
