@@ -2,6 +2,7 @@
 - Support for extra stuff (icons, bars) on supporting displays
 - Extra stuff handling for SoundGraph iMON LCD and Futaba/Targa mdm166a VFD
   devices (presence will be autodetected)
+- Align each line either left (default), centered or right
 - Fixed connection problem popup annoyance
 - GUI settings cleanup and some more LCD.xml configurables
 1.1.0
