@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.xbmc.lcd" name="XBMC LCDproc" version="1.2.0" provider-name="Memphiz, Daniel Scheller">
+<addon id="script.xbmc.lcd" name="XBMC LCDproc" version="1.2.0" provider-name="Team XBMC: Memphiz, Daniel 'herrnst' Scheller">
   <requires>
     <import addon="xbmc.python" version="2.0"/>
   </requires>
   <extension point="xbmc.service" library="lcdmain.py" start="login"></extension>
   <extension point="xbmc.addon.metadata">
-    <summary>XBMC LCD/VFD</summary>
-    <description>This addon will add the LCD/VFD feature which was integrated into XBMC before. There has to be an lcdproc daemon (LCDd) running somewhere in the network or local to use the addon.</description>
+    <language></language>
+    <summary>XBMC LCDproc</summary>
+    <description>Displays configurable information e.g. about playing media or XBMC status on any LC/VF-display driven by LCDproc, and acts as direct drop-in replacement to the LCD/VFD-feature previously available in XBMC's core. Supports additional display elements (icons, bars) on SoundGraph iMON LCD and Targa/Futaba mdm166a VFD hardware. Requires a properly configured and running LCDd either locally or somewhere on the network.</description>
+    <description lang="de">Zeigt konfigurierbare Informationen z.B. über aktuelle Wiedergabe oder XBMC Stati auf beliebigen von LCDproc angesteuerten LC/VF-Displays, ersetzt die zuvor im XBMC-Kern enthaltene LCD/VFD-Funktion. Unterstützt zusätzliche Elemente (Icons, Balken) von SoundGraph iMON LCD und Targa/Futaba mdm166a VFD Hardware. Benötigt einen konfigurierten, laufenden LCDd auf dem lokalen System oder im Netzwerk.</description>
+    <disclaimer>Works with LCDproc only. Other LCD services like LCD4Linux or iMON Manager on Win32 are not supported. No liability taken for damaged hardware and/or software caused by this addon.</disclaimer>
+    <disclaimer lang="de">Funktioniert ausschliesslich mit LCDproc. Andere LCD-Dienste wie LCD4Linux, iMON Manager unter Win32 u.a. sind nicht unterstützt. Keine Haftung für durch dieses Addon beschädigte Hard-/Software.</disclaimer>
     <platform>all</platform>
   </extension>
 </addon>
