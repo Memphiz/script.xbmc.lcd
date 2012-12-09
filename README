@@ -1,7 +1,7 @@
 XBMC LCDproc Python addon
 ==========================
 
-Copyright (C) 2012 Daniel Scheller
+Copyright (C) 2012 Team XBMC, Daniel 'herrnst' Scheller
 Based on initial work (C) 2012 Memphiz/Team XBMC
 
 LCDproc support for XBMC implemented in Python, direct drop-in replacement for
