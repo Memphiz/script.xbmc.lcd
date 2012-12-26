@@ -29,5 +29,6 @@
   <string id="500">Fehler beim Verbinden zu LCDproc!</string>
   <string id="501">Verbunden mit LCDproc!</string>
   <string id="502">Einstellungen geändert!</string>
+  <string id="503">Warnung! Fehlerhafte LCD.xml oder LCD.xml nicht gefunden!</string>
 
 </strings>

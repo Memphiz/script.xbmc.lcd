@@ -99,6 +99,7 @@ class LcdBase():
     self.m_strOldAudioCodec = ""
     self.m_iOldAudioChannelsVar = 0
     self.m_bWasStopped = True
+    self.m_bHaveSkin = False
 
 # @abstractmethod
   def _concrete_method(self):
@@ -170,7 +171,14 @@ class LcdBase():
 
   def LoadSkin(self, xmlFile):
     self.Reset()
-    doc = xmltree.parse(xmlFile)
+
+    try:
+      doc = xmltree.parse(xmlFile)
+    except:
+      text = __settings__.getLocalizedString(503)
+      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
+      return
+
     for element in doc.getiterator():
       #PARSE LCD infos
       if element.tag == "lcd":
@@ -274,6 +282,8 @@ class LcdBase():
 
         tmpMode = element.find("pvrradio")
         self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_PVRRADIO)
+        
+        self.m_bHaveSkin = True
 
   def LoadMode(self, node, mode):
     if node == None:
@@ -372,6 +382,9 @@ class LcdBase():
     self.CloseSocket()
 
   def Render(self, mode, bForce):
+    if not self.m_bHaveSkin:
+      return
+
     outLine = 0
     inLine = 0
 
