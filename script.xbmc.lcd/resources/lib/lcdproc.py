@@ -51,7 +51,7 @@ def log(loglevel, msg):
 MAX_ROWS = 20
 MAX_BIGDIGITS = 20
 INIT_RETRY_INTERVAL = 2
-INIT_RETRY_INTERVAL_MAX = 60000
+INIT_RETRY_INTERVAL_MAX = 60
 
 class LCDProc(LcdBase):
   def __init__(self):
@@ -218,7 +218,7 @@ class LCDProc(LcdBase):
       # preventively close socket
       self.CloseSocket()
 
-      # give up after 60 seconds
+      # give up after INIT_RETRY_INTERVAL_MAX (60) seconds
       if self.m_initRetryInterval > INIT_RETRY_INTERVAL_MAX:
         self.m_used = False
         log(xbmc.LOGERROR,"Connect failed. Giving up.")
