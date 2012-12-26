@@ -98,7 +98,7 @@ class LCDproc_extra_mdm166a(LCDproc_extra_base):
 
   def Initialize(self):
     for i in range(1, 5):
-      self._SetBar(i, float(0))
+      self.SetBar(i, float(0))
 
   def SetOutputIcons(self):
     ret = ""
