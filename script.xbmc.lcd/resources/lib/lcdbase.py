@@ -452,6 +452,10 @@ class LcdBase():
         self.m_bDimmedOnPlayback = False
 
   def SetExtraInfoPlaying(self, isplaying, isvideo, isaudio):
+    # make sure output scaling indicators are off when not playing and/or not playing video
+    if not isplaying or not isvideo:
+      self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_OUTSCALE)
+
     if isplaying:
       if isvideo:
         try:

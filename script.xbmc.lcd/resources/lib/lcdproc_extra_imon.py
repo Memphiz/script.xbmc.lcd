@@ -328,6 +328,8 @@ class LCDproc_extra_imon(LCDproc_extra_base):
   def ClearIconStates(self, category):
     if category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_MODES:
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_TOPROW
+
+    elif category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_OUTSCALE:
       self.m_iOutputValueIcons &= IMON_ICONS.ICON_CLEAR_OUTSCALE
 
     elif category == LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_CODECS:
