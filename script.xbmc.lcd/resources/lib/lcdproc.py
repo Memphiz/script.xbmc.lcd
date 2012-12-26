@@ -221,7 +221,7 @@ class LCDProc(LcdBase):
       # give up after INIT_RETRY_INTERVAL_MAX (60) seconds
       if self.m_initRetryInterval > INIT_RETRY_INTERVAL_MAX:
         self.m_used = False
-        log(xbmc.LOGERROR,"Connect failed. Giving up.")
+        log(xbmc.LOGERROR,"Connect failed. Giving up. Please fix any connection problems and restart the addon.")
       else:
         self.m_initRetryInterval = self.m_initRetryInterval * 2
         log(xbmc.LOGERROR,"Connect failed. Retry in %d seconds." % self.m_initRetryInterval)
