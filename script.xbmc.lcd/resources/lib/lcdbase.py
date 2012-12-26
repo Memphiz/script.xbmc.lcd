@@ -99,7 +99,7 @@ class LcdBase():
     self.m_strOldAudioCodec = ""
     self.m_iOldAudioChannelsVar = 0
     self.m_bWasStopped = True
-    self.m_bHaveSkin = False
+    self.m_bXMLWarningDisplayed = False
 
 # @abstractmethod
   def _concrete_method(self):
@@ -167,17 +167,25 @@ class LcdBase():
 
   def Initialize(self):
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
-    self.LoadSkin(__lcdxml__)
+    if not self.LoadSkin(__lcdxml__):
+      return False
+
+    return True
 
   def LoadSkin(self, xmlFile):
     self.Reset()
+    bHaveSkin = False
 
     try:
       doc = xmltree.parse(xmlFile)
     except:
-      text = __settings__.getLocalizedString(503)
-      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
-      return
+      if not self.m_bXMLWarningDisplayed:
+        self.m_bXMLWarningDisplayed = True
+        text = __settings__.getLocalizedString(503)
+        xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,5000,__icon__))
+
+      log(xbmc.LOGERROR, "Parsing of %s failed" % (xmlFile))
+      return False
 
     for element in doc.getiterator():
       #PARSE LCD infos
@@ -282,8 +290,13 @@ class LcdBase():
 
         tmpMode = element.find("pvrradio")
         self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_PVRRADIO)
-        
-        self.m_bHaveSkin = True
+
+        bHaveSkin = True
+
+        # LCD.xml parsed successfully, so reset warning flag
+        self.m_bXMLWarningDisplayed = False
+
+    return bHaveSkin
 
   def LoadMode(self, node, mode):
     if node == None:
@@ -382,9 +395,6 @@ class LcdBase():
     self.CloseSocket()
 
   def Render(self, mode, bForce):
-    if not self.m_bHaveSkin:
-      return
-
     outLine = 0
     inLine = 0
 

@@ -206,14 +206,18 @@ class LCDProc(LcdBase):
     self.m_lastInitAttempt = now
 
     if self.Connect():
-      # reset the retry interval after a successful connect
-      self.m_initRetryInterval = INIT_RETRY_INTERVAL
-      self.m_bStop = False
-      connected = True
-    else:
-      self.CloseSocket()
+      if LcdBase.Initialize(self):
+        # reset the retry interval after a successful connect
+        self.m_initRetryInterval = INIT_RETRY_INTERVAL
+        self.m_bStop = False
+        connected = True
+      else:
+        log(xbmc.LOGERROR, "Connection successful but LCD.xml has errors, aborting connect")
 
     if not connected:
+      # preventively close socket
+      self.CloseSocket()
+
       # give up after 60 seconds
       if self.m_initRetryInterval > INIT_RETRY_INTERVAL_MAX:
         self.m_used = False
@@ -221,8 +225,6 @@ class LCDProc(LcdBase):
       else:
         self.m_initRetryInterval = self.m_initRetryInterval * 2
         log(xbmc.LOGERROR,"Connect failed. Retry in %d seconds." % self.m_initRetryInterval)
-    else:
-      LcdBase.Initialize(self)
 
     return connected
 
