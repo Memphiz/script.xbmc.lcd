@@ -7,6 +7,7 @@
   <string id="32102">Scroll mode</string>
   <string id="32103">Navigation display duration (s)</string>
   <string id="32104">Display refresh rate (Hz)</string>
+  <string id="32105">Use native codepages (only for imon-like displays for now)</string>
 
   <!--Backlight-->
   <string id="32200">Backlight</string>

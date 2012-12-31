@@ -7,6 +7,7 @@
   <string id="32102">Scroll-Modus</string>
   <string id="32103">Anzeigedauer der Navigationsansicht (s)</string>
   <string id="32104">Display-Aktualisierungsrate (Hz)</string>
+  <string id="32105">Native codepages (für imon)</string>
 
   <!--Backlight-->
   <string id="32200">Beleuchtung</string>
