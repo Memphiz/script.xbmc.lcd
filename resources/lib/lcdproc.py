@@ -75,8 +75,6 @@ class LCDProc(LcdBase):
     self.m_strSetLineCmds = ""
     self.m_cExtraIcons = None
     self.m_vPythonVersion = sys.version_info
-    self.m_strInfoLabelEncoding = "utf-8" # http://forum.xbmc.org/showthread.php?tid=125492&pid=1045926#pid1045926
-    self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants anything but utf-8.
 
     if self.m_vPythonVersion < (2, 7):
       log(xbmc.LOGWARNING, "Python < 2.7 detected. Upgrade your Python for optimal results.")
@@ -238,6 +236,7 @@ class LCDProc(LcdBase):
     rematch_imon = "SoundGraph iMON(.*)LCD"
     rematch_mdm166a = "Targa(.*)mdm166a"
     rematch_imonvfd = "Soundgraph(.*)VFD"
+    bSupportNativeCP = False
 
     # Never cause script failure/interruption by this! This is totally optional!
     try:
@@ -256,9 +255,6 @@ class LCDProc(LcdBase):
         log(xbmc.LOGNOTICE, "SoundGraph iMON LCD detected")
         self.m_cExtraIcons = LCDproc_extra_imon()
         self.m_cExtraIcons.Initialize()
-      if settings_getNativecodepage():
-        codecs.register(searchcp)
-        self.m_strLCDEncoding = 'imon'
 
       elif re.match(rematch_mdm166a, reply):
         log(xbmc.LOGNOTICE, "Futaba/Targa USB mdm166a VFD detected")
@@ -267,7 +263,9 @@ class LCDProc(LcdBase):
 
       elif re.match(rematch_imonvfd, reply):
         log(xbmc.LOGNOTICE, "SoundGraph iMON IR/VFD detected")
-      if settings_getNativecodepage():
+        bSupportNativeCP = True
+
+      if bSupportNativeCP and settings_getNativecodepage():
         codecs.register(searchcp)
         self.m_strLCDEncoding = 'imon'
 
@@ -533,7 +531,7 @@ class LCDProc(LcdBase):
     if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
       strLineLong = self.GetBigDigitTime()
     else:
-      strLineLong = strLine.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
+      strLineLong = strLine
 
     strLineLong.strip()
   
