@@ -537,7 +537,13 @@ class LcdBase():
         self.m_strOldVideoCodec = strVideoCodec
 
         # any mpeg video
-        if strVideoCodec in ["mpg", "mpeg", "mpeg2video", "h264", "x264", "mpeg4"]:
+        # FIXME: "hdmv" is returned as video codec for ANYTHING played directly
+        # from bluray media played via libbluray and friends, regardless of the
+        # real codec (mpeg2/h264/vc1). Ripping to e.g. MKV and playing that back
+        # returns the correct codec id. As the display is wrong for VC-1 only,
+        # accept that the codec icon is right only in maybe 70-80% of all playback
+        # cases. This needs fixing in XBMC!
+        if strVideoCodec in ["mpg", "mpeg", "mpeg2video", "h264", "x264", "mpeg4", "hdmv"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_MPEG, True)
 
         # any divx
@@ -548,8 +554,8 @@ class LcdBase():
         elif strVideoCodec == "xvid":
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_XVID, True)
 
-        # wmv
-        elif strVideoCodec == "wmv":
+        # wmv and vc-1
+        elif strVideoCodec in ["wmv", "wvc1"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_WMV, True)
 
         # anything else
@@ -569,8 +575,8 @@ class LcdBase():
         elif strAudioCodec in ["ac3", "truehd"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_AC3, True)
 
-        # any dts
-        elif strAudioCodec in ["dts", "dca", "dtshd_ma"]:
+        # any dts including hires variants
+        elif strAudioCodec in ["dts", "dca", "dtshd_hra", "dtshd_ma"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_DTS, True)
 
         # mp3
