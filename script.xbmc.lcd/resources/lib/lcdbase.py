@@ -555,7 +555,7 @@ class LcdBase():
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_XVID, True)
 
         # wmv and vc-1
-        elif strVideoCodec in ["wmv", "wvc1"]:
+        elif strVideoCodec in ["wmv", "wvc1", "vc-1"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_WMV, True)
 
         # anything else
@@ -595,7 +595,7 @@ class LcdBase():
             self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_AWMA, True)
 
         # any pcm, wav or flac
-        elif strAudioCodec in ["wav", "pcm", "flac"]:
+        elif strAudioCodec in ["wav", "pcm", "pcm_bluray", "flac"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_WAV, True)
 
         # anything else
