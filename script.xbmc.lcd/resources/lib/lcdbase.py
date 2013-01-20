@@ -542,7 +542,7 @@ class LcdBase():
         # real codec (mpeg2/h264/vc1). Ripping to e.g. MKV and playing that back
         # returns the correct codec id. As the display is wrong for VC-1 only,
         # accept that the codec icon is right only in maybe 70-80% of all playback
-        # cases. This needs fixing in XBMC!
+        # cases. This needs fixing in XBMC! See http://trac.xbmc.org/ticket/13969
         if strVideoCodec in ["mpg", "mpeg", "mpeg2video", "h264", "x264", "mpeg4", "hdmv"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VCODEC_MPEG, True)
 
