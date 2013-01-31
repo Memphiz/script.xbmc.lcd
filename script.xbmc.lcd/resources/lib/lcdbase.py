@@ -26,6 +26,7 @@ import xbmc
 import xbmcgui
 import sys
 import os
+import shutil
 import re
 import telnetlib
 import time
@@ -38,6 +39,7 @@ __settings__ = sys.modules[ "__main__" ].__settings__
 __cwd__ = sys.modules[ "__main__" ].__cwd__
 __icon__ = sys.modules[ "__main__" ].__icon__
 __lcdxml__ = xbmc.translatePath( os.path.join("special://masterprofile","LCD.xml"))
+__lcddefaultxml__ = xbmc.translatePath( os.path.join(__cwd__, "resources", "LCD.xml.defaults"))
 
 from extraicons import *
 from infolabels import *
@@ -165,9 +167,32 @@ class LcdBase():
   def SetProgressBar(self, percent, lineIdx):
     pass
 
+  def ManageLCDXML(self):
+    ret = False
+
+    if not os.path.isfile(__lcdxml__):
+      if not os.path.isfile(__lcddefaultxml__):
+        log(xbmc.LOGERROR, "No LCD.xml found and LCD.xml.defaults missing, expect problems!")
+      else:
+        try:
+          shutil.copy2(__lcddefaultxml__, __lcdxml__)
+          log(xbmc.LOGNOTICE, "Initialised LCD.xml from defaults")
+          ret = True
+        except:
+          log(xbmc.LOGERROR, "Failed to copy LCD defaults!")
+    else:
+      ret = True
+
+    return ret
+
   def Initialize(self):
+    strXMLFile = __lcdxml__
     self.m_disableOnPlay = DISABLE_ON_PLAY.DISABLE_ON_PLAY_NONE
-    if not self.LoadSkin(__lcdxml__):
+
+    if not self.ManageLCDXML():
+      strXMLFile = __lcddefaultxml__
+
+    if not self.LoadSkin(strXMLFile):
       return False
 
     return True
