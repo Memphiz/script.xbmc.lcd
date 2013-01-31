@@ -595,7 +595,7 @@ class LcdBase():
             self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_AWMA, True)
 
         # any pcm, wav or flac
-        elif strAudioCodec in ["wav", "pcm", "pcm_bluray", "flac"]:
+        elif strAudioCodec in ["wav", "flac", "pcm", "pcm_bluray", "pcm_s24le"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_WAV, True)
 
         # anything else
