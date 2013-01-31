@@ -6,6 +6,7 @@
 - Align each line either left (default), centered or right
 - Fixed connection problem popup annoyance
 - GUI settings cleanup and some more LCD.xml configurables
+- Take care of providing a default LCD.xml in the master profile
 1.1.0
 - greatly improved client/server communication
 - native widgets for bars, icons and bignumbers
