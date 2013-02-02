@@ -1,5 +1,6 @@
-1.3.0
-1.2.0
+1.3.0 / 2.3.0
+1.2.0 / 2.2.0
+- Maintain versions for Eden (1.x.x) and Frodo+ (2.x.x)
 - Support for extra stuff (icons, bars) on supporting displays
 - Extra stuff handling for SoundGraph iMON LCD and Futaba/Targa mdm166a VFD
   devices (presence will be autodetected)
