@@ -234,7 +234,7 @@ def settings_handleLcdSettings():
     g_hideconnpopups = hideconnpopups
     g_settingsChanged = True
 
-#handles all settings of boblight and applies them as needed
+#handles all settings and applies them as needed
 #returns if a reconnect is needed due to settings changes
 def settings_setup():  
   reconnect = False

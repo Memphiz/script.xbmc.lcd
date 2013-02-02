@@ -131,7 +131,8 @@ def process_lcd():
 def handleConnectLCD():
   ret = True
 
-  while not xbmc.abortRequested:
+  # make sure not to block things when shutdown is requested
+  if not xbmc.abortRequested:
     #check for new settings
     if settings_checkForNewSettings() or not g_lcdproc.IsConnected():    #networksettings changed?
       g_failedConnectionNotified = False  #reset notification flag
@@ -144,10 +145,15 @@ def handleConnectLCD():
 
   return ret
 
+#########################################
+
 #MAIN - entry point
+
+# init vars and classes
 initGlobals()
 
-#main loop
-while not xbmc.abortRequested:
-  settings_setup()
-  process_lcd()    #lcd loop
+# initialise and load GUI settings
+settings_setup()
+
+# do LCD processing loop (needs to catch xbmc.abortRequested !)
+process_lcd()
