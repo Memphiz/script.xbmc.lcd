@@ -64,10 +64,10 @@ def HandleConnectionNotification(bConnectSuccess):
     if not g_failedConnectionNotified:
       g_failedConnectionNotified = True
       g_initialConnectAttempt = False
-      text = __settings__.getLocalizedString(500)
+      text = __settings__.getLocalizedString(32500)
       xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
   else:
-    text = __settings__.getLocalizedString(501)
+    text = __settings__.getLocalizedString(32501)
     if not g_initialConnectAttempt:
       xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,10,__icon__))
       g_failedConnectionNotified = True

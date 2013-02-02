@@ -2,33 +2,32 @@
 <strings>
 <!--Settings-->
   <!--Behaviour-->
-  <string id="100">Verhalten</string>
-  <string id="101">Geschwindigkeit für gescrollten Text</string>
-  <string id="102">Scroll-Modus</string>
-  <string id="103">Anzeigedauer der Navigationsansicht (s)</string>
-  <string id="104">Display-Aktualisierungsrate (Hz)</string>
+  <string id="32100">Verhalten</string>
+  <string id="32101">Geschwindigkeit für gescrollten Text</string>
+  <string id="32102">Scroll-Modus</string>
+  <string id="32103">Anzeigedauer der Navigationsansicht (s)</string>
+  <string id="32104">Display-Aktualisierungsrate (Hz)</string>
 
   <!--Backlight-->
-  <string id="200">Beleuchtung</string>
-  <string id="201">Hintergrundbeleuchtung ausschalten, wenn Bildschirmschoner aktiv</string>
-  <string id="202">Hintergrundbeleuchtung beim Herunterfahren ausschalten</string>
+  <string id="32200">Beleuchtung</string>
+  <string id="32201">Hintergrundbeleuchtung ausschalten, wenn Bildschirmschoner aktiv</string>
+  <string id="32202">Hintergrundbeleuchtung beim Herunterfahren ausschalten</string>
 
   <!--Connection-->
-  <string id="300">Verbindung</string>
-  <string id="301">Entfernten LCDproc-Server benutzen</string>
-  <string id="302">LCDd IP</string>
-  <string id="303">LCDd Port</string>
-  <string id="304">Heartbeatsymbol anzeigen</string>
-  <string id="305">Verbindungsfehler-Benachrichtigung verstecken</string>
+  <string id="32300">Verbindung</string>
+  <string id="32301">Entfernten LCDproc-Server benutzen</string>
+  <string id="32302">LCDd IP</string>
+  <string id="32303">LCDd Port</string>
+  <string id="32304">Heartbeatsymbol anzeigen</string>
+  <string id="32305">Verbindungsfehler-Benachrichtigung verstecken</string>
 
   <!--Enum values-->
-  <string id="401">Durchlaufend</string>
-  <string id="402">Links/Rechts</string>
+  <string id="32401">Durchlaufend</string>
+  <string id="32402">Links/Rechts</string>
 
   <!--Notifications-->
-  <string id="500">Fehler beim Verbinden zu LCDproc!</string>
-  <string id="501">Verbunden mit LCDproc!</string>
-  <string id="502">Einstellungen geändert!</string>
-  <string id="503">Warnung! Fehlerhafte LCD.xml oder LCD.xml nicht gefunden!</string>
+  <string id="32500">Fehler beim Verbinden zu LCDproc!</string>
+  <string id="32501">Verbunden mit LCDproc!</string>
+  <string id="32502">Warnung! Fehlerhafte LCD.xml oder LCD.xml nicht gefunden!</string>
 
 </strings>

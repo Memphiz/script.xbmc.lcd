@@ -206,7 +206,7 @@ class LcdBase():
     except:
       if not self.m_bXMLWarningDisplayed:
         self.m_bXMLWarningDisplayed = True
-        text = __settings__.getLocalizedString(503)
+        text = __settings__.getLocalizedString(32502)
         xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (__scriptname__,text,5000,__icon__))
 
       log(xbmc.LOGERROR, "Parsing of %s failed" % (xmlFile))

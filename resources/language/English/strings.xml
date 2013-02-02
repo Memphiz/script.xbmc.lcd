@@ -2,33 +2,32 @@
 <strings>
 <!--Settings-->
   <!--Behaviour-->
-  <string id="100">Behaviour</string>
-  <string id="101">Delay for scrolling text</string>
-  <string id="102">Scroll mode</string>
-  <string id="103">Navigation display duration (s)</string>
-  <string id="104">Display refresh rate (Hz)</string>
+  <string id="32100">Behaviour</string>
+  <string id="32101">Delay for scrolling text</string>
+  <string id="32102">Scroll mode</string>
+  <string id="32103">Navigation display duration (s)</string>
+  <string id="32104">Display refresh rate (Hz)</string>
 
   <!--Backlight-->
-  <string id="200">Backlight</string>
-  <string id="201">Dim backlight on screensaver</string>
-  <string id="202">Dim backlight on shutdown</string>
+  <string id="32200">Backlight</string>
+  <string id="32201">Dim backlight on screensaver</string>
+  <string id="32202">Dim backlight on shutdown</string>
 
   <!--Connection-->
-  <string id="300">Connection</string>
-  <string id="301">Use remote LCDProc</string>
-  <string id="302">LCDd IP</string>
-  <string id="303">LCDd port</string>
-  <string id="304">Show heartbeat symbol</string>
-  <string id="305">Hide connection error notifications</string>
+  <string id="32300">Connection</string>
+  <string id="32301">Use remote LCDProc</string>
+  <string id="32302">LCDd IP</string>
+  <string id="32303">LCDd port</string>
+  <string id="32304">Show heartbeat symbol</string>
+  <string id="32305">Hide connection error notifications</string>
 
   <!--Enum values-->
-  <string id="401">Marquee</string>
-  <string id="402">Left/Right</string>
+  <string id="32401">Marquee</string>
+  <string id="32402">Left/Right</string>
 
   <!--Notifications-->
-  <string id="500">Failed to connect to LCDProc!</string>
-  <string id="501">Connected to LCDProc!</string>
-  <string id="502">Settings changed!</string>
-  <string id="503">Warning! Errors in LCD.xml or LCD.xml not found!</string>
+  <string id="32500">Failed to connect to LCDProc!</string>
+  <string id="32501">Connected to LCDProc!</string>
+  <string id="32502">Warning! Errors in LCD.xml or LCD.xml not found!</string>
   
 </strings>
