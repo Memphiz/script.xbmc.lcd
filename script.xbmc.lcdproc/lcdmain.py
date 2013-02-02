@@ -27,7 +27,7 @@ import xbmcgui
 import time
 import os
 
-__settings__   = xbmcaddon.Addon(id='script.xbmc.lcd')
+__settings__   = xbmcaddon.Addon(id='script.xbmc.lcdproc')
 __cwd__        = __settings__.getAddonInfo('path')
 __icon__       = os.path.join(__cwd__,"icon.png")
 __scriptname__ = "XBMC LCDproc"
