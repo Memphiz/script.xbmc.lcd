@@ -339,6 +339,9 @@ class LCDProc(LcdBase):
     self.tn = telnetlib.Telnet()
 
   def IsConnected(self):
+    if self.tn.get_socket() == None:
+      return False
+
     # Ping only every SocketIdleTimeout seconds
     if (self.m_timeLastSockAction + self.m_timeSocketIdleTimeout) > time.time():
       return True
