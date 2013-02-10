@@ -339,9 +339,6 @@ class LCDProc(LcdBase):
     self.tn = telnetlib.Telnet()
 
   def IsConnected(self):
-    if self.tn.get_socket() == None:
-      return False
-
     # Ping only every SocketIdleTimeout seconds
     if (self.m_timeLastSockAction + self.m_timeSocketIdleTimeout) > time.time():
       return True
@@ -359,10 +356,8 @@ class LCDProc(LcdBase):
 
     # Build command
     if iLight == 0:
-      #self.m_bStop = True
       cmd = "screen_set xbmc -backlight off\n"
     elif iLight > 0:
-      #self.m_bStop = False
       cmd = "screen_set xbmc -backlight on\n"
 
     # Send to server
