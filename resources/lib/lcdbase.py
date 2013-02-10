@@ -701,7 +701,7 @@ class LcdBase():
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ALARM, False)
 
   def SetExtraInfoBars(self, isplaying):
-    for i in range(1, LCD_EXTRABARS_MAX):
+    for i in range(1, LCD_EXTRABARS_MAX + 1):
       if self.m_extraBars[i] == "progress":
         if isplaying:
           self.m_cExtraIcons.SetBar(i, (InfoLabel_GetProgressPercent() * 100))
