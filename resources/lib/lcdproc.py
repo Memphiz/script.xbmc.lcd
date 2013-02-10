@@ -60,6 +60,7 @@ class LCDProc(LcdBase):
     self.m_initRetryInterval = INIT_RETRY_INTERVAL
     self.m_used = True
     self.tn = telnetlib.Telnet()
+    self.tnsocket = None
     self.m_timeLastSockAction = time.time()
     self.m_timeSocketIdleTimeout = 2
     self.m_strLineText = [None]*MAX_ROWS
@@ -90,10 +91,9 @@ class LCDProc(LcdBase):
       sendcmd += "\n"
 
     try:
-      # Send to server
-      sock = self.tn.get_socket()
-      if sock is not None:
-        sock.send(sendcmd)
+      # Send to server via raw socket to prevent telnetlib tampering with
+      # certain chars (especially 0xFF -> telnet IAC)
+      self.tnsocket.send(sendcmd)
     except:
       # Something bad happened, abort
       log(xbmc.LOGERROR, "SendCommand: Telnet exception - send")
@@ -213,6 +213,7 @@ class LCDProc(LcdBase):
         self.m_initRetryInterval = INIT_RETRY_INTERVAL
         self.m_bStop = False
         connected = True
+
       else:
         log(xbmc.LOGERROR, "Connection successful but LCD.xml has errors, aborting connect")
 
@@ -309,6 +310,12 @@ class LCDProc(LcdBase):
       log(xbmc.LOGERROR,"Connect: Caught exception, aborting.")
       return False
 
+    # retrieve raw socket object
+    self.tnsocket = self.tn.get_socket()
+    if self.tnsocket is None:
+      log(xbmc.LOGERROR, "Retrieval of socket object failed!")
+      return False
+
     if not self.SetupScreen():
       log(xbmc.LOGERROR, "Screen setup failed!")
       return False      
@@ -327,6 +334,7 @@ class LCDProc(LcdBase):
         # exception caught on this, so what? :)
         pass
 
+    self.tnsocket = None
     del self.tn
     self.tn = telnetlib.Telnet()
 
