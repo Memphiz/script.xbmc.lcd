@@ -39,13 +39,14 @@ global g_timer
 global g_heartbeat
 global g_scrolldelay
 global g_scrollmode
-global g_nativecodepage
 global g_settingsChanged
 global g_dimonscreensaver
 global g_dimonshutdown
 global g_navtimeout
 global g_refreshrate
 global g_hideconnpopups
+global g_usealternatecharset
+global g_charset
 
 #init globals with defaults
 def settings_initGlobals():
@@ -55,27 +56,29 @@ def settings_initGlobals():
   global g_heartbeat
   global g_scrolldelay
   global g_scrollmode
-  global g_nativecodepage
   global g_settingsChanged
   global g_dimonscreensaver
   global g_dimonshutdown
   global g_navtimeout
   global g_refreshrate
   global g_hideconnpopups
+  global g_usealternatecharset
+  global g_charset
 
-  g_hostip           = "127.0.0.1"
-  g_hostport         = 13666
-  g_timer            = time.time()   
-  g_heartbeat	     = False
-  g_scrolldelay      = 1
-  g_scrollmode       = "0"
-  g_nativecodepage   = False
-  g_settigsChanged   = True
-  g_dimonscreensaver = False
-  g_dimonshutdown    = False
-  g_navtimeout       = 3
-  g_refreshrate      = 1
-  g_hideconnpopups   = True
+  g_hostip              = "127.0.0.1"
+  g_hostport            = 13666
+  g_timer               = time.time()   
+  g_heartbeat	        = False
+  g_scrolldelay         = 1
+  g_scrollmode          = "0"
+  g_settigsChanged      = True
+  g_dimonscreensaver    = False
+  g_dimonshutdown       = False
+  g_navtimeout          = 3
+  g_refreshrate         = 1
+  g_hideconnpopups      = True
+  g_usealternatecharset = False
+  g_charset             = "iso-8859-1"
 
 def settings_getHostIp():
   global g_hostip
@@ -96,10 +99,6 @@ def settings_getScrollDelay():
 def settings_getScrollMode():
   global g_scrollmode
   return g_scrollmode
-
-def settings_getNativecodepage():
-  global g_nativecodepage
-  return g_nativecodepage
 
 def settings_getLCDprocScrollMode():
   global g_scrollmode
@@ -127,6 +126,31 @@ def settings_getHideConnPopups():
   global g_hideconnpopups
   return g_hideconnpopups
 
+def settings_getCharset():
+  global g_usealternatecharset
+  global g_charset
+  ret = ""
+
+  # if alternatecharset is disabled, return LCDproc's default
+  if g_usealternatecharset == False:
+    ret = "iso-8859-1"
+  else:
+    # make sure to keep this in sync with settings.xml!
+    if g_charset == "1":
+      ret = "iso-8859-15"
+    elif g_charset == "2":
+      ret = "koi8-r"
+    elif g_charset == "3":
+      ret = "cp1251"
+    elif g_charset == "4":
+      ret = "iso-8859-5"
+    elif g_charset == "5":
+      ret = "hd44780-hw"
+    else:
+      ret = "iso-8859-1"
+
+  return ret
+  
 #check for new settings and handle them if anything changed
 #only checks if the last check is 5 secs old
 #returns if a reconnect is needed due to settings change
@@ -191,7 +215,6 @@ def settings_handleNetworkSettings():
 def settings_handleLcdSettings():
   global g_scrolldelay
   global g_scrollmode
-  global g_nativecodepage
   global g_heartbeat
   global g_settingsChanged
   global g_dimonscreensaver
@@ -199,28 +222,27 @@ def settings_handleLcdSettings():
   global g_navtimeout
   global g_refreshrate
   global g_hideconnpopups
+  global g_usealternatecharset
+  global g_charset
 
   g_settingsChanged = False
 
   scrolldelay = int(float(string.replace(__settings__.getSetting("scrolldelay"), ",", ".")))
   scrollmode = __settings__.getSetting("scrollmode")
-  nativecodepage = __settings__.getSetting("nativecodepage") == "true"
   dimonscreensaver = __settings__.getSetting("dimonscreensaver") == "true"
   dimonshutdown = __settings__.getSetting("dimonshutdown") == "true"
   navtimeout = int(float(string.replace(__settings__.getSetting("navtimeout"), ",", ".")))
   refreshrate = int(float(string.replace(__settings__.getSetting("refreshrate"), ",", ".")))
   hideconnpopups = __settings__.getSetting("hideconnpopups") == "true"
- 
+  usealternatecharset = __settings__.getSetting("usealternatecharset") == "true"
+  charset = __settings__.getSetting("charset")
+
   if g_scrolldelay != scrolldelay:
     g_scrolldelay = scrolldelay
     g_settingsChanged = True
 
   if g_scrollmode != scrollmode:
     g_scrollmode = scrollmode
-    g_settingsChanged = True
-
-  if g_nativecodepage != nativecodepage:
-    g_nativecodepage = nativecodepage
     g_settingsChanged = True
 
   if g_dimonscreensaver != dimonscreensaver:
@@ -245,6 +267,14 @@ def settings_handleLcdSettings():
 
   if g_hideconnpopups != hideconnpopups:
     g_hideconnpopups = hideconnpopups
+    g_settingsChanged = True
+
+  if g_usealternatecharset != usealternatecharset:
+    g_usealternatecharset = usealternatecharset
+    g_settingsChanged = True
+
+  if g_charset != charset:
+    g_charset = charset
     g_settingsChanged = True
 
 #handles all settings and applies them as needed

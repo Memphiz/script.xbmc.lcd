@@ -44,7 +44,6 @@ from lcdproc_extra_imon import *
 from lcdproc_extra_mdm166a import *
 
 from infolabels import *
-from lcd_codepages import *
 
 def log(loglevel, msg):
   xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
@@ -236,7 +235,6 @@ class LCDProc(LcdBase):
     rematch_imon = "SoundGraph iMON(.*)LCD"
     rematch_mdm166a = "Targa(.*)mdm166a"
     rematch_imonvfd = "Soundgraph(.*)VFD"
-    bSupportNativeCP = False
 
     # Never cause script failure/interruption by this! This is totally optional!
     try:
@@ -263,11 +261,6 @@ class LCDProc(LcdBase):
 
       elif re.match(rematch_imonvfd, reply):
         log(xbmc.LOGNOTICE, "SoundGraph iMON IR/VFD detected")
-        bSupportNativeCP = True
-
-      if bSupportNativeCP and settings_getNativecodepage():
-        codecs.register(searchcp)
-        self.m_strLCDEncoding = 'imon'
 
     except:
       pass
