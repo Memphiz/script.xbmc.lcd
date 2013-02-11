@@ -44,7 +44,7 @@ __lcddefaultxml__ = xbmc.translatePath( os.path.join(__cwd__, "resources", "LCD.
 from settings import *
 from extraicons import *
 from infolabels import *
-from lcd_codepages import *
+from charset_hd44780 import *
 
 # global functions
 def log(loglevel, msg):
@@ -194,7 +194,7 @@ class LcdBase():
 
     try:
       log(xbmc.LOGDEBUG, "Registering HD44780-ROM pseudocodepage")
-      codecs.register(searchcp)
+      codecs.register(charset_hd44780)
       self.m_bHaveHD44780Charmap = True
     except:
       log(xbmc.LOGERROR, "Failed to register custom HD44780-ROM pseudocodepage, expect problems with alternative charsets!")
