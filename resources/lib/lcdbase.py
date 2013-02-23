@@ -459,24 +459,24 @@ class LcdBase():
 
     self.FlushLines()
     
-    self.SetBacklight(mode)
+    self.HandleBacklight(mode)
 
-  def IsDimmingOnMusicAllowed(self, mode):
+  def DoDimOnMusic(self, mode):
     return (mode == LCD_MODE.LCD_MODE_MUSIC or mode == LCD_MODE.LCD_MODE_PVRRADIO) and settings_getDimOnMusicPlayback()
 
-  def IsDimmingOnVideoAllowed(self, mode):
+  def DoDimOnVideo(self, mode):
     return (mode == LCD_MODE.LCD_MODE_VIDEO or mode == LCD_MODE.LCD_MODE_PVRTV) and settings_getDimOnVideoPlayback()
 
-  def IsDimmingOnScreensaverAllowed(self, mode):
+  def DoDimOnScreensaver(self, mode):
     return (mode == LCD_MODE.LCD_MODE_SCREENSAVER) and settings_getDimOnScreensaver()
 
-  def SetBacklight(self, mode):
+  def HandleBacklight(self, mode):
     # dimming display in case screensaver is active or something is being played back (and not paused!)
     doDim = False
 
-    if self.IsDimmingOnScreensaverAllowed(mode):
+    if self.DoDimOnScreensaver(mode):
       doDim = True
-    elif not InfoLabel_IsPlayerPaused() and (self.IsDimmingOnVideoAllowed(mode) or self.IsDimmingOnMusicAllowed(mode)):
+    elif not InfoLabel_IsPlayerPaused() and (self.DoDimOnVideo(mode) or self.DoDimOnMusic(mode)):
       doDim = True
     
     if doDim:
