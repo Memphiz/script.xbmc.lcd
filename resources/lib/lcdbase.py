@@ -426,6 +426,8 @@ class LcdBase():
     outLine = 0
     inLine = 0
 
+    self.HandleBacklight(mode)
+
     while (outLine < int(self.GetRows()) and inLine < len(self.m_lcdMode[mode])):
       #parse the progressbar infolabel by ourselfs!
       if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS:
@@ -459,8 +461,6 @@ class LcdBase():
       self.m_strSetLineCmds += self.m_cExtraIcons.GetOutputCommands()
 
     self.FlushLines()
-    
-    self.HandleBacklight(mode)
 
   def DoDimOnMusic(self, mode):
     return (mode == LCD_MODE.LCD_MODE_MUSIC or mode == LCD_MODE.LCD_MODE_PVRRADIO) and settings_getDimOnMusicPlayback()
