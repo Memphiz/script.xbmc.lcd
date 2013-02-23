@@ -198,6 +198,7 @@ class LcdBase():
     if not self.LoadSkin(strXMLFile):
       return False
 
+    self.m_bCurrentlyDimmed = False
     return True
 
   def UpdateGUISettings(self):
