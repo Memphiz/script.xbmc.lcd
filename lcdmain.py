@@ -107,9 +107,7 @@ def process_lcd():
       if settingsChanged:
         g_lcdproc.UpdateGUISettings()
 
-      mode = getLcdMode()
-
-      g_lcdproc.Render(mode, settingsChanged)
+      g_lcdproc.Render(getLcdMode(), settingsChanged)
 
     time.sleep(1.0 / float(settings_getRefreshRate())) # refresh after configured rate
 
