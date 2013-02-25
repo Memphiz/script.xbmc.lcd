@@ -12,11 +12,12 @@
 
   <!--Backlight-->
   <string id="32200">Backlight</string>
-  <string id="32201">Dim on screensaver</string>
+  <string id="32201">on screensaver</string>
   <string id="32202">Dim on shutdown</string>
-  <string id="32203">Dim on video playback</string>
-  <string id="32204">Dim on music playback</string>
-  <string id="32205">Dim delay (s)</string>
+  <string id="32203">on video/LiveTV playback</string>
+  <string id="32204">on music/radio playback</string>
+  <string id="32205">Delay (s)</string>
+  <string id="32206">Dim/turn off...</string>
 
   <!--Connection-->
   <string id="32300">Connection</string>
