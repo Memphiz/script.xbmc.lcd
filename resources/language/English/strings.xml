@@ -16,6 +16,7 @@
   <string id="32202">Dim on shutdown</string>
   <string id="32203">Dim on video playback</string>
   <string id="32204">Dim on music playback</string>
+  <string id="32205">Dim delay (s)</string>
 
   <!--Connection-->
   <string id="32300">Connection</string>

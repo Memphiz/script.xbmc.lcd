@@ -13,6 +13,7 @@
     <setting id="dimonshutdown" type="bool" label="32202" default="false" />
     <setting id="dimonvideoplayback" type="bool" label="32203" default="false" />
     <setting id="dimonmusicplayback" type="bool" label="32204" default="false" />
+    <setting id="dimdelay" type="slider" label="32205" default="0" range="0,30" />
   </category>
   <category label="32300">
     <setting id="remotelcdproc" type="bool" label="32301" default="false" />

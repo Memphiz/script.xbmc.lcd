@@ -210,6 +210,8 @@ class LcdBase():
       self.m_strLCDEncoding = str_charset
       log(xbmc.LOGDEBUG, "Setting character encoding to %s" % (self.m_strLCDEncoding))
 
+    self.m_iDimOnPlayDelay = settings_getDimDelay()
+
   def LoadSkin(self, xmlFile):
     self.Reset()
     bHaveSkin = False
@@ -229,21 +231,6 @@ class LcdBase():
       #PARSE LCD infos
       if element.tag == "lcd":
         # load our settings  
-
-        # disable on play delay
-        self.m_iDimOnPlayDelay = 0
-
-        disableonplaydelay = element.find("disableonplaydelay")
-        if disableonplaydelay != None and disableonplaydelay.text != None:
-          try:
-            intdelay = int(disableonplaydelay.text)
-          except ValueError, TypeError:
-            log(xbmc.LOGERROR, "Value for disableonplaydelay must be integer (got: %s)" % (disableonplaydelay.text))
-          else:
-            if intdelay < 0:
-              log(xbmc.LOGERROR, "Value %d for disableonplaydelay smaller than zero, ignoring" % (intdelay))
-            else:
-              self.m_iDimOnPlayDelay = intdelay
 
         # apply scrollseparator
         scrollSeparator = element.find("scrollseparator")
