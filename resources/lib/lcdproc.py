@@ -327,7 +327,7 @@ class LCDProc(LcdBase):
     return True
 
   def CloseSocket(self):
-    if self.tn.get_socket() != None:
+    if self.tnsocket:
       # no pyexceptions, please, we're disconnecting anyway
       try:
         # do gracefully disconnect (send directly as we won't get any response on this)
@@ -343,7 +343,7 @@ class LCDProc(LcdBase):
     self.tn = telnetlib.Telnet()
 
   def IsConnected(self):
-    if self.tn.get_socket() == None:
+    if not self.tnsocket:
       return False
 
     # Ping only every SocketIdleTimeout seconds
@@ -357,7 +357,7 @@ class LCDProc(LcdBase):
     return True
 
   def SetBackLight(self, iLight):
-    if self.tn.get_socket() == None:
+    if not self.tnsocket:
       return
     log(xbmc.LOGDEBUG, "Switch Backlight to: " + str(iLight))
 
@@ -381,7 +381,7 @@ class LCDProc(LcdBase):
     self.m_bStop = True
 
   def Suspend(self):
-    if self.m_bStop or self.tn.get_socket() == None:
+    if self.m_bStop or not self.tnsocket:
       return
 
     # Build command to suspend screen
@@ -393,7 +393,7 @@ class LCDProc(LcdBase):
       self.CloseSocket()
 
   def Resume(self):
-    if self.m_bStop or self.tn.get_socket() == None:
+    if self.m_bStop or not self.tnsocket:
       return
 
     # Build command to resume screen
@@ -497,7 +497,7 @@ class LCDProc(LcdBase):
     self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"\"\n" % (iLine, iLine, self.m_iColumns, iLine)
 
   def SetLine(self, iLine, strLine, dictDescriptor, bForce):
-    if self.m_bStop or self.tn.get_socket() == None:
+    if self.m_bStop or not self.tnsocket:
       return
 
     if iLine < 0 or iLine >= int(self.m_iRows):
