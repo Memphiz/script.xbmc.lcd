@@ -410,10 +410,10 @@ class LcdBase():
     for i in range(0,LCD_MODE.LCD_MODE_MAX):
       self.m_lcdMode[i] = []			#clear list
 
-  def Shutdown(self, bDimOnShutdown):
+  def Shutdown(self):
     log(xbmc.LOGNOTICE, "Shutting down")
 
-    if bDimOnShutdown:
+    if settings_getDimOnShutdown():
       self.SetBackLight(0)
 
     if self.m_cExtraIcons is not None:

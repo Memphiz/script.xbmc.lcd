@@ -111,7 +111,7 @@ def process_lcd():
 
     time.sleep(1.0 / float(settings_getRefreshRate())) # refresh after configured rate
 
-  g_lcdproc.Shutdown(settings_getDimOnShutdown())
+  g_lcdproc.Shutdown()
 
 def handleConnectLCD():
   ret = True
