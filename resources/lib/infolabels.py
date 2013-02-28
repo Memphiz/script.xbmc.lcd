@@ -67,15 +67,21 @@ g_StreamPrefixes = [ \
 global g_InfoLabel_oldMenu
 global g_InfoLabel_oldSubMenu
 global g_InfoLabel_navTimer
+global g_InfoLabel_oldFilenameandpath
+global g_InfoLabel_CachedFilenameIsStream
 
 def InfoLabel_Initialize():
   global g_InfoLabel_oldMenu
   global g_InfoLabel_oldSubMenu
   global g_InfoLabel_navTimer
+  global g_InfoLabel_oldFilenameandpath
+  global g_InfoLabel_CachedFilenameIsStream
 
   g_InfoLabel_oldMenu = ""
   g_InfoLabel_oldSubMenu = ""
   g_InfoLabel_navTimer = time.time()
+  g_InfoLabel_oldFilenameandpath = ""
+  g_InfoLabel_CachedFilenameIsStream = False
 
 def InfoLabel_timeToSecs(timeAr):
   arLen = len(timeAr)
@@ -130,12 +136,19 @@ def InfoLabel_IsPlayingAny():
           InfoLabel_IsPlayerRewinding())
 
 def InfoLabel_IsInternetStream():
-  fname = xbmc.getInfoLabel("Player.Filenameandpath")
-  for prefix in g_StreamPrefixes:
-    if fname.find(prefix + "://") == 0:
-      return True
+  global g_InfoLabel_oldFilenameandpath
+  global g_InfoLabel_CachedFilenameIsStream
 
-  return False
+  fname = xbmc.getInfoLabel("Player.Filenameandpath")
+  if fname != g_InfoLabel_oldFilenameandpath:
+    g_InfoLabel_oldFilenameandpath = fname
+    g_InfoLabel_CachedFilenameIsStream = False
+    print "evaluating if " + fname + " 'IsInternetStream'..."
+    for prefix in g_StreamPrefixes:
+      if fname.find(prefix + "://") == 0:
+        g_InfoLabel_CachedFilenameIsStream = True
+
+  return g_InfoLabel_CachedFilenameIsStream
 
 def InfoLabel_IsPassthroughAudio():
   return xbmc.getCondVisibility("Player.Passthrough")
