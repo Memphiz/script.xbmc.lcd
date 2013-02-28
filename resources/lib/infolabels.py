@@ -140,10 +140,11 @@ def InfoLabel_IsInternetStream():
   global g_InfoLabel_CachedFilenameIsStream
 
   fname = xbmc.getInfoLabel("Player.Filenameandpath")
+
   if fname != g_InfoLabel_oldFilenameandpath:
     g_InfoLabel_oldFilenameandpath = fname
     g_InfoLabel_CachedFilenameIsStream = False
-    print "evaluating if " + fname + " 'IsInternetStream'..."
+
     for prefix in g_StreamPrefixes:
       if fname.find(prefix + "://") == 0:
         g_InfoLabel_CachedFilenameIsStream = True
