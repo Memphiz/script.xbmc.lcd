@@ -415,16 +415,15 @@ class LCDProc(LcdBase):
       ret = InfoLabel_GetPlayerTime()
 
       if ret == "": # no usable timestring, e.g. not playing anything
-        ret = InfoLabel_GetSystemTime("hh:mm:ss")
-        ret = ret.split(" ")[0] # Hack: remove AM/PM
-        ret = "0" + ret
+        # apply some split magic for 12h format here, as "hh:mm:ss"
+        # makes up for format guessing inside XBMC - fix for post-frodo at
+        # https://github.com/xbmc/xbmc/pull/2321
+        strSysTime = "0" + InfoLabel_GetSystemTime("hh:mm:ss").split(" ")[0]
 
         if self.m_iBigDigits >= 8: # return h:m:s
-          ret = ret[-8:]
+          ret = strSysTime[-8:]
         elif self.m_iBigDigits >= 5: # return h:m when display too small
-          ret = ret[-8:-3]
-        else:
-          ret = ""
+          ret = strSysTime[-8:-3]
 
       return ret
 
