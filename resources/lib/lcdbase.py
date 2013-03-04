@@ -98,6 +98,7 @@ class LcdBase():
     self.m_bWasStopped = True
     self.m_bXMLWarningDisplayed = False
     self.m_bHaveHD44780Charmap = False
+    self.m_bDisablePlayIndicatorOnPause = False
 
 # @abstractmethod
   def _concrete_method(self):
@@ -274,6 +275,14 @@ class LcdBase():
         if allowemptylines != None:
           if str(allowemptylines.text).lower() in ["on", "true"]:
             self.m_bAllowEmptyLines = True
+
+        # check for disableplayindicatoronpause setting
+        self.m_bDisablePlayIndicatorOnPause = False
+
+        disableplayindicatoronpause = element.find("disableplayindicatoronpause")
+        if disableplayindicatoronpause != None:
+          if str(disableplayindicatoronpause.text).lower() in ["on", "true"]:
+            self.m_bDisablePlayIndicatorOnPause = True
 
         # extra progress bars
         for i in range(1, LCD_EXTRABARS_MAX + 1):
@@ -734,7 +743,8 @@ class LcdBase():
     bIsVideo = InfoLabel_PlayingVideo()
     bIsAudio = InfoLabel_PlayingAudio()
 
-    self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING, bPlaying)
+    self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING,
+      bPlaying and not (bPaused and self.m_bDisablePlayIndicatorOnPause))
 
     self.SetExtraInfoPlaying(bPlaying, bIsVideo, bIsAudio)
     self.SetExtraInfoCodecs(bPlaying, bIsVideo, bIsAudio)
