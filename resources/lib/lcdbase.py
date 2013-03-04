@@ -99,6 +99,7 @@ class LcdBase():
     self.m_bXMLWarningDisplayed = False
     self.m_bHaveHD44780Charmap = False
     self.m_bDisablePlayIndicatorOnPause = False
+    self.m_bVolumeChangeActive = False
 
 # @abstractmethod
   def _concrete_method(self):
@@ -289,7 +290,7 @@ class LcdBase():
           extrabar = None
           extrabar = element.find("extrabar%i" % (i))
           if extrabar != None:
-            if str(extrabar.text).strip() in ["progress", "volume", "menu"]:
+            if str(extrabar.text).strip() in ["progress", "volume", "volumehidden", "menu"]:
               self.m_extraBars[i] = str(extrabar.text).strip()
             else:
               self.m_extraBars[i] = ""
@@ -711,8 +712,10 @@ class LcdBase():
 
     if InfoLabel_WindowIsActive(WINDOW_IDS.WINDOW_DIALOG_VOLUME_BAR):
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VOLUME, True)
+      self.m_bVolumeChangeActive = True
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VOLUME, False)
+      self.m_bVolumeChangeActive = False
 
     if InfoLabel_WindowIsActive(WINDOW_IDS.WINDOW_DIALOG_KAI_TOAST):
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ALARM, True)
@@ -728,6 +731,11 @@ class LcdBase():
           self.m_cExtraIcons.SetBar(i, 0)
       elif self.m_extraBars[i] == "volume":
         self.m_cExtraIcons.SetBar(i, InfoLabel_GetVolumePercent())
+      elif self.m_extraBars[i] == "volumehidden":
+        if self.m_bVolumeChangeActive:
+          self.m_cExtraIcons.SetBar(i, InfoLabel_GetVolumePercent())
+        else:
+          self.m_cExtraIcons.SetBar(i, 0)
       elif self.m_extraBars[i] == "menu":
         if isplaying:
           self.m_cExtraIcons.SetBar(i, 0)
