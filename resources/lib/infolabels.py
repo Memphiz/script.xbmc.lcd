@@ -83,6 +83,15 @@ def InfoLabel_Initialize():
   g_InfoLabel_oldFilenameandpath = ""
   g_InfoLabel_CachedFilenameIsStream = False
 
+def InfoLabel_GetInfoLabel(strLabel):
+  return xbmc.getInfoLabel(strLabel)
+
+def InfoLabel_GetBool(strBool):
+  return xbmc.getCondVisibility(strBool)
+
+def InfoLabel_GetActiveWindowID():
+  return int(xbmcgui.getCurrentWindowId())
+
 def InfoLabel_timeToSecs(timeAr):
   arLen = len(timeAr)
   if arLen == 1:
@@ -94,46 +103,43 @@ def InfoLabel_timeToSecs(timeAr):
   return currentSecs
 
 def InfoLabel_WindowIsActive(WindowID):
-  return xbmc.getCondVisibility("Window.IsActive(" + str(WindowID) + ")")
+  return InfoLabel_GetBool("Window.IsActive(" + str(WindowID) + ")")
 
 def InfoLabel_PlayingVideo():
-  return xbmc.getCondVisibility("Player.HasVideo")
+  return InfoLabel_GetBool("Player.HasVideo")
 
 def InfoLabel_PlayingAudio():
-  return xbmc.getCondVisibility("Player.HasAudio")
+  return InfoLabel_GetBool("Player.HasAudio")
 
 def InfoLabel_PlayingLiveTV():
-  return xbmc.getCondVisibility("PVR.IsPlayingTV")
+  return InfoLabel_GetBool("PVR.IsPlayingTV")
 
 def InfoLabel_PlayingLiveRadio():
-  return xbmc.getCondVisibility("PVR.IsPlayingRadio")
+  return InfoLabel_GetBool("PVR.IsPlayingRadio")
 
 def InfoLabel_GetSystemTime(format):
   cmd = "System.Time"
   if len(format):
     cmd += "(" + format + ")"
-  return xbmc.getInfoLabel(cmd)
+  return InfoLabel_GetInfoLabel(cmd)
 
 def InfoLabel_GetPlayerTime():
-  return xbmc.getInfoLabel("Player.Time")
+  return InfoLabel_GetInfoLabel("Player.Time")
 
 def InfoLabel_GetPlayerDuration():
-  return xbmc.getInfoLabel("Player.Duration")
-
-def InfoLabel_GetActiveWindowID():
-  return int(xbmcgui.getCurrentWindowId())
+  return InfoLabel_GetInfoLabel("Player.Duration")
 
 def InfoLabel_IsPlayerPlaying():
-  return xbmc.getCondVisibility("Player.Playing")
+  return InfoLabel_GetBool("Player.Playing")
 
 def InfoLabel_IsPlayerPaused():
-  return xbmc.getCondVisibility("Player.Paused")
+  return InfoLabel_GetBool("Player.Paused")
 
 def InfoLabel_IsPlayerForwarding():
-  return xbmc.getCondVisibility("Player.Forwarding")
+  return InfoLabel_GetBool("Player.Forwarding")
 
 def InfoLabel_IsPlayerRewinding():
-  return xbmc.getCondVisibility("Player.Rewinding")
+  return InfoLabel_GetBool("Player.Rewinding")
 
 def InfoLabel_IsPlayingAny():
   return (InfoLabel_IsPlayerPlaying() |
@@ -145,7 +151,7 @@ def InfoLabel_IsInternetStream():
   global g_InfoLabel_oldFilenameandpath
   global g_InfoLabel_CachedFilenameIsStream
 
-  fname = xbmc.getInfoLabel("Player.Filenameandpath")
+  fname = InfoLabel_GetInfoLabel("Player.Filenameandpath")
 
   if fname != g_InfoLabel_oldFilenameandpath:
     g_InfoLabel_oldFilenameandpath = fname
@@ -158,34 +164,31 @@ def InfoLabel_IsInternetStream():
   return g_InfoLabel_CachedFilenameIsStream
 
 def InfoLabel_IsPassthroughAudio():
-  return xbmc.getCondVisibility("Player.Passthrough")
+  return InfoLabel_GetBool("Player.Passthrough")
 
 def InfoLabel_IsPVRRecording():
-  return xbmc.getCondVisibility("PVR.IsRecording")
+  return InfoLabel_GetBool("PVR.IsRecording")
 
 def InfoLabel_IsPlaylistRandom():
-  return xbmc.getCondVisibility("Playlist.IsRandom")
+  return InfoLabel_GetBool("Playlist.IsRandom")
 
 def InfoLabel_IsPlaylistRepeatAll():
-  return xbmc.getCondVisibility("Playlist.IsRepeat")
+  return InfoLabel_GetBool("Playlist.IsRepeat")
 
 def InfoLabel_IsPlaylistRepeatOne():
-  return xbmc.getCondVisibility("Playlist.IsRepeatOne")
+  return InfoLabel_GetBool("Playlist.IsRepeatOne")
 
 def InfoLabel_IsPlaylistRepeatAny():
   return (InfoLabel_IsPlaylistRepeatAll() | InfoLabel_IsPlaylistRepeatOne())
 
 def InfoLabel_IsDiscInDrive():
-  return xbmc.getCondVisibility("System.HasMediaDVD")
+  return InfoLabel_GetBool("System.HasMediaDVD")
 
 def InfoLabel_IsScreenSaverActive():
-  return xbmc.getCondVisibility("System.ScreenSaverActive")
-
-def InfoLabel_GetInfoLabel(strLabel):
-  return xbmc.getInfoLabel(strLabel)
+  return InfoLabel_GetBool("System.ScreenSaverActive")
 
 def InfoLabel_GetVolumePercent():
-  volumedb = float(string.replace(string.replace(xbmc.getInfoLabel("Player.Volume"), ",", "."), " dB", ""))
+  volumedb = float(string.replace(string.replace(InfoLabel_GetInfoLabel("Player.Volume"), ",", "."), " dB", ""))
   return (100 * (60.0 + volumedb) / 60)
 
 def InfoLabel_GetPlayerTimeSecs():
