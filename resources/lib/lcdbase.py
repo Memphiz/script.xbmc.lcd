@@ -81,26 +81,29 @@ g_dictEmptyLineDescriptor['align'] = LCD_LINEALIGN.LCD_LINEALIGN_LEFT
 
 class LcdBase():
   def __init__(self):
-    self.m_timeDisableOnPlayTimer = time.time()
+    # configuration vars (from LCD.xml)
     self.m_lcdMode = [None] * LCD_MODE.LCD_MODE_MAX
     self.m_extraBars = [None] * (LCD_EXTRABARS_MAX + 1)
-    self.m_bCenterBigDigits = False
-    self.m_bCurrentlyDimmed = False
-    self.m_iDimOnPlayDelay = 0
-    self.m_strInfoLabelEncoding = "utf-8" # http://forum.xbmc.org/showthread.php?tid=125492&pid=1045926#pid1045926
-    self.m_strLCDEncoding = "iso-8859-1" # LCDproc wants iso-8859-1!
-    self.m_strScrollSeparator = " "
-    self.m_bProgressbarSurroundings = False
-    self.m_iIconTextOffset = 2
     self.m_bAllowEmptyLines = False
-    self.m_strOldVideoCodec = ""
-    self.m_strOldAudioCodec = ""
-    self.m_iOldAudioChannelsVar = 0
+    self.m_bCenterBigDigits = False
+    self.m_bDisablePlayIndicatorOnPause = False
+    self.m_bProgressbarSurroundings = False
+    self.m_iDimOnPlayDelay = 0
+    self.m_iIconTextOffset = 2
+    self.m_strLCDEncoding = "iso-8859-1" # LCDproc default is iso-8859-1!
+    self.m_strScrollSeparator = " "
+
+    # runtime vars/state tracking
+    self.m_strInfoLabelEncoding = "utf-8" # http://forum.xbmc.org/showthread.php?tid=125492&pid=1045926#pid1045926
+    self.m_timeDisableOnPlayTimer = time.time()
+    self.m_bCurrentlyDimmed = False
+    self.m_bHaveHD44780Charmap = False
+    self.m_bVolumeChangeActive = False
     self.m_bWasStopped = True
     self.m_bXMLWarningDisplayed = False
-    self.m_bHaveHD44780Charmap = False
-    self.m_bDisablePlayIndicatorOnPause = False
-    self.m_bVolumeChangeActive = False
+    self.m_iOldAudioChannelsVar = 0
+    self.m_strOldAudioCodec = ""
+    self.m_strOldVideoCodec = ""
 
 # @abstractmethod
   def _concrete_method(self):
