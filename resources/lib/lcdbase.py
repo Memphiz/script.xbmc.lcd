@@ -281,6 +281,9 @@ class LcdBase():
           if str(allowemptylines.text).lower() in ["on", "true"]:
             self.m_bAllowEmptyLines = True
 
+        # check for centerbigdigits setting
+        self.m_bCenterBigDigits = False
+
         centerbigdigits = element.find("centerbigdigits")
         if centerbigdigits != None:
           if str(centerbigdigits.text).lower() in ["on", "true"]:
