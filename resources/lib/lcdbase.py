@@ -302,7 +302,7 @@ class LcdBase():
           extrabar = None
           extrabar = element.find("extrabar%i" % (i))
           if extrabar != None:
-            if str(extrabar.text).strip() in ["progress", "volume", "volumehidden", "menu"]:
+            if str(extrabar.text).strip() in ["progress", "volume", "volumehidden", "menu", "alwayson"]:
               self.m_extraBars[i] = str(extrabar.text).strip()
             else:
               self.m_extraBars[i] = ""
@@ -753,6 +753,8 @@ class LcdBase():
           self.m_cExtraIcons.SetBar(i, 0)
         else:
           self.m_cExtraIcons.SetBar(i, 100)
+      elif self.m_extraBars[i] == "alwayson":
+        self.m_cExtraIcons.SetBar(i, 100)
       else:
         self.m_cExtraIcons.SetBar(i, 0)
 
