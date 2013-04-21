@@ -6,7 +6,7 @@
     <setting id="navtimeout" type="slider" label="32103" option="int" default="2" range="1,10" />
     <setting id="refreshrate" type="slider" label="32104" option="int" default="1" range="1,20" />
     <setting id="usealternatecharset" type="bool" label="32105" default="false" />
-    <setting id="charset" enable="eq(-1,true)" type="enum" label="32106" lvalues="32411|32412|32413|32414|32415|32416" default="0" subsetting="true"/>
+    <setting id="charset" enable="eq(-1,true)" type="enum" label="32106" lvalues="32411|32412|32413|32414|32415|32416|32417" default="0" subsetting="true"/>
   </category>
   <category label="32200">
     <setting label="32206" type="lsep" />

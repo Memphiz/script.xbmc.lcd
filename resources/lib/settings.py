@@ -166,7 +166,9 @@ def settings_getCharset():
     elif g_charset == "4":
       ret = "iso-8859-5"
     elif g_charset == "5":
-      ret = "hd44780-hw"
+      ret = "hd44780-a00"
+    elif g_charset == "6":
+      ret = "hd44780-a02"
     else:
       ret = "iso-8859-1"
 

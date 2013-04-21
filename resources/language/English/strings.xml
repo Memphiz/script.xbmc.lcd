@@ -37,7 +37,8 @@
   <string id="32413">KOI8-R</string>
   <string id="32414">CP1251</string>
   <string id="32415">ISO8859-5</string>
-  <string id="32416">HD44780-ROM</string>
+  <string id="32416">HD44780-ROM A00</string>
+  <string id="32417">HD44780-ROM A02</string>
 
   <!--Notifications-->
   <string id="32500">Failed to connect to LCDProc!</string>

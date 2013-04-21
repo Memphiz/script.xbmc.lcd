@@ -192,7 +192,7 @@ class LcdBase():
 
     try:
       if not self.m_bHaveHD44780Charmap:
-        log(xbmc.LOGDEBUG, "Registering HD44780-ROM pseudocodepage")
+        log(xbmc.LOGDEBUG, "Registering HD44780-ROM pseudocodepages")
         codecs.register(charset_hd44780)
         self.m_bHaveHD44780Charmap = True
     except:
@@ -213,7 +213,7 @@ class LcdBase():
   def UpdateGUISettings(self):
     str_charset = settings_getCharset()
     if str_charset != self.m_strLCDEncoding:
-      if str_charset == "hd44780-hw" and not self.m_bHaveHD44780Charmap:
+      if (str_charset == "hd44780-a00" or str_charset == "hd44780-a02") and not self.m_bHaveHD44780Charmap:
         str_charset = "iso8859-1"
 
       self.m_strLCDEncoding = str_charset
