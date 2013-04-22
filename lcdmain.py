@@ -121,12 +121,10 @@ def handleConnectLCD():
     #check for new settings
     if settings_checkForNewSettings() or not g_lcdproc.IsConnected():    #networksettings changed?
       g_failedConnectionNotified = False  #reset notification flag
-    else:
-      return True
 
-    ret = g_lcdproc.Initialize()
-    if not settings_getHideConnPopups():
-      HandleConnectionNotification(ret)
+      ret = g_lcdproc.Initialize()
+      if not settings_getHideConnPopups():
+        HandleConnectionNotification(ret)
 
   return ret
 
