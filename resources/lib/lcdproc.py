@@ -236,6 +236,8 @@ class LCDProc(LcdBase):
     rematch_imon = "SoundGraph iMON(.*)LCD"
     rematch_mdm166a = "Targa(.*)mdm166a"
     rematch_imonvfd = "Soundgraph(.*)VFD"
+    
+    bUseExtraIcons = settings_getUseExtraElements()
 
     # Never cause script failure/interruption by this! This is totally optional!
     try:
@@ -252,11 +254,13 @@ class LCDProc(LcdBase):
 
       if re.match(rematch_imon, reply):
         log(xbmc.LOGNOTICE, "SoundGraph iMON LCD detected")
-        self.m_cExtraIcons = LCDproc_extra_imon()
+        if bUseExtraIcons:
+          self.m_cExtraIcons = LCDproc_extra_imon()
 
       elif re.match(rematch_mdm166a, reply):
         log(xbmc.LOGNOTICE, "Futaba/Targa USB mdm166a VFD detected")
-        self.m_cExtraIcons = LCDproc_extra_mdm166a()
+        if bUseExtraIcons:
+          self.m_cExtraIcons = LCDproc_extra_mdm166a()
 
       elif re.match(rematch_imonvfd, reply):
         log(xbmc.LOGNOTICE, "SoundGraph iMON IR/VFD detected")
@@ -336,6 +340,10 @@ class LCDProc(LcdBase):
     if self.tnsocket:
       # no pyexceptions, please, we're disconnecting anyway
       try:
+        # if we served extra elements, (try to) reset them
+        if self.m_cExtraIcons is not None:
+          self.SendCommand(self.m_cExtraIcons.GetClearAllCmd(), False)
+
         # do gracefully disconnect (send directly as we won't get any response on this)
         self.tn.write("bye\n")
         # and close socket afterwards
@@ -343,6 +351,10 @@ class LCDProc(LcdBase):
       except:
         # exception caught on this, so what? :)
         pass
+
+    # delete/cleanup extra support instance
+    del self.m_cExtraIcons
+    self.m_cExtraIcons = None
 
     self.tnsocket = None
     del self.tn

@@ -50,6 +50,7 @@ global g_refreshrate
 global g_hideconnpopups
 global g_usealternatecharset
 global g_charset
+global g_useextraelements
 
 #init globals with defaults
 def settings_initGlobals():
@@ -70,6 +71,7 @@ def settings_initGlobals():
   global g_hideconnpopups
   global g_usealternatecharset
   global g_charset
+  global g_useextraelements
 
   g_hostip              = "127.0.0.1"
   g_hostport            = 13666
@@ -88,6 +90,7 @@ def settings_initGlobals():
   g_hideconnpopups      = True
   g_usealternatecharset = False
   g_charset             = "iso-8859-1"
+  g_useextraelements    = True
 
 def settings_getHostIp():
   global g_hostip
@@ -100,6 +103,10 @@ def settings_getHostPort():
 def settings_getHeartBeat():
   global g_heartbeat
   return g_heartbeat
+
+def settings_getUseExtraElements():
+  global g_useextraelements
+  return g_useextraelements
 
 def settings_getScrollDelay():
   global g_scrolldelay
@@ -194,18 +201,21 @@ def settings_didSettingsChange():
   g_settingsChanged = False
   return settingsChanged
   
-#handle all settings in the general tab according to network access
-#returns true if reconnect is needed due to network changes
-def settings_handleNetworkSettings():
+# handle all settings that might require a reinit and/or reconnect
+# (e.g. network config changes)
+# returns true if reconnect is needed due to network changes
+def settings_handleCriticalSettings():
   global g_hostip
   global g_hostport
   global g_heartbeat
+  global g_useextraelements
 
   reconnect = False
 
   hostip    = __settings__.getSetting("hostip")
   hostport  = int(__settings__.getSetting("hostport"))
   heartbeat = __settings__.getSetting("heartbeat") == "true"
+  useextraelements = __settings__.getSetting("useextraelements") == "true"
 
   #server settings
   #we need to reconnect if networkaccess bool changes
@@ -232,6 +242,12 @@ def settings_handleNetworkSettings():
       print "lcd: toggled heartbeat bool"
       g_heartbeat = heartbeat
       reconnect = True
+
+  # extra element support needs a reinit+reconnect so the extraelement
+  # support object resets
+  if g_useextraelements != useextraelements:
+    g_useextraelements = useextraelements
+    reconnect = True
 
   return reconnect
 
@@ -322,7 +338,7 @@ def settings_handleLcdSettings():
 #returns if a reconnect is needed due to settings changes
 def settings_setup():  
   reconnect = False
-  reconnect = settings_handleNetworkSettings()
+  reconnect = settings_handleCriticalSettings()
   settings_handleLcdSettings()
 
   return reconnect
