@@ -342,7 +342,8 @@ class LCDProc(LcdBase):
       try:
         # if we served extra elements, (try to) reset them
         if self.m_cExtraIcons is not None:
-          self.SendCommand(self.m_cExtraIcons.GetClearAllCmd(), False)
+          if not self.SendCommand(self.m_cExtraIcons.GetClearAllCmd(), True):
+            log(xbmc.LOGERROR, "CloseSocket(): Cannot clear extra icons")
 
         # do gracefully disconnect (send directly as we won't get any response on this)
         self.tn.write("bye\n")

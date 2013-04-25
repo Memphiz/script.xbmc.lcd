@@ -428,10 +428,6 @@ class LcdBase():
     if settings_getDimOnShutdown():
       self.SetBackLight(0)
 
-    if self.m_cExtraIcons is not None:
-      if not self.SendCommand(self.m_cExtraIcons.GetClearAllCmd(), True):
-        log(xbmc.LOGERROR, "Shutdown(): Cannot clear extra icons")
-
     self.CloseSocket()
 
   def Render(self, mode, bForce):
