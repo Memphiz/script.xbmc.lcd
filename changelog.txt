@@ -1,5 +1,6 @@
 1.3.0 / 2.3.0
 - Alternate charmap selection, support for HD44780/iMON ROM (A00 and A02 variants) charsets
+- New "tvshow" mode, active when playing media from the TV-shows database
 - Refactored backlight dimming handling and configuration via GUI settings
 - Cleaned up and improved TCP/Telnet socket handling
 - Indicate internet stream on extraicon-supported displays
