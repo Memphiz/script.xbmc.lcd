@@ -7,6 +7,7 @@
 - Use XBMC's time for daytime display on BigDigit-mode and thus properly display 12/24h clocks
 - Additional "finetuning"-options for extraicon/bar-support
 - Option to entirely disable extra stuff support
+- Always load defaults so LCD.xml in the masterprofile acts as user override, makes additions like new modes or wrong spelling in XML tags not result in empty displays
 1.2.1 / 2.2.1
 - Bugfixes, Credits, slightly more convenient configuration option bools
 1.2.0 / 2.2.0

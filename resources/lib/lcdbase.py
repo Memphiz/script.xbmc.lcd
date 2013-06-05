@@ -189,7 +189,8 @@ class LcdBase():
     return ret
 
   def Initialize(self):
-    strXMLFile = __lcdxml__
+    bGotDefaultSkin = False
+    bSkinHandled = False
 
     try:
       if not self.m_bHaveHD44780Charmap:
@@ -199,10 +200,15 @@ class LcdBase():
     except:
       log(xbmc.LOGERROR, "Failed to register custom HD44780-ROM pseudocodepage, expect problems with alternative charsets!")
 
-    if not self.ManageLCDXML():
-      strXMLFile = __lcddefaultxml__
+    # make sure we got reasonable defaults for users who didn't adapt to newest additions
+    bGotDefaultSkin = self.LoadSkin(__lcddefaultxml__, True)
 
-    if not self.LoadSkin(strXMLFile):
+    # check for user-LCD.xml, optionally create it
+    bSkinHandled = self.ManageLCDXML()
+
+    # try to load user setup
+    if not self.LoadSkin(__lcdxml__, False) and not bGotDefaultSkin:
+      log(xbmc.LOGERROR, "No usable mode configuration/skin could be loaded, check your addon installation!")
       return False
 
     # force-update GUI settings
@@ -222,9 +228,13 @@ class LcdBase():
 
     self.m_iDimOnPlayDelay = settings_getDimDelay()
 
-  def LoadSkin(self, xmlFile):
-    self.Reset()
+  def LoadSkin(self, xmlFile, doReset):
+    if doReset == True:
+      self.Reset()
+
     bHaveSkin = False
+
+    log(xbmc.LOGNOTICE, "Loading settings from %s" % (xmlFile))
 
     try:
       doc = xmltree.parse(xmlFile)
@@ -346,14 +356,24 @@ class LcdBase():
   def LoadMode(self, node, mode):
     if node == None:
       log(xbmc.LOGWARNING, "Empty Mode %d, check LCD.xml" % (mode))
-      self.m_lcdMode[mode].append(g_dictEmptyLineDescriptor)
+
+      # if mode is empty, initialise with blank line
+      if len(self.m_lcdMode[mode]) <= 0:
+        self.m_lcdMode[mode].append(g_dictEmptyLineDescriptor)
+
       return
 
     if len(node.findall("line")) <= 0:
       log(xbmc.LOGWARNING, "Mode %d defined without lines, check LCD.xml" % (mode))
-      self.m_lcdMode[mode].append(g_dictEmptyLineDescriptor)
+
+      if len(self.m_lcdMode[mode]) <= 0:
+        self.m_lcdMode[mode].append(g_dictEmptyLineDescriptor)
+
       return
 
+    # node has something interesting, so clear mode (probably overriding defaults)
+    self.m_lcdMode[mode] = []
+    
     # regex to determine any of $INFO[LCD.Time(Wide)21-44]
     timeregex = r'' + re.escape('$INFO[LCD.') + 'Time((Wide)?\d?\d?)' + re.escape(']')
 
