@@ -354,8 +354,11 @@ class LcdBase():
     return bHaveSkin
 
   def LoadMode(self, node, mode):
+    # clear mode (probably overriding defaults), assume the user knows what he wants if an empty node is given
+    self.m_lcdMode[mode] = []
+    
     if node == None:
-      log(xbmc.LOGWARNING, "Empty Mode %d, check LCD.xml" % (mode))
+      log(xbmc.LOGWARNING, "Empty Mode %d, consider checking LCD.xml" % (mode))
 
       # if mode is empty, initialise with blank line
       if len(self.m_lcdMode[mode]) <= 0:
@@ -364,16 +367,13 @@ class LcdBase():
       return
 
     if len(node.findall("line")) <= 0:
-      log(xbmc.LOGWARNING, "Mode %d defined without lines, check LCD.xml" % (mode))
+      log(xbmc.LOGWARNING, "Mode %d defined without lines, consider checking LCD.xml" % (mode))
 
       if len(self.m_lcdMode[mode]) <= 0:
         self.m_lcdMode[mode].append(g_dictEmptyLineDescriptor)
 
       return
 
-    # node has something interesting, so clear mode (probably overriding defaults)
-    self.m_lcdMode[mode] = []
-    
     # regex to determine any of $INFO[LCD.Time(Wide)21-44]
     timeregex = r'' + re.escape('$INFO[LCD.') + 'Time((Wide)?\d?\d?)' + re.escape(']')
 
