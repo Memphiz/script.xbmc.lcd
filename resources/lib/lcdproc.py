@@ -257,6 +257,10 @@ class LCDProc(LcdBase):
         if bUseExtraIcons:
           self.m_cExtraIcons = LCDproc_extra_imon()
 
+        # override bigdigits counter, the imonlcd driver handles bigdigits
+        # different: digits count for two columns instead of three
+        self.m_iBigDigits = 7
+
       elif re.match(rematch_mdm166a, reply):
         log(xbmc.LOGNOTICE, "Futaba/Targa USB mdm166a VFD detected")
         if bUseExtraIcons:
@@ -308,17 +312,19 @@ class LCDProc(LcdBase):
       # tell users what's going on
       log(xbmc.LOGNOTICE, "Connected to LCDd at %s:%s, Protocol version %s - Geometry %sx%s characters (%sx%s pixels, %sx%s pixels per character)" % (str(ip), str(port), float(lcdinfo.group(1)), str(self.m_iColumns), str(self.m_iRows), str(self.m_iColumns * self.m_iCellWidth), str(self.m_iRows * self.m_iCellHeight), str(self.m_iCellWidth), str(self.m_iCellHeight)))
 
-      self.DetermineExtraSupport()
-
       # Set up BigNum values based on display geometry
       if self.m_iColumns < 13:
         self.m_iBigDigits = 0 # No clock
-      elif self.m_iColumns < 16: # Hack: should be 17, but use 16 for imonlcd
+      elif self.m_iColumns < 17:
         self.m_iBigDigits = 5 # HH:MM
       elif self.m_iColumns < 20:
         self.m_iBigDigits = 7 # H:MM:SS on play, HH:MM on clock
       else:
         self.m_iBigDigits = 8 # HH:MM:SS
+
+      # Check LCDproc if we can enable any extras or override values
+      # (might override e.g. m_iBigDigits!)
+      self.DetermineExtraSupport()
 
     except:
       log(xbmc.LOGERROR,"Connect: Caught exception, aborting.")
@@ -427,7 +433,7 @@ class LCDProc(LcdBase):
     return int(self.m_iColumns)
 
   def GetBigDigitTime(self):
-      ret = InfoLabel_GetPlayerTime()
+      ret = InfoLabel_GetPlayerTime()[-self.m_iBigDigits:]
 
       if ret == "": # no usable timestring, e.g. not playing anything
         strSysTime = InfoLabel_GetSystemTime()
