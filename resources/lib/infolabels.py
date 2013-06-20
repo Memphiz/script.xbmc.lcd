@@ -127,11 +127,12 @@ def InfoLabel_PlayingLiveTV():
 def InfoLabel_PlayingLiveRadio():
   return InfoLabel_GetBool("PVR.IsPlayingRadio")
 
-def InfoLabel_GetSystemTime(format):
-  cmd = "System.Time"
-  if len(format):
-    cmd += "(" + format + ")"
-  return InfoLabel_GetInfoLabel(cmd)
+def InfoLabel_GetSystemTime():
+  # apply some split magic for 12h format here, as "hh:mm:ss"
+  # makes up for format guessing inside XBMC - fix for post-frodo at
+  # https://github.com/xbmc/xbmc/pull/2321
+  ret = "0" + InfoLabel_GetInfoLabel("System.Time(hh:mm:ss)").split(" ")[0]
+  return ret[-8:]
 
 def InfoLabel_GetPlayerTime():
   return InfoLabel_GetInfoLabel("Player.Time")
