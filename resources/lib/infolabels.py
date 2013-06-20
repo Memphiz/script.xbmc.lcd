@@ -93,6 +93,9 @@ def InfoLabel_GetActiveWindowID():
   return int(xbmcgui.getCurrentWindowId())
 
 def InfoLabel_timeToSecs(timeAr):
+  # initialise return
+  currentSecs = 0
+
   arLen = len(timeAr)
   if arLen == 1:
     currentSecs = int(timeAr[0])
@@ -100,6 +103,7 @@ def InfoLabel_timeToSecs(timeAr):
     currentSecs = int(timeAr[0]) * 60 + int(timeAr[1])
   elif arLen == 3:
     currentSecs = int(timeAr[0]) * 60 * 60 + int(timeAr[1]) * 60 + int(timeAr[2])
+
   return currentSecs
 
 def InfoLabel_WindowIsActive(WindowID):
