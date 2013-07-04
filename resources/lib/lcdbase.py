@@ -471,9 +471,14 @@ class LcdBase():
         if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_ICONTEXT:
           self.SetPlayingStateIcon()
 
-        line = InfoLabel_GetInfoLabel(self.m_lcdMode[mode][inLine]['text'])
+        srcline = InfoLabel_GetInfoLabel(self.m_lcdMode[mode][inLine]['text'])
         if self.m_strInfoLabelEncoding != self.m_strLCDEncoding:
-          line = line.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
+          try:
+            line = srcline.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
+          except:
+            log(xbmc.LOGDEBUG, "Caught exception on charset conversion: " + srcline)
+            line = "---"
+
         self.SetProgressBar(0, -1)
 
       if self.m_bAllowEmptyLines or len(line) > 0:
