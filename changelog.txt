@@ -1,4 +1,6 @@
-1.3.3 / 2.3.3
+2.4.0 (Gotham)
+- Gotham
+1.3.3 / 2.3.3 (Eden / Frodo)
 - A02 char map enhanced to map czech characters
 1.3.2 / 2.3.2
 - Fix "dim display on video playback" functionality
