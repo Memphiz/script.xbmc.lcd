@@ -23,7 +23,6 @@
 
 import platform
 import xbmc
-import xbmcgui
 import sys
 import os
 import re
