@@ -431,8 +431,10 @@ class LCDProc(LcdBase):
   def GetColumns(self):
     return int(self.m_iColumns)
 
-  def GetBigDigitTime(self):
-      ret = InfoLabel_GetPlayerTime()[-self.m_iBigDigits:]
+  def GetBigDigitTime(self, mode):
+      ret = ""
+      if not (InfoLabel_IsPlayerPaused() and mode == LCD_MODE.LCD_MODE_SCREENSAVER):
+        ret = InfoLabel_GetPlayerTime()[-self.m_iBigDigits:]
 
       if ret == "": # no usable timestring, e.g. not playing anything
         strSysTime = InfoLabel_GetSystemTime()
@@ -537,7 +539,7 @@ class LCDProc(LcdBase):
     self.m_strSetLineCmds += "widget_set xbmc lineProgress%i 0 0 0\n" % (iLine)
     self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"\"\n" % (iLine, iLine, self.m_iColumns, iLine)
 
-  def SetLine(self, iLine, strLine, dictDescriptor, bForce):
+  def SetLine(self, mode, iLine, strLine, dictDescriptor, bForce):
     if self.m_bStop or not self.tnsocket:
       return
 
@@ -563,7 +565,7 @@ class LCDProc(LcdBase):
         self.m_strSetLineCmds += "widget_set xbmc lineScroller%i 1 %i %i %i m 1 \"%s\"\n" % (ln, ln, self.m_iColumns, ln, dictDescriptor['text'])
 
     if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
-      strLineLong = self.GetBigDigitTime()
+      strLineLong = self.GetBigDigitTime(mode)
     else:
       strLineLong = strLine
 

@@ -142,7 +142,7 @@ class LcdBase():
     pass
 
 # @abstractmethod     
-  def SetLine(self, iLine, strLine, dictDescriptor, bForce):
+  def SetLine(self, mode, iLine, strLine, dictDescriptor, bForce):
     pass
 
 # @abstractmethod     
@@ -504,7 +504,7 @@ class LcdBase():
         self.SetProgressBar(0, -1)
 
       if self.m_bAllowEmptyLines or len(line) > 0:
-        self.SetLine(outLine, line, self.m_lcdMode[mode][inLine], bForce)
+        self.SetLine(mode, outLine, line, self.m_lcdMode[mode][inLine], bForce)
         outLine += 1
 
       inLine += 1
@@ -512,7 +512,7 @@ class LcdBase():
     # fill remainder with empty space if not bigscreen
     if self.m_lcdMode[mode][0]['type'] != LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
       while outLine < int(self.GetRows()):
-        self.SetLine(outLine, "", g_dictEmptyLineDescriptor, bForce)
+        self.SetLine(mode, outLine, "", g_dictEmptyLineDescriptor, bForce)
         outLine += 1
 
     if self.m_cExtraIcons is not None:
