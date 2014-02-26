@@ -453,6 +453,23 @@ class LcdBase():
 
     self.CloseSocket()
 
+  def StripBBCode(self, strtext):
+    tmpline = strtext
+    loopcount = 5
+
+    # do regex multiple times to catch nested tags
+    while True:
+      loopcount = loopcount - 1
+      mangledline = re.sub("\[(?P<tagname>\w+)([^\[]+)*\](?P<content>.*?)\[/(?P=tagname)\]", "\g<content>", tmpline)
+
+      # when the result didn't change, all tags should be gone (but also stop if maxnum iterations are reached)
+      if tmpline == mangledline or loopcount < 1:
+        break
+      tmpline = mangledline
+
+    # return last replace mangling
+    return tmpline
+
   def Render(self, mode, bForce):
     outLine = 0
     inLine = 0
@@ -471,6 +488,10 @@ class LcdBase():
           self.SetPlayingStateIcon()
 
         srcline = InfoLabel_GetInfoLabel(self.m_lcdMode[mode][inLine]['text'])
+
+        if len(srcline) > 0:
+          srcline = self.StripBBCode(srcline)
+
         if self.m_strInfoLabelEncoding != self.m_strLCDEncoding:
           try:
             line = srcline.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
