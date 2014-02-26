@@ -477,6 +477,8 @@ class LcdBase():
           except:
             log(xbmc.LOGDEBUG, "Caught exception on charset conversion: " + srcline)
             line = "---"
+        else:
+          line = srcline
 
         self.SetProgressBar(0, -1)
 
