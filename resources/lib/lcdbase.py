@@ -105,6 +105,9 @@ class LcdBase():
     self.m_strOldAudioCodec = ""
     self.m_strOldVideoCodec = ""
 
+    # regex compile cache
+    self.m_reBBCode = None
+
 # @abstractmethod
   def _concrete_method(self):
     pass
@@ -454,21 +457,27 @@ class LcdBase():
     self.CloseSocket()
 
   def StripBBCode(self, strtext):
-    tmpline = strtext
+    # precompile and remember regex to make sure re's caching won't cause accidential recompilation
+    if not self.m_reBBCode:
+      self.m_reBBCode = re.compile("\[(?P<tagname>[0-9a-zA-Z_\-]+?)[0-9a-zA-Z_\- ]*?\](?P<content>.*?)\[\/(?P=tagname)\]")
+
+    # loop to catch nested tags
     loopcount = 5
+    
+    # start with passed string
+    mangledline = strtext
 
     # do regex multiple times to catch nested tags
     while True:
       loopcount = loopcount - 1
-      mangledline = re.sub("\[(?P<tagname>\w+)([^\[]+)*\](?P<content>.*?)\[/(?P=tagname)\]", "\g<content>", tmpline)
+      mangledline, replacements = re.subn(self.m_reBBCode, "\g<content>", mangledline)
 
       # when the result didn't change, all tags should be gone (but also stop if maxnum iterations are reached)
-      if tmpline == mangledline or loopcount < 1:
+      if replacements == 0 or loopcount < 1:
         break
-      tmpline = mangledline
 
     # return last replace mangling
-    return tmpline
+    return mangledline
 
   def Render(self, mode, bForce):
     outLine = 0
