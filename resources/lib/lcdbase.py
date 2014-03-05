@@ -457,9 +457,14 @@ class LcdBase():
     self.CloseSocket()
 
   def StripBBCode(self, strtext):
+    regexbbcode = "\[(?P<tagname>[0-9a-zA-Z_\-]+?)[0-9a-zA-Z_\- ]*?\](?P<content>.*?)\[\/(?P=tagname)\]"
     # precompile and remember regex to make sure re's caching won't cause accidential recompilation
     if not self.m_reBBCode:
-      self.m_reBBCode = re.compile("\[(?P<tagname>[0-9a-zA-Z_\-]+?)[0-9a-zA-Z_\- ]*?\](?P<content>.*?)\[\/(?P=tagname)\]")
+      self.m_reBBCode = re.compile(regexbbcode)
+      # catch+report failure
+      if not self.m_reBBCode:
+        log(xbmc.LOGWARNING, "Precompilation of BBCode strip regex failed")
+        self.m_reBBCode = regexbbcode
 
     # loop to catch nested tags
     loopcount = 5
@@ -470,7 +475,10 @@ class LcdBase():
     # do regex multiple times to catch nested tags
     while True:
       loopcount = loopcount - 1
-      mangledline, replacements = re.subn(self.m_reBBCode, "\g<content>", mangledline)
+      try:
+        mangledline, replacements = re.subn(self.m_reBBCode, "\g<content>", mangledline)
+      except:
+        return mangledline
 
       # when the result didn't change, all tags should be gone (but also stop if maxnum iterations are reached)
       if replacements == 0 or loopcount < 1:
