@@ -1,3 +1,5 @@
+2.5.1
+- Fix name conflict with the LCDproc PyEgg
 2.5.0 (Gotham)
 - Initial version for XBMC Gotham with updated dependencies
 - BBcode tags are stripped before sending content to the display (reported to happen on e.g. OpenELEC)
