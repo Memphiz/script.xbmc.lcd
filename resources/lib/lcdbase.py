@@ -389,7 +389,8 @@ class LcdBase():
       if line.text == None:
         linetext = ""
       else:
-        linetext = line.text.strip().encode("utf-8", "ignore")
+        # prepare text line for XBMC's expected encoding
+        linetext = line.text.strip().encode(self.m_strInfoLabelEncoding, "ignore")
       
       # make sure linetext has something so re.match won't fail
       if linetext != "":
