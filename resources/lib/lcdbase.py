@@ -752,7 +752,7 @@ class LcdBase():
       self.m_bWasStopped = True
 
   def SetExtraInfoGeneric(self, ispaused):
-    if InfoLabel_GetVolumePercent() == 0.0:
+    if InfoLabel_IsMuted():
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUTE, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUTE, False)

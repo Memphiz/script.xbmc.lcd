@@ -198,6 +198,9 @@ def InfoLabel_IsDiscInDrive():
 def InfoLabel_IsScreenSaverActive():
   return InfoLabel_GetBool("System.ScreenSaverActive")
 
+def InfoLabel_IsMuted():
+  return InfoLabel_GetBool("Player.Muted")
+
 def InfoLabel_GetVolumePercent():
   volumedb = float(string.replace(string.replace(InfoLabel_GetInfoLabel("Player.Volume"), ",", "."), " dB", ""))
   return (100 * (60.0 + volumedb) / 60)
