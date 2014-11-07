@@ -1,4 +1,4 @@
-2.6.0
+2.6.0 (Helix)
 - Initial version for Kodi Helix
 - Fix retrieval of application mute state
 - Small addition to the HD44780-A00 charmap for polish chars
