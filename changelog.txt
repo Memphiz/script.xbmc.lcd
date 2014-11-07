@@ -2,6 +2,7 @@
 - Initial version for Kodi Helix
 - Fix retrieval of application mute state
 - Small addition to the HD44780-A00 charmap for polish chars
+- Dropped unneeded dependency on xbmc.gui
 2.5.1
 - Fix name conflict with the LCDproc PyEgg
 - Split setup command list loop to initialise hbars before icons, fixes progress bars not being shown if placed after any icons on RasbPi
