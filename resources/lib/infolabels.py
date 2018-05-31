@@ -57,31 +57,19 @@ class WINDOW_IDS:
   WINDOW_PICTURES              = 10002
   WINDOW_DIALOG_VOLUME_BAR     = 10104
   WINDOW_DIALOG_KAI_TOAST      = 10107
-  
-g_StreamPrefixes = [ \
- "http", "https", "tcp",   "udp",    "rtp",  \
- "sdp",  "mms",   "mmst",  "mmsh",   "rtsp", \
- "rtmp", "rtmpt", "rtmpe", "rtmpte", "rtmps" \
-]
 
 global g_InfoLabel_oldMenu
 global g_InfoLabel_oldSubMenu
 global g_InfoLabel_navTimer
-global g_InfoLabel_oldFilenameandpath
-global g_InfoLabel_CachedFilenameIsStream
 
 def InfoLabel_Initialize():
   global g_InfoLabel_oldMenu
   global g_InfoLabel_oldSubMenu
   global g_InfoLabel_navTimer
-  global g_InfoLabel_oldFilenameandpath
-  global g_InfoLabel_CachedFilenameIsStream
 
   g_InfoLabel_oldMenu = ""
   g_InfoLabel_oldSubMenu = ""
   g_InfoLabel_navTimer = time.time()
-  g_InfoLabel_oldFilenameandpath = ""
-  g_InfoLabel_CachedFilenameIsStream = False
 
 def InfoLabel_GetInfoLabel(strLabel):
   return xbmc.getInfoLabel(strLabel)
@@ -159,20 +147,7 @@ def InfoLabel_IsPlayerRewinding():
   return InfoLabel_GetBool("Player.Rewinding")
 
 def InfoLabel_IsInternetStream():
-  global g_InfoLabel_oldFilenameandpath
-  global g_InfoLabel_CachedFilenameIsStream
-
-  fname = InfoLabel_GetInfoLabel("Player.Filenameandpath")
-
-  if fname != g_InfoLabel_oldFilenameandpath:
-    g_InfoLabel_oldFilenameandpath = fname
-    g_InfoLabel_CachedFilenameIsStream = False
-
-    for prefix in g_StreamPrefixes:
-      if fname.find(prefix + "://") == 0:
-        g_InfoLabel_CachedFilenameIsStream = True
-
-  return g_InfoLabel_CachedFilenameIsStream
+  return InfoLabel_GetBool("Player.IsInternetStream")
 
 def InfoLabel_IsPassthroughAudio():
   return InfoLabel_GetBool("Player.Passthrough")
