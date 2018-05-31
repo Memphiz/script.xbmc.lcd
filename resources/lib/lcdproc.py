@@ -436,8 +436,10 @@ class LCDProc(LcdBase):
 
   def GetBigDigitTime(self, mode):
       ret = ""
-      if not (InfoLabel_IsPlayerPaused() and mode == LCD_MODE.LCD_MODE_SCREENSAVER):
-        ret = InfoLabel_GetPlayerTime()[-self.m_iBigDigits:]
+
+      if InfoLabel_IsPlayerPlaying():
+        if not (mode == LCD_MODE.LCD_MODE_SCREENSAVER and InfoLabel_IsPlayerPaused()):
+          ret = InfoLabel_GetPlayerTime()[-self.m_iBigDigits:]
 
       if ret == "": # no usable timestring, e.g. not playing anything
         strSysTime = InfoLabel_GetSystemTime()
