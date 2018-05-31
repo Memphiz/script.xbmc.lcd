@@ -135,9 +135,15 @@ def InfoLabel_GetSystemTime():
   return ret[-8:]
 
 def InfoLabel_GetPlayerTime():
+  if InfoLabel_PlayingLiveTV() or InfoLabel_PlayingLiveRadio():
+    return InfoLabel_GetInfoLabel("PVR.EpgEventElapsedTime")
+
   return InfoLabel_GetInfoLabel("Player.Time")
 
 def InfoLabel_GetPlayerDuration():
+  if InfoLabel_PlayingLiveTV() or InfoLabel_PlayingLiveRadio():
+    return InfoLabel_GetInfoLabel("PVR.EpgEventDuration")
+
   return InfoLabel_GetInfoLabel("Player.Duration")
 
 def InfoLabel_IsPlayerPlaying():
