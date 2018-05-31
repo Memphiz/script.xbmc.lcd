@@ -554,7 +554,7 @@ class LcdBase():
 
     if self.DoDimOnScreensaver(mode):
       doDim = True
-    elif not InfoLabel_IsPlayerPaused() and (self.DoDimOnVideo(mode) or self.DoDimOnMusic(mode)):
+    elif not (InfoLabel_IsPlayerPlaying() and InfoLabel_IsPlayerPaused()) and (self.DoDimOnVideo(mode) or self.DoDimOnMusic(mode)):
       doDim = True
     
     if doDim:
