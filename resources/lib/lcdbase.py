@@ -825,7 +825,7 @@ class LcdBase():
 
   def SetExtraInformation(self):
     bPaused = InfoLabel_IsPlayerPaused()
-    bPlaying = InfoLabel_IsPlayingAny()
+    bPlaying = InfoLabel_IsPlayerPlaying()
 
     bIsVideo = InfoLabel_PlayingVideo()
     bIsAudio = InfoLabel_PlayingAudio()

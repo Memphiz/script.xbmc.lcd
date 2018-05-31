@@ -152,12 +152,6 @@ def InfoLabel_IsPlayerForwarding():
 def InfoLabel_IsPlayerRewinding():
   return InfoLabel_GetBool("Player.Rewinding")
 
-def InfoLabel_IsPlayingAny():
-  return (InfoLabel_IsPlayerPlaying() |
-          InfoLabel_IsPlayerPaused() |
-          InfoLabel_IsPlayerForwarding() |
-          InfoLabel_IsPlayerRewinding())
-
 def InfoLabel_IsInternetStream():
   global g_InfoLabel_oldFilenameandpath
   global g_InfoLabel_CachedFilenameIsStream
