@@ -141,7 +141,7 @@ def InfoLabel_GetPlayerDuration():
   return InfoLabel_GetInfoLabel("Player.Duration")
 
 def InfoLabel_IsPlayerPlaying():
-  return InfoLabel_GetBool("Player.Playing")
+  return InfoLabel_GetBool("Player.HasMedia")
 
 def InfoLabel_IsPlayerPaused():
   return InfoLabel_GetBool("Player.Paused")
