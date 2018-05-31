@@ -2,21 +2,21 @@
     XBMC LCDproc addon
     Copyright (C) 2012 Team XBMC
     Copyright (C) 2012 Daniel 'herrnst' Scheller
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
@@ -45,8 +45,8 @@ from lcdproc_extra_mdm166a import *
 from infolabels import *
 
 def log(loglevel, msg):
-  xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel) 
-  
+  xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel)
+
 MAX_ROWS = 20
 MAX_BIGDIGITS = 20
 INIT_RETRY_INTERVAL = 2
@@ -101,14 +101,14 @@ class LCDProc(LcdBase):
 
     # Update last socketaction timestamp
     self.m_timeLastSockAction = time.time()
-    
+
     # Repeat for number of found commands
     for i in range(1, (countcmds + 1)):
       # Read in (multiple) responses
       while True:
         try:
           # Read server reply
-          reply = self.tn.read_until("\n",3)            
+          reply = self.tn.read_until("\n",3)
         except:
           # (Re)read failed, abort
           log(xbmc.LOGERROR, "SendCommand: Telnet exception - reread")
@@ -124,9 +124,9 @@ class LCDProc(LcdBase):
         elif reply[:9] == 'menuevent':
           continue
 
-        # Response seems interesting, so stop here      
+        # Response seems interesting, so stop here
         break
-      
+
       if not bCheckRet:
         continue # no return checking desired, so be fine
 
@@ -135,7 +135,7 @@ class LCDProc(LcdBase):
 
       if reply == 'success\n':
         continue
-      
+
       ret = False
 
     # Leave information something undesired happened
@@ -238,7 +238,7 @@ class LCDProc(LcdBase):
     rematch_imon = "SoundGraph iMON(.*)LCD"
     rematch_mdm166a = "Targa(.*)mdm166a"
     rematch_imonvfd = "Soundgraph(.*)VFD"
-    
+
     bUseExtraIcons = settings_getUseExtraElements()
 
     # Never cause script failure/interruption by this! This is totally optional!
@@ -284,7 +284,7 @@ class LCDProc(LcdBase):
       ip = settings_getHostIp()
       port = settings_getHostPort()
       log(xbmc.LOGDEBUG,"Open " + str(ip) + ":" + str(port))
-      
+
       self.tn.open(ip, port)
       # Start a new session
       self.tn.write("hello\n")
@@ -292,7 +292,7 @@ class LCDProc(LcdBase):
       # Receive LCDproc data to determine row and column information
       reply = self.tn.read_until("\n",3)
       log(xbmc.LOGDEBUG,"Reply: " + reply)
-      
+
       # parse reply by regex
       lcdinfo = re.match("^connect .+ protocol ([0-9\.]+) lcd wid (\d+) hgt (\d+) cellwid (\d+) cellhgt (\d+)$", reply)
 
@@ -340,7 +340,7 @@ class LCDProc(LcdBase):
 
     if not self.SetupScreen():
       log(xbmc.LOGERROR, "Screen setup failed!")
-      return False      
+      return False
 
     return True
 
@@ -479,7 +479,7 @@ class LCDProc(LcdBase):
     for i in range(int(iStringOffset), int(iStringLength)):
       if self.m_strDigits[iDigitCount] != strTimeString[i] or bForceUpdate:
         self.m_strDigits[iDigitCount] = strTimeString[i]
-        
+
         if strTimeString[i] == ":":
           self.m_strSetLineCmds += "widget_set xbmc lineBigDigit%i %i 10\n" % (iDigitCount, iOffset)
         elif strTimeString[i].isdigit():
@@ -498,7 +498,7 @@ class LCDProc(LcdBase):
       if self.m_strDigits[iDigitCount] != "" or bForceUpdate:
         self.m_strDigits[iDigitCount] = ""
         self.m_strSetLineCmds += "widget_set xbmc lineBigDigit" + str(iDigitCount) + " 0 0\n"
-      
+
       iDigitCount += 1
 
   def SetProgressBar(self, percent, pxWidth):
@@ -575,7 +575,7 @@ class LCDProc(LcdBase):
       strLineLong = strLine
 
     strLineLong.strip()
-  
+
     iMaxLineLen = dictDescriptor['endx'] - (int(dictDescriptor['startx']) - 1)
     iScrollSpeed = settings_getScrollDelay()
     strScrollMode = settings_getLCDprocScrollMode()
@@ -583,7 +583,7 @@ class LCDProc(LcdBase):
     if len(strLineLong) > iMaxLineLen: # if the string doesn't fit the display...
       if iScrollSpeed != 0:          # add separator when scrolling enabled
         if strScrollMode == "m":     # and scrollmode is marquee
-          strLineLong += self.m_strScrollSeparator      
+          strLineLong += self.m_strScrollSeparator
       else:                                       # or cut off
         strLineLong = strLineLong[:iMaxLineLen]
         iScrollSpeed = 1
@@ -615,7 +615,7 @@ class LCDProc(LcdBase):
     if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_ICONTEXT:
       if self.m_strLineIcon[iLine] != self.m_strIconName or bExtraForce:
         self.m_strLineIcon[iLine] = self.m_strIconName
-        
+
         self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 1 %i %s\n" % (ln, ln, self.m_strIconName)
 
   def ClearDisplay(self):

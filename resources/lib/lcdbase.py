@@ -2,21 +2,21 @@
     XBMC LCDproc addon
     Copyright (C) 2012 Team XBMC
     Copyright (C) 2012 Daniel 'herrnst' Scheller
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
@@ -47,7 +47,7 @@ from charset_hd44780 import *
 
 # global functions
 def log(loglevel, msg):
-  xbmc.log("### [%s] - %s" % (__scriptname__,msg,),level=loglevel ) 
+  xbmc.log("### [%s] - %s" % (__scriptname__,msg,),level=loglevel)
 
 class LCD_MODE:
   LCD_MODE_GENERAL     = 0
@@ -72,7 +72,7 @@ class LCD_LINEALIGN:
   LCD_LINEALIGN_CENTER = 1
   LCD_LINEALIGN_RIGHT  = 2
 
-g_dictEmptyLineDescriptor = {} 
+g_dictEmptyLineDescriptor = {}
 g_dictEmptyLineDescriptor['type'] = LCD_LINETYPE.LCD_LINETYPE_TEXT
 g_dictEmptyLineDescriptor['startx'] = int(0)
 g_dictEmptyLineDescriptor['text'] = str("")
@@ -124,11 +124,11 @@ class LcdBase():
   def Suspend(self):
     pass
 
-# @abstractmethod   
+# @abstractmethod
   def Resume(self):
     pass
 
-# @abstractmethod   
+# @abstractmethod
   def SetBackLight(self, iLight):
     pass
 
@@ -136,27 +136,27 @@ class LcdBase():
   def SetContrast(self, iContrast):
     pass
 
-# @abstractmethod  
+# @abstractmethod
   def SetBigDigits(self, strTimeString, bForceUpdate):
     pass
 
-# @abstractmethod   
+# @abstractmethod
   def ClearLine(self, iLine):
     pass
 
-# @abstractmethod     
+# @abstractmethod
   def SetLine(self, mode, iLine, strLine, dictDescriptor, bForce):
     pass
 
-# @abstractmethod     
+# @abstractmethod
   def ClearDisplay(self):
     pass
 
-# @abstractmethod     
+# @abstractmethod
   def FlushLines(self):
     pass
-    
-# @abstractmethod	
+
+# @abstractmethod
   def GetColumns(self):
     pass
 
@@ -252,7 +252,7 @@ class LcdBase():
     for element in doc.getiterator():
       #PARSE LCD infos
       if element.tag == "lcd":
-        # load our settings  
+        # load our settings
 
         # apply scrollseparator
         scrollSeparator = element.find("scrollseparator")
@@ -335,7 +335,7 @@ class LcdBase():
 
         tmpMode = element.find("navigation")
         self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_NAVIGATION)
-    
+
         tmpMode = element.find("screensaver")
         self.LoadMode(tmpMode, LCD_MODE.LCD_MODE_SCREENSAVER)
 
@@ -358,7 +358,7 @@ class LcdBase():
   def LoadMode(self, node, mode):
     # clear mode (probably overriding defaults), assume the user knows what he wants if an empty node is given
     self.m_lcdMode[mode] = []
-    
+
     if node == None:
       log(xbmc.LOGWARNING, "Empty Mode %d, consider checking LCD.xml" % (mode))
 
@@ -391,7 +391,7 @@ class LcdBase():
       else:
         # prepare text line for XBMC's expected encoding
         linetext = line.text.strip().encode(self.m_strInfoLabelEncoding, "ignore")
-      
+
       # make sure linetext has something so re.match won't fail
       if linetext != "":
         timematch = re.match(timeregex, linetext, flags=re.IGNORECASE)
@@ -469,7 +469,7 @@ class LcdBase():
 
     # loop to catch nested tags
     loopcount = 5
-    
+
     # start with passed string
     mangledline = strtext
 
@@ -556,7 +556,7 @@ class LcdBase():
       doDim = True
     elif not (InfoLabel_IsPlayerPlaying() and InfoLabel_IsPlayerPaused()) and (self.DoDimOnVideo(mode) or self.DoDimOnMusic(mode)):
       doDim = True
-    
+
     if doDim:
       if not self.m_bCurrentlyDimmed:
         if (self.m_timeDisableOnPlayTimer + self.m_iDimOnPlayDelay) < time.time():
@@ -637,7 +637,7 @@ class LcdBase():
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, True)
       else:
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, False)
-      
+
       if isvideo:
         strVideoCodec = str(InfoLabel_GetInfoLabel("VideoPlayer.VideoCodec")).lower()
         strAudioCodec = str(InfoLabel_GetInfoLabel("VideoPlayer.AudioCodec")).lower()
@@ -688,7 +688,7 @@ class LcdBase():
       if self.m_strOldAudioCodec != strAudioCodec:
         # work only when audio codec changed
         self.m_strOldAudioCodec = strAudioCodec
-      
+
         # any mpeg audio
         if strAudioCodec in ["mpga", "mp2"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_MPEG, True)
@@ -709,7 +709,7 @@ class LcdBase():
         elif strAudioCodec in ["ogg", "vorbis"]:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_OGG, True)
 
-        # any wma        
+        # any wma
         elif strAudioCodec in ["wma", "wmav2"]:
           if isvideo:
             self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ACODEC_VWMA, True)

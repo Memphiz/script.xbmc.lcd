@@ -2,21 +2,21 @@
     XBMC LCDproc addon
     Copyright (C) 2012 Team XBMC
     Copyright (C) 2012 Daniel 'herrnst' Scheller
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-    
+
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-    
+
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-    
+
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
@@ -55,7 +55,7 @@ global g_useextraelements
 #init globals with defaults
 def settings_initGlobals():
   global g_hostip
-  global g_hostport  
+  global g_hostport
   global g_timer
   global g_heartbeat
   global g_scrolldelay
@@ -75,7 +75,7 @@ def settings_initGlobals():
 
   g_hostip              = "127.0.0.1"
   g_hostport            = 13666
-  g_timer               = time.time()   
+  g_timer               = time.time()
   g_heartbeat           = False
   g_scrolldelay         = 1
   g_scrollmode          = "0"
@@ -98,7 +98,7 @@ def settings_getHostIp():
 
 def settings_getHostPort():
   global g_hostport
-  return g_hostport 
+  return g_hostport
 
 def settings_getHeartBeat():
   global g_heartbeat
@@ -180,7 +180,7 @@ def settings_getCharset():
       ret = "iso-8859-1"
 
   return ret
-  
+
 #check for new settings and handle them if anything changed
 #only checks if the last check is 5 secs old
 #returns if a reconnect is needed due to settings change
@@ -194,13 +194,13 @@ def settings_checkForNewSettings():
     reconnect = settings_setup()
     g_timer = time.time()
   return reconnect
-  
+
 def settings_didSettingsChange():
   global g_settingsChanged
   settingsChanged = g_settingsChanged
   g_settingsChanged = False
   return settingsChanged
-  
+
 # handle all settings that might require a reinit and/or reconnect
 # (e.g. network config changes)
 # returns true if reconnect is needed due to network changes
@@ -297,11 +297,11 @@ def settings_handleLcdSettings():
   if g_dimonshutdown != dimonshutdown:
     g_dimonshutdown = dimonshutdown
     g_settingsChanged = True
-  
+
   if g_dimonvideoplayback != dimonvideoplayback:
     g_dimonvideoplayback = dimonvideoplayback
     g_settingsChanged = True
-  
+
   if g_dimonmusicplayback != dimonmusicplayback:
     g_dimonmusicplayback = dimonmusicplayback
     g_settingsChanged = True
@@ -309,10 +309,10 @@ def settings_handleLcdSettings():
   if g_dimdelay != dimdelay:
     g_dimdelay = dimdelay
     g_settingsChanged = True
-    
+
   if g_navtimeout != navtimeout:
     g_navtimeout = navtimeout
-    g_settingsChanged = True    
+    g_settingsChanged = True
 
   if g_refreshrate != refreshrate:
     g_refreshrate = refreshrate
@@ -320,7 +320,7 @@ def settings_handleLcdSettings():
     if refreshrate < 1:
       g_refreshrate = 1
 
-    g_settingsChanged = True    
+    g_settingsChanged = True
 
   if g_hideconnpopups != hideconnpopups:
     g_hideconnpopups = hideconnpopups
@@ -336,7 +336,7 @@ def settings_handleLcdSettings():
 
 #handles all settings and applies them as needed
 #returns if a reconnect is needed due to settings changes
-def settings_setup():  
+def settings_setup():
   reconnect = False
   reconnect = settings_handleCriticalSettings()
   settings_handleLcdSettings()
