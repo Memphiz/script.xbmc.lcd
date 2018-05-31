@@ -1,9 +1,9 @@
 '''
     XBMC LCDproc addon
-    Copyright (C) 2012 Team XBMC
+    Copyright (C) 2012-2018 Team XBMC
 
     Support for extra symbols on SoundGraph iMON LCD displays
-    Copyright (C) 2012 Daniel 'herrnst' Scheller
+    Copyright (C) 2012-2018 Daniel 'herrnst' Scheller
     Original C implementation (C) 2010 Christian Leuschen
 
     This program is free software; you can redistribute it and/or modify
