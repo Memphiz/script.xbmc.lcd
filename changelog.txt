@@ -1,7 +1,8 @@
 3.0.0 (Leia)
 - Compatibility with Kodi 18 Leia
 - Polish translation by mskalski (thanks!)
-- Fixes, cleanups and optimizations all over the place
+- French translation by fengalin (thanks!)
+- Fixes, cleanups, cosmetics and optimizations all over the place
 2.6.0 (Helix)
 - Initial version for Kodi Helix
 - Fix retrieval of application mute state
