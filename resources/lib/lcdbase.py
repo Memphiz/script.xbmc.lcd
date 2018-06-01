@@ -510,12 +510,8 @@ class LcdBase():
 
     while (outLine < int(self.GetRows()) and inLine < len(self.m_lcdMode[mode])):
       #parse the progressbar infolabel by ourselfs!
-      if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS:
+      if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS or self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESSTIME:
         # get playtime and duration and convert into seconds
-        percent = InfoLabel_GetProgressPercent()
-        pixelsWidth = self.SetProgressBar(percent, self.m_lcdMode[mode][inLine]['endx'])
-        line = "p" + str(pixelsWidth)
-      elif self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESSTIME:
         percent = InfoLabel_GetProgressPercent()
         pixelsWidth = self.SetProgressBar(percent, self.m_lcdMode[mode][inLine]['endx'])
         line = "p" + str(pixelsWidth)

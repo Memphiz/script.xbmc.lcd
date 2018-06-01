@@ -551,8 +551,11 @@ class LCDProc(LcdBase):
     if iLine < 0 or iLine >= int(self.m_iRows):
       return
 
+    plTime = InfoLabel_GetPlayerTime()
+    plDuration = InfoLabel_GetPlayerDuration()
     ln = iLine + 1
     bExtraForce = False
+    drawLineText = False
 
     if self.m_strLineType[iLine] != dictDescriptor['type']:
       if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
@@ -575,7 +578,7 @@ class LCDProc(LcdBase):
     if dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_BIGSCREEN:
       strLineLong = self.GetBigDigitTime(mode)
     elif dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESSTIME:
-      strLineLong = InfoLabel_GetPlayerTime() + self.m_bProgressbarBlank * (self.m_iColumns - len(InfoLabel_GetPlayerTime()) - len(InfoLabel_GetPlayerDuration())) + InfoLabel_GetPlayerDuration()
+      strLineLong = plTime + self.m_bProgressbarBlank * (self.m_iColumns - len(plTime) - len(plDuration)) + plDuration
     else:
       strLineLong = strLine
 
@@ -605,10 +608,13 @@ class LCDProc(LcdBase):
         self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, iStartX, ln, self.m_iProgressBarWidth)
       # progressbar line with time
       elif dictDescriptor['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESSTIME:
-        self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, iStartX + len(InfoLabel_GetPlayerTime()), ln, self.m_iProgressBarWidth - int((len(InfoLabel_GetPlayerDuration()) + len(InfoLabel_GetPlayerTime())) * self.m_iProgressBarWidth / self.m_iColumns))
-        self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i %s %i \"%s\"\n" % (ln, iStartX, ln, self.m_iColumns, ln, strScrollMode, iScrollSpeed, re.escape(strLineLong))
+        drawLineText = True
+        pLenFract = float(self.m_iColumns - int(len(plDuration) + len(plTime))) / self.m_iColumns
+        pTimeLen = int(self.m_iProgressBarWidth * pLenFract)
+        self.m_strSetLineCmds += "widget_set xbmc lineProgress%i %i %i %i\n" % (ln, iStartX + len(plTime), ln, pTimeLen)
       # everything else (text, icontext)
       else:
+        drawLineText = True
         if len(strLineLong) < iMaxLineLen and dictDescriptor['align'] != LCD_LINEALIGN.LCD_LINEALIGN_LEFT:
           iSpaces = iMaxLineLen - len(strLineLong)
           if dictDescriptor['align'] == LCD_LINEALIGN.LCD_LINEALIGN_RIGHT:
@@ -616,6 +622,7 @@ class LCDProc(LcdBase):
           elif dictDescriptor['align'] == LCD_LINEALIGN.LCD_LINEALIGN_CENTER:
             iStartX += int(iSpaces / 2)
 
+      if drawLineText:
         self.m_strSetLineCmds += "widget_set xbmc lineScroller%i %i %i %i %i %s %i \"%s\"\n" % (ln, iStartX, ln, self.m_iColumns, ln, strScrollMode, iScrollSpeed, re.escape(strLineLong))
 
       # cache contents
