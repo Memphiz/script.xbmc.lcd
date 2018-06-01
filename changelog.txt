@@ -2,6 +2,7 @@
 - Compatibility with Kodi 18 Leia
 - Polish translation by mskalski (thanks!)
 - French translation by fengalin (thanks!)
+- New progressbar+time linetype by Truong Ta (thanks!)
 - Fixes, cleanups, cosmetics and optimizations all over the place
 2.6.0 (Helix)
 - Initial version for Kodi Helix
