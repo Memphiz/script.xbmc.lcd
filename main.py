@@ -130,15 +130,19 @@ def handleConnectLCD():
 
   return ret
 
-#########################################
+######
+# main()
+def main():
+  # init vars and classes
+  initGlobals()
 
-#MAIN - entry point
+  # initialise and load GUI settings
+  settings_setup()
 
-# init vars and classes
-initGlobals()
+  # do LCD processing loop (needs to catch xbmc.abortRequested !)
+  process_lcd()
 
-# initialise and load GUI settings
-settings_setup()
-
-# do LCD processing loop (needs to catch xbmc.abortRequested !)
-process_lcd()
+######
+# script entry point
+if __name__ == "__main__":
+  main()
