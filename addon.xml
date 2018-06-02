@@ -3,7 +3,7 @@
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
   </requires>
-  <extension point="xbmc.service" library="lcdmain.py"/>
+  <extension point="xbmc.service" library="main.py"/>
   <extension point="xbmc.addon.metadata">
     <language></language>
     <summary>Kodi/XBMC LCDproc</summary>
