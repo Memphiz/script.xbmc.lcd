@@ -31,10 +31,10 @@ import time
 
 from socket import *
 
-__scriptname__ = sys.modules[ "__main__" ].__scriptname__
-__settings__ = sys.modules[ "__main__" ].__settings__
-__cwd__ = sys.modules[ "__main__" ].__cwd__
-__icon__ = sys.modules[ "__main__" ].__icon__
+__scriptname__ = sys.modules["resources.lib.common"].__scriptname__
+__settings__   = sys.modules["resources.lib.common"].__settings__
+__cwd__        = sys.modules["resources.lib.common"].__cwd__
+__icon__       = sys.modules["resources.lib.common"].__icon__
 
 from settings import *
 from lcdbase import *
@@ -43,9 +43,6 @@ from lcdproc_extra_imon import *
 from lcdproc_extra_mdm166a import *
 
 from infolabels import *
-
-def log(loglevel, msg):
-  xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel)
 
 MAX_ROWS = 20
 MAX_BIGDIGITS = 20

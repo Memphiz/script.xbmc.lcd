@@ -28,10 +28,10 @@ import xbmc
 import sys
 import time
 
-__scriptname__ = sys.modules[ "__main__" ].__scriptname__
-__settings__ = sys.modules[ "__main__" ].__settings__
-__cwd__ = sys.modules[ "__main__" ].__cwd__
-__icon__ = sys.modules[ "__main__" ].__icon__
+__scriptname__ = sys.modules["resources.lib.common"].__scriptname__
+__settings__   = sys.modules["resources.lib.common"].__settings__
+__cwd__        = sys.modules["resources.lib.common"].__cwd__
+__icon__       = sys.modules["resources.lib.common"].__icon__
 
 from lcdproc import *
 from lcdbase import LCD_EXTRAICONS
@@ -39,9 +39,6 @@ from extraicons import *
 from lcdproc_extra_base import *
 
 IMON_OUTPUT_INTERVAL = 0.2 # seconds
-
-def log(loglevel, msg):
-  xbmc.log("### [%s] - %s" % (__scriptname__,msg,), level=loglevel)
 
 # extra icon bitmasks
 class IMON_ICONS:

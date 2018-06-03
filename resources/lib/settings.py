@@ -26,11 +26,10 @@ import sys
 import time
 import xbmc
 
-__scriptname__ = sys.modules[ "__main__" ].__scriptname__
-__settings__   = sys.modules[ "__main__" ].__settings__
-__cwd__        = sys.modules[ "__main__" ].__cwd__
-__icon__       = sys.modules[ "__main__" ].__icon__
-sys.path.append (__cwd__)
+__scriptname__ = sys.modules["resources.lib.common"].__scriptname__
+__settings__   = sys.modules["resources.lib.common"].__settings__
+__cwd__        = sys.modules["resources.lib.common"].__cwd__
+__icon__       = sys.modules["resources.lib.common"].__icon__
 
 #general
 global g_hostip

@@ -21,22 +21,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import xbmc
-import xbmcaddon
+# base imports
 import time
 import os
+import sys
 
-__settings__   = xbmcaddon.Addon(id='script.xbmc.lcdproc')
-__cwd__        = __settings__.getAddonInfo('path')
-__icon__       = os.path.join(__cwd__, "resources", "icon.png")
-__scriptname__ = "XBMC LCDproc"
+# Kodi imports
+import xbmc
+import xbmcaddon
 
-BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( __cwd__, 'resources', 'lib' ) )
-sys.path.insert(0, BASE_RESOURCE_PATH)
+from resources.lib.common import *
+from resources.lib.settings import *
+from resources.lib.lcdproc import *
+from resources.lib.infolabels import *
 
-from settings import *
-from lcdproc import *
-from infolabels import *
+__settings__   = sys.modules["resources.lib.common"].__settings__
+__icon__       = sys.modules["resources.lib.common"].__icon__
+__scriptname__ = sys.modules["resources.lib.common"].__scriptname__
 
 global g_failedConnectionNotified
 global g_initialConnectAttempt

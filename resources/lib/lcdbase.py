@@ -33,21 +33,17 @@ import time
 from xml.etree import ElementTree as xmltree
 from array import array
 
-__scriptname__ = sys.modules[ "__main__" ].__scriptname__
-__settings__ = sys.modules[ "__main__" ].__settings__
-__cwd__ = sys.modules[ "__main__" ].__cwd__
-__icon__ = sys.modules[ "__main__" ].__icon__
-__lcdxml__ = xbmc.translatePath( os.path.join("special://masterprofile","LCD.xml"))
-__lcddefaultxml__ = xbmc.translatePath( os.path.join(__cwd__, "resources", "LCD.xml.defaults"))
+__scriptname__    = sys.modules["resources.lib.common"].__scriptname__
+__settings__      = sys.modules["resources.lib.common"].__settings__
+__cwd__           = sys.modules["resources.lib.common"].__cwd__
+__icon__          = sys.modules["resources.lib.common"].__icon__
+__lcdxml__        = xbmc.translatePath(os.path.join("special://masterprofile", "LCD.xml"))
+__lcddefaultxml__ = xbmc.translatePath(os.path.join(__cwd__, "resources", "LCD.xml.defaults"))
 
 from settings import *
 from extraicons import *
 from infolabels import *
 from charset_hd44780 import *
-
-# global functions
-def log(loglevel, msg):
-  xbmc.log("### [%s] - %s" % (__scriptname__,msg,),level=loglevel)
 
 class LCD_MODE:
   LCD_MODE_GENERAL     = 0

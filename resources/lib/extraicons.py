@@ -23,10 +23,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-# enum snippet from http://stackoverflow.com/a/1695250 - thanks!
-def enum(*sequential, **named):
-  enums = dict(zip(sequential, range(len(sequential))), **named)
-  return type('Enum', (), enums)
+from common import *
 
 LCD_EXTRABARS_MAX = 4
 

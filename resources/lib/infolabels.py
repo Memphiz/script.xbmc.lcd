@@ -33,12 +33,7 @@ import xbmcaddon
 import xbmcgui
 
 # wonder why "from settings import *" does not work...
-__settingshandler__ = sys.modules[ "settings" ]
-
-# enum snippet from http://stackoverflow.com/a/1695250 - thanks!
-def enum(*sequential, **named):
-  enums = dict(zip(sequential, range(len(sequential))), **named)
-  return type('Enum', (), enums)
+__settingshandler__ = sys.modules["resources.lib.settings"]
 
 # interesting XBMC GUI Window IDs (no defines seem to exist for this)
 class WINDOW_IDS:
