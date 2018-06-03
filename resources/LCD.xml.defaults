@@ -49,7 +49,7 @@
       <line>Freemem: $INFO[System.FreeMemory]</line>
    </tvshow>
    <general>
-      <line>XBMC running...</line>
+      <line>Kodi running...</line>
       <line>$INFO[System.Time] $INFO[System.Date]</line>
       <line>Freemem: $INFO[System.FreeMemory]</line>
       <line>$INFO[System.ScreenWidth]x$INFO[System.ScreenHeight] $INFO[System.ScreenMode]</line>

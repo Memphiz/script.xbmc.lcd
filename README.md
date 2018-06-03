@@ -1,11 +1,11 @@
-XBMC LCDproc Python addon
-==========================
+Kodi (XBMC) LCDproc Python addon
+=================================
 
-Copyright (C) 2012-2018 Team XBMC, Daniel 'herrnst' Scheller
-Based on initial work (C) 2012 Memphiz/Team XBMC
+Copyright (C) 2012-2018 Team Kodi, Daniel 'herrnst' Scheller
+Based on initial work (C) 2012 Memphiz/Team Kodi (formerly Team XBMC)
 
-LCDproc support for XBMC implemented in Python, direct drop-in replacement for
-the LCD support in XBMC core.
+LCDproc support for Kodi implemented in Python, direct drop-in replacement for
+the LCD support that was present in prior versions of XBMC and it's core.
 
 See https://github.com/herrnst/script.xbmc.lcdproc/wiki for details and usage
 information.

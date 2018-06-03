@@ -1,6 +1,6 @@
 '''
     XBMC LCDproc addon
-    Copyright (C) 2012-2018 Team XBMC
+    Copyright (C) 2012-2018 Team Kodi
 
     Support for extra symbols on SoundGraph iMON LCD displays
     Copyright (C) 2012-2018 Daniel 'herrnst' Scheller
