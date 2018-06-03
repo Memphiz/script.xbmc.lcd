@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: script.xbmc.lcdproc\n"
 "Report-Msgid-Bugs-To: https://github.com/herrnst/script.xbmc.lcdproc\n"
 "POT-Creation-Date: 2018-06-02 15:55+0200\n"
-"PO-Revision-Date: 2018-06-02 15:55+0200\n"
+"PO-Revision-Date: 2018-06-03 18:37+0200\n"
 "Last-Translator: François Laignel <fengalin@free.fr>\n"
 "Language-Team: Français\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,6 @@ msgstr ""
 
 # Settings
 # Behaviour
-
 msgctxt "#32100"
 msgid "Behaviour"
 msgstr "Comportement"
@@ -49,11 +48,10 @@ msgstr "Jeu de caractères"
 
 msgctxt "#32107"
 msgid "Support for extra display elements (e.g. icons)"
-msgstr "Gestion des éléments d'affichage supplémentaires (ex. icones)"
+msgstr "Gestion des éléments d'affichage supplémentaires (ex. icônes)"
 
 # empty strings from id 32108 to 32199
 # Backlight
-
 msgctxt "#32200"
 msgid "Backlight"
 msgstr "Rétro-éclairage"
@@ -80,11 +78,10 @@ msgstr "Délai (s)"
 
 msgctxt "#32206"
 msgid "Dim/turn off..."
-msgstr "Diminuer/éteindre..."
+msgstr "Diminuer/éteindre…"
 
 # empty strings from id 32207 to 32299
 # Connection
-
 msgctxt "#32300"
 msgid "Connection"
 msgstr "Connexion"
@@ -111,7 +108,6 @@ msgstr "Cacher les notifications d'erreurs de connexion"
 
 # empty strings from id 32306 to 32400
 # Enum values: Scroll mode
-
 msgctxt "#32401"
 msgid "Marquee"
 msgstr "En boucle"
@@ -122,7 +118,6 @@ msgstr "Gauche/Droite"
 
 # empty strings from id 32403 to 32410
 # Enum values: Charsets
-
 msgctxt "#32411"
 msgid "ISO8859-1 (default)"
 msgstr "ISO8859-1 (valeur d'origine)"
@@ -153,15 +148,14 @@ msgstr "HD44780-ROM A02"
 
 # empty strings from id 32418 to 32499
 # Notifications
-
 msgctxt "#32500"
 msgid "Failed to connect to LCDProc!"
-msgstr "Échec lors de la connection à LCDProc !"
+msgstr "Échec lors de la connexion à LCDProc !"
 
 msgctxt "#32501"
 msgid "Connected to LCDProc!"
-msgstr "Connecté à LCDProc!"
+msgstr "Connecté à LCDProc !"
 
 msgctxt "#32502"
 msgid "Warning! Errors in LCD.xml or LCD.xml not found!"
-msgstr "Attention ! Erreurs dans LCD.xml ou impossible de trouver LCD.xml !"
+msgstr "Attention ! LCD.xml comporte des erreurs ou est introuvable !"
