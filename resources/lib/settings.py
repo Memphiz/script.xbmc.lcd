@@ -24,9 +24,10 @@
 import string
 import sys
 import time
+
 import xbmc
 
-__settings__ = sys.modules["resources.lib.common"].__settings__
+from common import *
 
 #general
 global g_hostip
@@ -208,10 +209,10 @@ def settings_handleCriticalSettings():
 
   reconnect = False
 
-  hostip    = __settings__.getSetting("hostip")
-  hostport  = int(__settings__.getSetting("hostport"))
-  heartbeat = __settings__.getSetting("heartbeat") == "true"
-  useextraelements = __settings__.getSetting("useextraelements") == "true"
+  hostip    = KODI_ADDON_SETTINGS.getSetting("hostip")
+  hostport  = int(KODI_ADDON_SETTINGS.getSetting("hostport"))
+  heartbeat = KODI_ADDON_SETTINGS.getSetting("heartbeat") == "true"
+  useextraelements = KODI_ADDON_SETTINGS.getSetting("useextraelements") == "true"
 
   #server settings
   #we need to reconnect if networkaccess bool changes
@@ -232,7 +233,7 @@ def settings_handleCriticalSettings():
       else:
         print "lcd: invalid hostport value " + str(hostport) + ", resetting to old value " + str(g_hostport)
 
-      __settings__.setSetting("hostport", str(g_hostport))
+      KODI_ADDON_SETTINGS.setSetting("hostport", str(g_hostport))
 
     if g_heartbeat != heartbeat:
       print "lcd: toggled heartbeat bool"
@@ -265,18 +266,18 @@ def settings_handleLcdSettings():
 
   g_settingsChanged = False
 
-  scrolldelay = int(float(string.replace(__settings__.getSetting("scrolldelay"), ",", ".")))
-  scrollmode = __settings__.getSetting("scrollmode")
-  dimonscreensaver = __settings__.getSetting("dimonscreensaver") == "true"
-  dimonshutdown = __settings__.getSetting("dimonshutdown") == "true"
-  dimonvideoplayback = __settings__.getSetting("dimonvideoplayback") == "true"
-  dimonmusicplayback = __settings__.getSetting("dimonmusicplayback") == "true"
-  dimdelay = int(float(string.replace(__settings__.getSetting("dimdelay"), ",", ".")))
-  navtimeout = int(float(string.replace(__settings__.getSetting("navtimeout"), ",", ".")))
-  refreshrate = int(float(string.replace(__settings__.getSetting("refreshrate"), ",", ".")))
-  hideconnpopups = __settings__.getSetting("hideconnpopups") == "true"
-  usealternatecharset = __settings__.getSetting("usealternatecharset") == "true"
-  charset = __settings__.getSetting("charset")
+  scrolldelay = int(float(string.replace(KODI_ADDON_SETTINGS.getSetting("scrolldelay"), ",", ".")))
+  scrollmode = KODI_ADDON_SETTINGS.getSetting("scrollmode")
+  dimonscreensaver = KODI_ADDON_SETTINGS.getSetting("dimonscreensaver") == "true"
+  dimonshutdown = KODI_ADDON_SETTINGS.getSetting("dimonshutdown") == "true"
+  dimonvideoplayback = KODI_ADDON_SETTINGS.getSetting("dimonvideoplayback") == "true"
+  dimonmusicplayback = KODI_ADDON_SETTINGS.getSetting("dimonmusicplayback") == "true"
+  dimdelay = int(float(string.replace(KODI_ADDON_SETTINGS.getSetting("dimdelay"), ",", ".")))
+  navtimeout = int(float(string.replace(KODI_ADDON_SETTINGS.getSetting("navtimeout"), ",", ".")))
+  refreshrate = int(float(string.replace(KODI_ADDON_SETTINGS.getSetting("refreshrate"), ",", ".")))
+  hideconnpopups = KODI_ADDON_SETTINGS.getSetting("hideconnpopups") == "true"
+  usealternatecharset = KODI_ADDON_SETTINGS.getSetting("usealternatecharset") == "true"
+  charset = KODI_ADDON_SETTINGS.getSetting("charset")
 
   if g_scrolldelay != scrolldelay:
     g_scrolldelay = scrolldelay

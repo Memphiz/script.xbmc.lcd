@@ -33,16 +33,14 @@ import time
 from xml.etree import ElementTree as xmltree
 from array import array
 
-__settings__ = sys.modules["resources.lib.common"].__settings__
-__cwd__      = sys.modules["resources.lib.common"].__cwd__
-
-__lcdxml__        = xbmc.translatePath(os.path.join("special://masterprofile", "LCD.xml"))
-__lcddefaultxml__ = xbmc.translatePath(os.path.join(__cwd__, "resources", "LCD.xml.defaults"))
-
+from common import *
 from settings import *
 from extraicons import *
 from infolabels import *
 from charset_hd44780 import *
+
+__lcdxml__        = xbmc.translatePath(os.path.join("special://masterprofile", "LCD.xml"))
+__lcddefaultxml__ = xbmc.translatePath(os.path.join(KODI_ADDON_ROOTPATH, "resources", "LCD.xml.defaults"))
 
 class LCD_MODE:
   LCD_MODE_GENERAL     = 0
@@ -239,7 +237,7 @@ class LcdBase():
     except:
       if not self.m_bXMLWarningDisplayed:
         self.m_bXMLWarningDisplayed = True
-        text = __settings__.getLocalizedString(32502)
+        text = KODI_ADDON_SETTINGS.getLocalizedString(32502)
         xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (KODI_ADDON_NAME, text, 5000, KODI_ADDON_ICON))
 
       log(xbmc.LOGERROR, "Parsing of %s failed" % (xmlFile))
