@@ -33,9 +33,10 @@ import xbmcaddon
 KODI_ADDON_ID   = "script.xbmc.lcdproc"
 KODI_ADDON_NAME = "XBMC LCDproc"
 
-__settings__   = xbmcaddon.Addon(id=KODI_ADDON_ID)
-__cwd__        = __settings__.getAddonInfo('path')
-__icon__       = os.path.join(__cwd__, "resources", "icon.png")
+__settings__ = xbmcaddon.Addon(id=KODI_ADDON_ID)
+__cwd__      = __settings__.getAddonInfo('path')
+
+KODI_ADDON_ICON = os.path.join(__cwd__, "resources", "icon.png")
 
 # copy loglevel defines to the global scope
 LOGDEBUG   = xbmc.LOGDEBUG

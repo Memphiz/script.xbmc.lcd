@@ -36,7 +36,6 @@ from resources.lib.lcdproc import *
 from resources.lib.infolabels import *
 
 __settings__ = sys.modules["resources.lib.common"].__settings__
-__icon__     = sys.modules["resources.lib.common"].__icon__
 
 global g_failedConnectionNotified
 global g_initialConnectAttempt
@@ -64,11 +63,11 @@ def HandleConnectionNotification(bConnectSuccess):
       g_failedConnectionNotified = True
       g_initialConnectAttempt = False
       text = __settings__.getLocalizedString(32500)
-      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (KODI_ADDON_NAME, text, 10, __icon__))
+      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (KODI_ADDON_NAME, text, 10, KODI_ADDON_ICON))
   else:
     text = __settings__.getLocalizedString(32501)
     if not g_initialConnectAttempt:
-      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (KODI_ADDON_NAME, text, 10, __icon__))
+      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (KODI_ADDON_NAME, text, 10, KODI_ADDON_ICON))
       g_failedConnectionNotified = True
 
 # returns mode identifier based on currently playing media/active navigation
