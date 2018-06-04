@@ -36,7 +36,6 @@ KODI_ADDON_NAME = "XBMC LCDproc"
 __settings__   = xbmcaddon.Addon(id=KODI_ADDON_ID)
 __cwd__        = __settings__.getAddonInfo('path')
 __icon__       = os.path.join(__cwd__, "resources", "icon.png")
-__scriptname__ = KODI_ADDON_NAME
 
 # copy loglevel defines to the global scope
 LOGDEBUG   = xbmc.LOGDEBUG
@@ -50,7 +49,7 @@ LOGWARNING = xbmc.LOGWARNING
 
 # log wrapper
 def log(loglevel, msg):
-	xbmc.log("### [%s] - %s" % (__scriptname__, msg), level=loglevel)
+	xbmc.log("### [%s] - %s" % (KODI_ADDON_NAME, msg), level=loglevel)
 
 # enum snippet from http://stackoverflow.com/a/1695250 - thanks!
 def enum(*sequential, **named):

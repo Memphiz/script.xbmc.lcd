@@ -31,7 +31,6 @@ import time
 
 from socket import *
 
-__scriptname__ = sys.modules["resources.lib.common"].__scriptname__
 __settings__   = sys.modules["resources.lib.common"].__settings__
 __cwd__        = sys.modules["resources.lib.common"].__cwd__
 __icon__       = sys.modules["resources.lib.common"].__icon__
