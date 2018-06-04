@@ -27,9 +27,6 @@
 import xbmc
 import sys
 
-__settings__ = sys.modules["resources.lib.common"].__settings__
-__cwd__      = sys.modules["resources.lib.common"].__cwd__
-
 from lcdproc import *
 from lcdbase import LCD_EXTRAICONS
 from extraicons import *

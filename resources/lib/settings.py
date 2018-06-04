@@ -27,7 +27,6 @@ import time
 import xbmc
 
 __settings__ = sys.modules["resources.lib.common"].__settings__
-__cwd__      = sys.modules["resources.lib.common"].__cwd__
 
 #general
 global g_hostip

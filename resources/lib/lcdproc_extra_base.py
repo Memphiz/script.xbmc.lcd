@@ -25,9 +25,6 @@
 
 import sys
 
-__settings__ = sys.modules["resources.lib.common"].__settings__
-__cwd__      = sys.modules["resources.lib.common"].__cwd__
-
 class LCDproc_extra_base():
   def __init__(self):
     pass

@@ -31,9 +31,6 @@ import time
 
 from socket import *
 
-__settings__ = sys.modules["resources.lib.common"].__settings__
-__cwd__      = sys.modules["resources.lib.common"].__cwd__
-
 from settings import *
 from lcdbase import *
 
