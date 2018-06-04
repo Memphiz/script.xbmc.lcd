@@ -28,7 +28,7 @@ import os
 
 __settings__   = xbmcaddon.Addon(id='script.xbmc.lcdproc')
 __cwd__        = __settings__.getAddonInfo('path')
-__icon__       = os.path.join(__cwd__,"icon.png")
+__icon__       = os.path.join(__cwd__, "resources", "icon.png")
 __scriptname__ = "XBMC LCDproc"
 
 BASE_RESOURCE_PATH = xbmc.translatePath( os.path.join( __cwd__, 'resources', 'lib' ) )
