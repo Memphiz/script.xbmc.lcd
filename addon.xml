@@ -2,7 +2,6 @@
 <addon id="script.xbmc.lcdproc" name="XBMC LCDproc" version="3.0.0" provider-name="Team Kodi: Memphiz, Daniel 'herrnst' Scheller">
   <requires>
     <import addon="xbmc.python" version="2.25.0"/>
-    <import addon="xbmc.addon" version="17.9.701"/>
   </requires>
   <extension point="xbmc.service" library="lcdmain.py"/>
   <extension point="xbmc.addon.metadata">
