@@ -23,6 +23,13 @@
     <assets>
       <icon>resources/icon.png</icon>
     </assets>
-    <news>TBD on release</news>
+    <news>3.0.0 (Leia)
+- Compatibility with Kodi 18 Leia
+- Polish translation by mskalski (thanks!)
+- French translation by fengalin (thanks!)
+- Strings finally migrated to strings.po format
+- New progressbar+time linetype by Truong Ta (thanks!)
+- Fixes, cleanups, cosmetics and optimizations all over the place
+</news>
   </extension>
 </addon>
