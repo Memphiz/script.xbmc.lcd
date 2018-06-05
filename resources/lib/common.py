@@ -49,8 +49,3 @@ LOGWARNING = xbmc.LOGWARNING
 # log wrapper
 def log(loglevel, msg):
 	xbmc.log("### [%s] - %s" % (KODI_ADDON_NAME, msg), level=loglevel)
-
-# enum snippet from http://stackoverflow.com/a/1695250 - thanks!
-def enum(*sequential, **named):
-	enums = dict(zip(sequential, range(len(sequential))), **named)
-	return type('Enum', (), enums)
