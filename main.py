@@ -39,13 +39,19 @@ global g_failedConnectionNotified
 global g_initialConnectAttempt
 global g_lcdproc
 
+global g_xbmcMonitor
+
 def initGlobals():
   global g_failedConnectionNotified
   global g_initialConnectAttempt
   global g_lcdproc
+  global g_xbmcMonitor
 
   g_failedConnectionNotified = False
   g_initialConnectAttempt = True
+
+  g_xbmcMonitor = xbmc.Monitor()
+
   settings_initGlobals()
   g_lcdproc = LCDProc()
 
@@ -98,8 +104,9 @@ def getLcdMode():
   return ret
 
 def process_lcd():
+  global g_xbmcMonitor
 
-  while not xbmc.abortRequested:
+  while not g_xbmcMonitor.abortRequested():
     if handleConnectLCD():
       settingsChanged = settings_didSettingsChange()
 
@@ -113,10 +120,12 @@ def process_lcd():
   g_lcdproc.Shutdown()
 
 def handleConnectLCD():
+  global g_xbmcMonitor
+
   ret = True
 
   # make sure not to block things when shutdown is requested
-  if not xbmc.abortRequested:
+  if not g_xbmcMonitor.abortRequested():
     #check for new settings
     if settings_checkForNewSettings() or not g_lcdproc.IsConnected():    #networksettings changed?
       g_failedConnectionNotified = False  #reset notification flag
@@ -136,7 +145,7 @@ def main():
   # initialise and load GUI settings
   settings_setup()
 
-  # do LCD processing loop (needs to catch xbmc.abortRequested !)
+  # do LCD processing loop (needs to catch xbmc.Monitor().abortRequested() !)
   process_lcd()
 
 ######
