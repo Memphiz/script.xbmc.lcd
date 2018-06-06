@@ -32,8 +32,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-# wonder why "from settings import *" does not work...
-__settingshandler__ = sys.modules["resources.lib.settings"]
+from settings import *
 
 # interesting XBMC GUI Window IDs (no defines seem to exist for this)
 class WINDOW_IDS:
@@ -207,7 +206,7 @@ def InfoLabel_IsNavigationActive():
 
   ret = False
 
-  navtimeout = __settingshandler__.settings_getNavTimeout()
+  navtimeout = settings_getNavTimeout()
   menu = InfoLabel_GetInfoLabel("$INFO[System.CurrentWindow]")
   subMenu = InfoLabel_GetInfoLabel("$INFO[System.CurrentControl]")
 
