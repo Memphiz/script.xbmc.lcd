@@ -29,6 +29,7 @@ import sys
 # Kodi imports
 import xbmc
 import xbmcaddon
+import xbmcgui
 
 from resources.lib.common import *
 from resources.lib.settings import *
@@ -67,11 +68,11 @@ def HandleConnectionNotification(bConnectSuccess):
       g_failedConnectionNotified = True
       g_initialConnectAttempt = False
       text = KODI_ADDON_SETTINGS.getLocalizedString(32500)
-      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (KODI_ADDON_NAME, text, 10, KODI_ADDON_ICON))
+      xbmcgui.Dialog().notification(KODI_ADDON_NAME, text, KODI_ADDON_ICON)
   else:
     text = KODI_ADDON_SETTINGS.getLocalizedString(32501)
     if not g_initialConnectAttempt:
-      xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (KODI_ADDON_NAME, text, 10, KODI_ADDON_ICON))
+      xbmcgui.Dialog().notification(KODI_ADDON_NAME, text, KODI_ADDON_ICON)
       g_failedConnectionNotified = True
 
 # returns mode identifier based on currently playing media/active navigation

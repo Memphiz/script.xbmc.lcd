@@ -22,7 +22,6 @@
 '''
 
 import platform
-import xbmc
 import sys
 import os
 import shutil
@@ -32,6 +31,9 @@ import time
 
 from xml.etree import ElementTree as xmltree
 from array import array
+
+import xbmc
+import xbmcgui
 
 from common import *
 from settings import *
@@ -238,7 +240,7 @@ class LcdBase():
       if not self.m_bXMLWarningDisplayed:
         self.m_bXMLWarningDisplayed = True
         text = KODI_ADDON_SETTINGS.getLocalizedString(32502)
-        xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (KODI_ADDON_NAME, text, 5000, KODI_ADDON_ICON))
+        xbmcgui.Dialog().notification(KODI_ADDON_NAME, text, KODI_ADDON_ICON)
 
       log(LOGERROR, "Parsing of %s failed" % (xmlFile))
       return False
