@@ -171,14 +171,14 @@ class LcdBase():
 
     if not os.path.isfile(__lcdxml__):
       if not os.path.isfile(__lcddefaultxml__):
-        log(xbmc.LOGERROR, "No LCD.xml found and LCD.xml.defaults missing, expect problems!")
+        log(LOGERROR, "No LCD.xml found and LCD.xml.defaults missing, expect problems!")
       else:
         try:
           shutil.copy2(__lcddefaultxml__, __lcdxml__)
-          log(xbmc.LOGNOTICE, "Initialised LCD.xml from defaults")
+          log(LOGNOTICE, "Initialised LCD.xml from defaults")
           ret = True
         except:
-          log(xbmc.LOGERROR, "Failed to copy LCD defaults!")
+          log(LOGERROR, "Failed to copy LCD defaults!")
     else:
       ret = True
 
@@ -190,11 +190,11 @@ class LcdBase():
 
     try:
       if not self.m_bHaveHD44780Charmap:
-        log(xbmc.LOGDEBUG, "Registering HD44780-ROM pseudocodepages")
+        log(LOGDEBUG, "Registering HD44780-ROM pseudocodepages")
         codecs.register(charset_hd44780)
         self.m_bHaveHD44780Charmap = True
     except:
-      log(xbmc.LOGERROR, "Failed to register custom HD44780-ROM pseudocodepage, expect problems with alternative charsets!")
+      log(LOGERROR, "Failed to register custom HD44780-ROM pseudocodepage, expect problems with alternative charsets!")
 
     # make sure we got reasonable defaults for users who didn't adapt to newest additions
     bGotDefaultSkin = self.LoadSkin(__lcddefaultxml__, True)
@@ -204,7 +204,7 @@ class LcdBase():
 
     # try to load user setup
     if not self.LoadSkin(__lcdxml__, False) and not bGotDefaultSkin:
-      log(xbmc.LOGERROR, "No usable mode configuration/skin could be loaded, check your addon installation!")
+      log(LOGERROR, "No usable mode configuration/skin could be loaded, check your addon installation!")
       return False
 
     # force-update GUI settings
@@ -220,7 +220,7 @@ class LcdBase():
         str_charset = "iso8859-1"
 
       self.m_strLCDEncoding = str_charset
-      log(xbmc.LOGDEBUG, "Setting character encoding to %s" % (self.m_strLCDEncoding))
+      log(LOGDEBUG, "Setting character encoding to %s" % (self.m_strLCDEncoding))
 
     self.m_iDimOnPlayDelay = settings_getDimDelay()
 
@@ -230,7 +230,7 @@ class LcdBase():
 
     bHaveSkin = False
 
-    log(xbmc.LOGNOTICE, "Loading settings from %s" % (xmlFile))
+    log(LOGNOTICE, "Loading settings from %s" % (xmlFile))
 
     try:
       doc = xmltree.parse(xmlFile)
@@ -240,7 +240,7 @@ class LcdBase():
         text = KODI_ADDON_SETTINGS.getLocalizedString(32502)
         xbmc.executebuiltin("XBMC.Notification(%s,%s,%s,%s)" % (KODI_ADDON_NAME, text, 5000, KODI_ADDON_ICON))
 
-      log(xbmc.LOGERROR, "Parsing of %s failed" % (xmlFile))
+      log(LOGERROR, "Parsing of %s failed" % (xmlFile))
       return False
 
     for element in doc.getiterator():
@@ -278,13 +278,13 @@ class LcdBase():
           try:
             intoffset = int(icontextoffset.text)
           except ValueError, TypeError:
-            log(xbmc.LOGERROR, "Value for icontextoffset must be integer (got: %s)" % (icontextoffset.text))
+            log(LOGERROR, "Value for icontextoffset must be integer (got: %s)" % (icontextoffset.text))
           else:
             if intoffset <= 0 or intoffset >= self.GetColumns():
-              log(xbmc.LOGERROR, "Value %d for icontextoffset out of range, ignoring" % (intoffset))
+              log(LOGERROR, "Value %d for icontextoffset out of range, ignoring" % (intoffset))
             else:
               if intoffset < 2:
-                log(xbmc.LOGWARNING, "Value %d for icontextoffset smaller than LCDproc's icon width" % (intoffset))
+                log(LOGWARNING, "Value %d for icontextoffset smaller than LCDproc's icon width" % (intoffset))
               self.m_iIconTextOffset = intoffset
 
         # check for allowemptylines setting
@@ -361,7 +361,7 @@ class LcdBase():
     self.m_lcdMode[mode] = []
 
     if node == None:
-      log(xbmc.LOGWARNING, "Empty Mode %d, consider checking LCD.xml" % (mode))
+      log(LOGWARNING, "Empty Mode %d, consider checking LCD.xml" % (mode))
 
       # if mode is empty, initialise with blank line
       if len(self.m_lcdMode[mode]) <= 0:
@@ -370,7 +370,7 @@ class LcdBase():
       return
 
     if len(node.findall("line")) <= 0:
-      log(xbmc.LOGWARNING, "Mode %d defined without lines, consider checking LCD.xml" % (mode))
+      log(LOGWARNING, "Mode %d defined without lines, consider checking LCD.xml" % (mode))
 
       if len(self.m_lcdMode[mode]) <= 0:
         self.m_lcdMode[mode].append(g_dictEmptyLineDescriptor)
@@ -449,7 +449,7 @@ class LcdBase():
       self.m_lcdMode[i] = []			#clear list
 
   def Shutdown(self):
-    log(xbmc.LOGNOTICE, "Shutting down")
+    log(LOGNOTICE, "Shutting down")
 
     if settings_getDimOnShutdown():
       self.SetBackLight(0)
@@ -463,7 +463,7 @@ class LcdBase():
       self.m_reBBCode = re.compile(regexbbcode)
       # catch+report failure
       if not self.m_reBBCode:
-        log(xbmc.LOGWARNING, "Precompilation of BBCode strip regex failed")
+        log(LOGWARNING, "Precompilation of BBCode strip regex failed")
         self.m_reBBCode = regexbbcode
 
     # loop to catch nested tags
@@ -513,7 +513,7 @@ class LcdBase():
           try:
             line = srcline.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
           except:
-            log(xbmc.LOGDEBUG, "Caught exception on charset conversion: " + srcline)
+            log(LOGDEBUG, "Caught exception on charset conversion: " + srcline)
             line = "---"
         else:
           line = srcline

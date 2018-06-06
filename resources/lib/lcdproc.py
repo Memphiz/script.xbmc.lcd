@@ -84,7 +84,7 @@ class LCDProc(LcdBase):
       self.tnsocket.sendall(sendcmd)
     except:
       # Something bad happened, abort
-      log(xbmc.LOGERROR, "SendCommand: Telnet exception - send")
+      log(LOGERROR, "SendCommand: Telnet exception - send")
       return False
 
     # Update last socketaction timestamp
@@ -99,7 +99,7 @@ class LCDProc(LcdBase):
           reply = self.tn.read_until("\n",3)
         except:
           # (Re)read failed, abort
-          log(xbmc.LOGERROR, "SendCommand: Telnet exception - reread")
+          log(LOGERROR, "SendCommand: Telnet exception - reread")
           return False
 
         # Skip these messages
@@ -128,7 +128,7 @@ class LCDProc(LcdBase):
 
     # Leave information something undesired happened
     if ret is False:
-      log(xbmc.LOGWARNING, "Reply to '" + strCmd +"' was '" + reply)
+      log(LOGWARNING, "Reply to '" + strCmd +"' was '" + reply)
 
     return ret
 
@@ -206,7 +206,7 @@ class LCDProc(LcdBase):
         connected = True
 
       else:
-        log(xbmc.LOGERROR, "Connection successful but LCD.xml has errors, aborting connect")
+        log(LOGERROR, "Connection successful but LCD.xml has errors, aborting connect")
 
     if not connected:
       # preventively close socket
@@ -215,10 +215,10 @@ class LCDProc(LcdBase):
       # give up after INIT_RETRY_INTERVAL_MAX (60) seconds
       if self.m_initRetryInterval > INIT_RETRY_INTERVAL_MAX:
         self.m_used = False
-        log(xbmc.LOGERROR,"Connect failed. Giving up. Please fix any connection problems and restart the addon.")
+        log(LOGERROR,"Connect failed. Giving up. Please fix any connection problems and restart the addon.")
       else:
         self.m_initRetryInterval = self.m_initRetryInterval * 2
-        log(xbmc.LOGERROR,"Connect failed. Retry in %d seconds." % self.m_initRetryInterval)
+        log(LOGERROR,"Connect failed. Retry in %d seconds." % self.m_initRetryInterval)
 
     return connected
 
@@ -237,13 +237,13 @@ class LCDProc(LcdBase):
 
       # When the LCDd driver doesn't supply a valid string, inform and return
       if reply == "":
-        log(xbmc.LOGNOTICE, "Empty driver information reply")
+        log(LOGNOTICE, "Empty driver information reply")
         return
 
-      log(xbmc.LOGNOTICE, "Driver information reply: " + reply)
+      log(LOGNOTICE, "Driver information reply: " + reply)
 
       if re.match(rematch_imon, reply):
-        log(xbmc.LOGNOTICE, "SoundGraph iMON LCD detected")
+        log(LOGNOTICE, "SoundGraph iMON LCD detected")
         if bUseExtraIcons:
           self.m_cExtraIcons = LCDproc_extra_imon()
 
@@ -252,12 +252,12 @@ class LCDProc(LcdBase):
         self.m_iBigDigits = 7
 
       elif re.match(rematch_mdm166a, reply):
-        log(xbmc.LOGNOTICE, "Futaba/Targa USB mdm166a VFD detected")
+        log(LOGNOTICE, "Futaba/Targa USB mdm166a VFD detected")
         if bUseExtraIcons:
           self.m_cExtraIcons = LCDproc_extra_mdm166a()
 
       elif re.match(rematch_imonvfd, reply):
-        log(xbmc.LOGNOTICE, "SoundGraph iMON IR/VFD detected")
+        log(LOGNOTICE, "SoundGraph iMON IR/VFD detected")
 
       if self.m_cExtraIcons is not None:
         self.m_cExtraIcons.Initialize()
@@ -271,7 +271,7 @@ class LCDProc(LcdBase):
     try:
       ip = settings_getHostIp()
       port = settings_getHostPort()
-      log(xbmc.LOGDEBUG,"Open " + str(ip) + ":" + str(port))
+      log(LOGDEBUG,"Open " + str(ip) + ":" + str(port))
 
       self.tn.open(ip, port)
       # Start a new session
@@ -279,7 +279,7 @@ class LCDProc(LcdBase):
 
       # Receive LCDproc data to determine row and column information
       reply = self.tn.read_until("\n",3)
-      log(xbmc.LOGDEBUG,"Reply: " + reply)
+      log(LOGDEBUG,"Reply: " + reply)
 
       # parse reply by regex
       lcdinfo = re.match("^connect .+ protocol ([0-9\.]+) lcd wid (\d+) hgt (\d+) cellwid (\d+) cellhgt (\d+)$", reply)
@@ -290,7 +290,7 @@ class LCDProc(LcdBase):
 
       # protocol version must currently be 0.3
       if float(lcdinfo.group(1)) != 0.3:
-        log(xbmc.LOGERROR, "Only LCDproc protocol 0.3 supported (got " + lcdinfo.group(1) +")")
+        log(LOGERROR, "Only LCDproc protocol 0.3 supported (got " + lcdinfo.group(1) +")")
         return False
 
       # set up class vars
@@ -300,7 +300,7 @@ class LCDProc(LcdBase):
       self.m_iCellHeight = int(lcdinfo.group(5))
 
       # tell users what's going on
-      log(xbmc.LOGNOTICE, "Connected to LCDd at %s:%s, Protocol version %s - Geometry %sx%s characters (%sx%s pixels, %sx%s pixels per character)" % (str(ip), str(port), float(lcdinfo.group(1)), str(self.m_iColumns), str(self.m_iRows), str(self.m_iColumns * self.m_iCellWidth), str(self.m_iRows * self.m_iCellHeight), str(self.m_iCellWidth), str(self.m_iCellHeight)))
+      log(LOGNOTICE, "Connected to LCDd at %s:%s, Protocol version %s - Geometry %sx%s characters (%sx%s pixels, %sx%s pixels per character)" % (str(ip), str(port), float(lcdinfo.group(1)), str(self.m_iColumns), str(self.m_iRows), str(self.m_iColumns * self.m_iCellWidth), str(self.m_iRows * self.m_iCellHeight), str(self.m_iCellWidth), str(self.m_iCellHeight)))
 
       # Set up BigNum values based on display geometry
       if self.m_iColumns < 13:
@@ -317,17 +317,17 @@ class LCDProc(LcdBase):
       self.DetermineExtraSupport()
 
     except:
-      log(xbmc.LOGERROR,"Connect: Caught exception, aborting.")
+      log(LOGERROR,"Connect: Caught exception, aborting.")
       return False
 
     # retrieve raw socket object
     self.tnsocket = self.tn.get_socket()
     if self.tnsocket is None:
-      log(xbmc.LOGERROR, "Retrieval of socket object failed!")
+      log(LOGERROR, "Retrieval of socket object failed!")
       return False
 
     if not self.SetupScreen():
-      log(xbmc.LOGERROR, "Screen setup failed!")
+      log(LOGERROR, "Screen setup failed!")
       return False
 
     return True
@@ -339,7 +339,7 @@ class LCDProc(LcdBase):
         # if we served extra elements, (try to) reset them
         if self.m_cExtraIcons is not None:
           if not self.SendCommand(self.m_cExtraIcons.GetClearAllCmd(), True):
-            log(xbmc.LOGERROR, "CloseSocket(): Cannot clear extra icons")
+            log(LOGERROR, "CloseSocket(): Cannot clear extra icons")
 
         # do gracefully disconnect (send directly as we won't get any response on this)
         self.tn.write("bye\n")
@@ -366,7 +366,7 @@ class LCDProc(LcdBase):
       return True
 
     if not self.SendCommand("noop", True):
-      log(xbmc.LOGERROR, "noop failed in IsConnected(), aborting!")
+      log(LOGERROR, "noop failed in IsConnected(), aborting!")
       return False
 
     return True
@@ -374,7 +374,7 @@ class LCDProc(LcdBase):
   def SetBackLight(self, iLight):
     if not self.tnsocket:
       return
-    log(xbmc.LOGDEBUG, "Switch Backlight to: " + str(iLight))
+    log(LOGDEBUG, "Switch Backlight to: " + str(iLight))
 
     # Build command
     if iLight == 0:
@@ -384,7 +384,7 @@ class LCDProc(LcdBase):
 
     # Send to server
     if not self.SendCommand(cmd, True):
-      log(xbmc.LOGERROR, "SetBackLight(): Cannot change backlight state")
+      log(LOGERROR, "SetBackLight(): Cannot change backlight state")
       self.CloseSocket()
 
   def SetContrast(self, iContrast):
@@ -404,7 +404,7 @@ class LCDProc(LcdBase):
 
     # Send to server
     if not self.SendCommand(cmd, True):
-      log(xbmc.LOGERROR, "Suspend(): Cannot suspend")
+      log(LOGERROR, "Suspend(): Cannot suspend")
       self.CloseSocket()
 
   def Resume(self):
@@ -416,7 +416,7 @@ class LCDProc(LcdBase):
 
     # Send to server
     if not self.SendCommand(cmd, True):
-      log(xbmc.LOGERROR, "Resume(): Cannot resume")
+      log(LOGERROR, "Resume(): Cannot resume")
       self.CloseSocket()
 
   def GetColumns(self):
@@ -623,7 +623,7 @@ class LCDProc(LcdBase):
         self.m_strSetLineCmds += "widget_set xbmc lineIcon%i 1 %i %s\n" % (ln, ln, self.m_strIconName)
 
   def ClearDisplay(self):
-    log(xbmc.LOGDEBUG, "Clearing display contents")
+    log(LOGDEBUG, "Clearing display contents")
 
     # clear line buffer first
     self.FlushLines()
