@@ -219,7 +219,7 @@ def settings_handleCriticalSettings():
   #or if network access is enabled and ip or port have changed
   if g_hostip != hostip or g_hostport != hostport or g_heartbeat != heartbeat:
     if g_hostip != hostip:
-      print "lcd: changed hostip to " + str(hostip)
+      log(LOGDEBUG, "settings: changed hostip to " + str(hostip))
       g_hostip = hostip
       reconnect = True
 
@@ -227,16 +227,16 @@ def settings_handleCriticalSettings():
 
       # make sure valid port number was given
       if hostport > 0 and hostport < 65536:
-        print "lcd: changed hostport to " + str(hostport)
+        log(LOGDEBUG, "settings: changed hostport to " + str(hostport))
         g_hostport = hostport
         reconnect = True
       else:
-        print "lcd: invalid hostport value " + str(hostport) + ", resetting to old value " + str(g_hostport)
+        log(LOGDEBUG, "settings: invalid hostport value " + str(hostport) + ", resetting to old value " + str(g_hostport))
 
       KODI_ADDON_SETTINGS.setSetting("hostport", str(g_hostport))
 
     if g_heartbeat != heartbeat:
-      print "lcd: toggled heartbeat bool"
+      log(LOGDEBUG, "settings: toggled heartbeat bool")
       g_heartbeat = heartbeat
       reconnect = True
 
