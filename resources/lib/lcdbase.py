@@ -279,7 +279,7 @@ class LcdBase():
         if icontextoffset != None and icontextoffset.text != None:
           try:
             intoffset = int(icontextoffset.text)
-          except ValueError, TypeError:
+          except ValueError as TypeError:
             log(LOGERROR, "Value for icontextoffset must be integer (got: %s)" % (icontextoffset.text))
           else:
             if intoffset <= 0 or intoffset >= self.GetColumns():
