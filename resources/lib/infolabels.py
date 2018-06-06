@@ -23,13 +23,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import os
 import string
-import sys
 import time
 
 import xbmc
-import xbmcaddon
 import xbmcgui
 
 from settings import *
@@ -201,8 +198,6 @@ def InfoLabel_IsNavigationActive():
   global g_InfoLabel_oldMenu
   global g_InfoLabel_oldSubMenu
   global g_InfoLabel_navTimer
-
-  #from settings import settings_getNavTimeout
 
   ret = False
 

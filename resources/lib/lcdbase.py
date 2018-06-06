@@ -21,12 +21,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import platform
-import sys
 import os
-import shutil
 import re
-import telnetlib
+import shutil
 import time
 
 from xml.etree import ElementTree as xmltree

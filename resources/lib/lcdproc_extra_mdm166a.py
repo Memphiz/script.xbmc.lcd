@@ -24,11 +24,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import xbmc
-import sys
-
-from lcdproc import *
-from lcdbase import LCD_EXTRAICONS
 from extraicons import *
 from lcdproc_extra_base import *
 

@@ -22,10 +22,7 @@
 '''
 
 import string
-import sys
 import time
-
-import xbmc
 
 from common import *
 
