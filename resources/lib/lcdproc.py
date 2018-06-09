@@ -67,7 +67,7 @@ class LCDProc(LcdBase):
     LcdBase.__init__(self)
 
   def SendCommand(self, strCmd, bCheckRet):
-    countcmds = string.count(strCmd, '\n')
+    countcmds = strCmd.count('\n')
     sendcmd = strCmd
     ret = True
 

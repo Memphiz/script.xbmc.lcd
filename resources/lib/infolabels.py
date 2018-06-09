@@ -23,7 +23,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import string
 import time
 
 import xbmc
@@ -168,7 +167,7 @@ def InfoLabel_IsMuted():
   return InfoLabel_GetBool("Player.Muted")
 
 def InfoLabel_GetVolumePercent():
-  volumedb = float(string.replace(string.replace(InfoLabel_GetInfoLabel("Player.Volume"), ",", "."), " dB", ""))
+  volumedb = float(InfoLabel_GetInfoLabel("Player.Volume").replace(",", ".").replace(" dB", ""))
   return (100 * (60.0 + volumedb) / 60)
 
 def InfoLabel_GetPlayerTimeSecs():
