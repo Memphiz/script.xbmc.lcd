@@ -24,7 +24,7 @@
 import string
 import time
 
-from common import *
+from .common import *
 
 #general
 global g_hostip

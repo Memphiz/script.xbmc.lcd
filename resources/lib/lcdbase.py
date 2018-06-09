@@ -32,11 +32,11 @@ from array import array
 import xbmc
 import xbmcgui
 
-from common import *
-from settings import *
-from extraicons import *
-from infolabels import *
-from charset_hd44780 import *
+from .common import *
+from .settings import *
+from .extraicons import *
+from .infolabels import *
+from .charset_hd44780 import *
 
 __lcdxml__        = xbmc.translatePath(os.path.join("special://masterprofile", "LCD.xml"))
 __lcddefaultxml__ = xbmc.translatePath(os.path.join(KODI_ADDON_ROOTPATH, "resources", "LCD.xml.defaults"))

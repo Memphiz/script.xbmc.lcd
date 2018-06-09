@@ -26,8 +26,8 @@
 
 import time
 
-from extraicons import *
-from lcdproc_extra_base import *
+from .extraicons import *
+from .lcdproc_extra_base import *
 
 IMON_OUTPUT_INTERVAL = 0.2 # seconds
 

@@ -29,7 +29,7 @@ import time
 import xbmc
 import xbmcgui
 
-from settings import *
+from .settings import *
 
 # interesting XBMC GUI Window IDs (no defines seem to exist for this)
 class WINDOW_IDS:

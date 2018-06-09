@@ -24,8 +24,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-from extraicons import *
-from lcdproc_extra_base import *
+from .extraicons import *
+from .lcdproc_extra_base import *
 
 # extra icon bitmasks
 class MDM166A_ICONS:

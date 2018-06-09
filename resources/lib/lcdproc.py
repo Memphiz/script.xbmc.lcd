@@ -29,13 +29,13 @@ import xbmc
 
 from socket import *
 
-from settings import *
-from lcdbase import *
+from .settings import *
+from .lcdbase import *
 
-from lcdproc_extra_imon import *
-from lcdproc_extra_mdm166a import *
+from .lcdproc_extra_imon import *
+from .lcdproc_extra_mdm166a import *
 
-from infolabels import *
+from .infolabels import *
 
 MAX_ROWS = 20
 MAX_BIGDIGITS = 20
