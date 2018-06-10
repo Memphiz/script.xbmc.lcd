@@ -88,11 +88,11 @@ class LCDproc_extra_mdm166a(LCDproc_extra_base):
       self.SetBar(i, float(0))
 
   def SetOutputIcons(self):
-    ret = ""
+    ret = b""
 
     if self.m_iOutputValueIcons != self.m_iOutputValueOldIcons:
       self.m_iOutputValueOldIcons = self.m_iOutputValueIcons
-      ret += "output %d\n" % (self.m_iOutputValueIcons)
+      ret += b"output %d\n" % (self.m_iOutputValueIcons)
 
     return ret
 
@@ -149,4 +149,4 @@ class LCDproc_extra_mdm166a(LCDproc_extra_base):
     self.m_iOutputValueOldIcons = 0
     self.m_iOutputValueIcons = 0
 
-    return "output 0\n"
+    return b"output 0\n"

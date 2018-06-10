@@ -390,7 +390,7 @@ class LcdBase():
         linetext = ""
       else:
         # prepare text line for XBMC's expected encoding
-        linetext = line.text.strip().encode(self.m_strInfoLabelEncoding, "ignore")
+        linetext = line.text.strip()
 
       # make sure linetext has something so re.match won't fail
       if linetext != "":
@@ -510,7 +510,7 @@ class LcdBase():
 
         if self.m_strInfoLabelEncoding != self.m_strLCDEncoding:
           try:
-            line = srcline.decode(self.m_strInfoLabelEncoding).encode(self.m_strLCDEncoding, "replace")
+            line = srcline
           except:
             log(LOGDEBUG, "Caught exception on charset conversion: " + srcline)
             line = "---"
@@ -533,7 +533,7 @@ class LcdBase():
 
     if self.m_cExtraIcons is not None:
       self.SetExtraInformation()
-      self.m_strSetLineCmds += self.m_cExtraIcons.GetOutputCommands()
+      self.m_bstrSetLineCmds += self.m_cExtraIcons.GetOutputCommands()
 
     self.FlushLines()
 
