@@ -23,6 +23,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
+import sys
 import time
 
 import xbmc
@@ -62,7 +63,11 @@ def InfoLabel_Initialize():
   g_InfoLabel_navTimer = time.time()
 
 def InfoLabel_GetInfoLabel(strLabel):
-  return xbmc.getInfoLabel(strLabel)
+  ret = xbmc.getInfoLabel(strLabel)
+  # pre-py3 compat
+  if sys.version_info.major < 3:
+    return ret.decode("utf-8")
+  return ret
 
 def InfoLabel_GetBool(strBool):
   return xbmc.getCondVisibility(strBool)
