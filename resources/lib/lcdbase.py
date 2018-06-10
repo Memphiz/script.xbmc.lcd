@@ -87,7 +87,6 @@ class LcdBase():
     self.m_strScrollSeparator = " "
 
     # runtime vars/state tracking
-    self.m_strInfoLabelEncoding = "utf-8" # http://forum.xbmc.org/showthread.php?tid=125492&pid=1045926#pid1045926
     self.m_timeDisableOnPlayTimer = time.time()
     self.m_bCurrentlyDimmed = False
     self.m_bHaveHD44780Charmap = False
@@ -503,19 +502,10 @@ class LcdBase():
         if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_ICONTEXT:
           self.SetPlayingStateIcon()
 
-        srcline = InfoLabel_GetInfoLabel(self.m_lcdMode[mode][inLine]['text'])
+        line = InfoLabel_GetInfoLabel(self.m_lcdMode[mode][inLine]['text'])
 
-        if len(srcline) > 0:
-          srcline = self.StripBBCode(srcline)
-
-        if self.m_strInfoLabelEncoding != self.m_strLCDEncoding:
-          try:
-            line = srcline
-          except:
-            log(LOGDEBUG, "Caught exception on charset conversion: " + srcline)
-            line = "---"
-        else:
-          line = srcline
+        if len(line) > 0:
+          line = self.StripBBCode(line)
 
         self.SetProgressBar(0, -1)
 
