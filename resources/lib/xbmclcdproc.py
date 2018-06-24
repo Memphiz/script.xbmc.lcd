@@ -105,16 +105,14 @@ class XBMCLCDproc():
     def HandleConnectLCD(self):
         ret = True
 
-        # make sure not to block things when shutdown is requested
-        if not self._xbmcMonitor.abortRequested():
-            # check for new settings - networksettings changed?
-            if settings_checkForNewSettings() or not self._LCDproc.IsConnected():
-                # reset notification flag
-                self._failedConnectionNotified = False
+        # check for new settings - networksettings changed?
+        if settings_checkForNewSettings() or not self._LCDproc.IsConnected():
+            # reset notification flag
+            self._failedConnectionNotified = False
 
-                ret = self._LCDproc.Initialize()
-                if not settings_getHideConnPopups():
-                    self.HandleConnectionNotification(ret)
+            ret = self._LCDproc.Initialize()
+            if not settings_getHideConnPopups():
+                self.HandleConnectionNotification(ret)
 
         return ret
 
