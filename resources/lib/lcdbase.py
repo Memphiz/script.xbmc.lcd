@@ -73,7 +73,7 @@ g_dictEmptyLineDescriptor['endx'] = int(0)
 g_dictEmptyLineDescriptor['align'] = LCD_LINEALIGN.LCD_LINEALIGN_LEFT
 
 class LcdBase():
-  def __init__(self):
+  def __init__(self, settings):
     # configuration vars (from LCD.xml)
     self.m_lcdMode = [None] * LCD_MODE.LCD_MODE_MAX
     self.m_extraBars = [None] * (LCD_EXTRABARS_MAX + 1)
@@ -99,6 +99,9 @@ class LcdBase():
 
     # regex compile cache
     self.m_reBBCode = None
+
+    # class instances
+    self.m_Settings = settings
 
 # @abstractmethod
   def _concrete_method(self):
@@ -212,7 +215,7 @@ class LcdBase():
     return True
 
   def UpdateGUISettings(self):
-    str_charset = settings_getCharset()
+    str_charset = self.m_Settings.getCharset()
     if str_charset != self.m_strLCDEncoding:
       if (str_charset == "hd44780-a00" or str_charset == "hd44780-a02") and not self.m_bHaveHD44780Charmap:
         str_charset = "iso8859-1"
@@ -220,7 +223,7 @@ class LcdBase():
       self.m_strLCDEncoding = str_charset
       log(LOGDEBUG, "Setting character encoding to %s" % (self.m_strLCDEncoding))
 
-    self.m_iDimOnPlayDelay = settings_getDimDelay()
+    self.m_iDimOnPlayDelay = self.m_Settings.getDimDelay()
 
   def LoadSkin(self, xmlFile, doReset):
     if doReset == True:
@@ -449,7 +452,7 @@ class LcdBase():
   def Shutdown(self):
     log(LOGNOTICE, "Shutting down")
 
-    if settings_getDimOnShutdown():
+    if self.m_Settings.getDimOnShutdown():
       self.SetBackLight(0)
 
     self.CloseSocket()
@@ -528,13 +531,13 @@ class LcdBase():
     self.FlushLines()
 
   def DoDimOnMusic(self, mode):
-    return (mode == LCD_MODE.LCD_MODE_MUSIC or mode == LCD_MODE.LCD_MODE_PVRRADIO) and settings_getDimOnMusicPlayback()
+    return (mode == LCD_MODE.LCD_MODE_MUSIC or mode == LCD_MODE.LCD_MODE_PVRRADIO) and self.m_Settings.getDimOnMusicPlayback()
 
   def DoDimOnVideo(self, mode):
-    return (mode == LCD_MODE.LCD_MODE_VIDEO or mode == LCD_MODE.LCD_MODE_TVSHOW or mode == LCD_MODE.LCD_MODE_PVRTV) and settings_getDimOnVideoPlayback()
+    return (mode == LCD_MODE.LCD_MODE_VIDEO or mode == LCD_MODE.LCD_MODE_TVSHOW or mode == LCD_MODE.LCD_MODE_PVRTV) and self.m_Settings.getDimOnVideoPlayback()
 
   def DoDimOnScreensaver(self, mode):
-    return (mode == LCD_MODE.LCD_MODE_SCREENSAVER) and settings_getDimOnScreensaver()
+    return (mode == LCD_MODE.LCD_MODE_SCREENSAVER) and self.m_Settings.getDimOnScreensaver()
 
   def HandleBacklight(self, mode):
     # dimming display in case screensaver is active or something is being played back (and not paused!)

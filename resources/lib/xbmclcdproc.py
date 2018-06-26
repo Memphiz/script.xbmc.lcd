@@ -47,12 +47,14 @@ class XBMCLCDproc():
         # instantiate xbmc.Monitor object
         self._xbmcMonitor = xbmc.Monitor()
 
+        # instantiate Settings object
+        self._Settings = Settings()
+
         # instantiate LCDProc object
-        self._LCDproc = LCDProc()
+        self._LCDproc = LCDProc(self._Settings)
 
         # initialize components
-        settings_initGlobals()
-        settings_setup()
+        self._Settings.setup()
         InfoLabel_Initialize()
 
     ########
@@ -77,7 +79,7 @@ class XBMCLCDproc():
     def GetLCDMode(self):
         ret = LCD_MODE.LCD_MODE_GENERAL
 
-        navActive = InfoLabel_IsNavigationActive()
+        navActive = InfoLabel_IsNavigationActive(self._Settings)
         screenSaver = InfoLabel_IsScreenSaverActive()
         playingVideo = InfoLabel_PlayingVideo()
         playingTVShow = InfoLabel_PlayingTVShow()
@@ -105,7 +107,7 @@ class XBMCLCDproc():
     def HandleConnectLCD(self):
         ret = True
 
-        reconnect = settings_checkForNewSettings()
+        reconnect = self._Settings.checkForNewSettings()
 
         # check for new settings - networksettings changed?
         if reconnect or not self._LCDproc.IsConnected():
@@ -115,7 +117,7 @@ class XBMCLCDproc():
                 self._failedConnectionNotified = False
 
             ret = self._LCDproc.Initialize()
-            if not settings_getHideConnPopups():
+            if not self._Settings.getHideConnPopups():
                 self.HandleConnectionNotification(ret)
 
         return ret
@@ -126,7 +128,7 @@ class XBMCLCDproc():
     def RunLCD(self):
         while not self._xbmcMonitor.abortRequested():
             if self.HandleConnectLCD():
-                settingsChanged = settings_didSettingsChange()
+                settingsChanged = self._Settings.didSettingsChange()
 
                 if settingsChanged:
                     self._LCDproc.UpdateGUISettings()
@@ -134,6 +136,6 @@ class XBMCLCDproc():
                 self._LCDproc.Render(self.GetLCDMode(), settingsChanged)
 
             # refresh after configured rate
-            time.sleep(1.0 / float(settings_getRefreshRate()))
+            time.sleep(1.0 / float(self._Settings.getRefreshRate()))
 
         self._LCDproc.Shutdown()

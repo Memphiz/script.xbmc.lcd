@@ -198,14 +198,14 @@ def InfoLabel_GetProgressPercent():
 
   return float(tCurrent)/float(tTotal)
 
-def InfoLabel_IsNavigationActive():
+def InfoLabel_IsNavigationActive(settings):
   global g_InfoLabel_oldMenu
   global g_InfoLabel_oldSubMenu
   global g_InfoLabel_navTimer
 
   ret = False
 
-  navtimeout = settings_getNavTimeout()
+  navtimeout = settings.getNavTimeout()
   menu = InfoLabel_GetInfoLabel("$INFO[System.CurrentWindow]")
   subMenu = InfoLabel_GetInfoLabel("$INFO[System.CurrentControl]")
 
