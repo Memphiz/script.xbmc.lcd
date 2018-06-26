@@ -105,10 +105,14 @@ class XBMCLCDproc():
     def HandleConnectLCD(self):
         ret = True
 
+        reconnect = settings_checkForNewSettings()
+
         # check for new settings - networksettings changed?
-        if settings_checkForNewSettings() or not self._LCDproc.IsConnected():
-            # reset notification flag
-            self._failedConnectionNotified = False
+        if reconnect or not self._LCDproc.IsConnected():
+
+            # reset notification flag if settingchanges require reconnect
+            if reconnect:
+                self._failedConnectionNotified = False
 
             ret = self._LCDproc.Initialize()
             if not settings_getHideConnPopups():
