@@ -34,7 +34,6 @@ import xbmcgui
 from .common import *
 from .settings import *
 from .lcdproc import *
-from .infolabels import *
 
 class XBMCLCDproc():
 
@@ -55,7 +54,6 @@ class XBMCLCDproc():
 
         # initialize components
         self._Settings.setup()
-        InfoLabel_Initialize()
 
     ########
     # HandleConnectionNotification():
@@ -72,37 +70,6 @@ class XBMCLCDproc():
             if not self._initialConnectAttempt:
                 xbmcgui.Dialog().notification(KODI_ADDON_NAME, text, KODI_ADDON_ICON)
                 self._failedConnectionNotified = True
-
-    ########
-    # GetLCDMode():
-    # returns mode identifier based on currently playing media/active navigation
-    def GetLCDMode(self):
-        ret = LCD_MODE.LCD_MODE_GENERAL
-
-        navActive = InfoLabel_IsNavigationActive(self._Settings)
-        screenSaver = InfoLabel_IsScreenSaverActive()
-        playingVideo = InfoLabel_PlayingVideo()
-        playingTVShow = InfoLabel_PlayingTVShow()
-        playingMusic = InfoLabel_PlayingAudio()
-        playingPVRTV = InfoLabel_PlayingLiveTV()
-        playingPVRRadio = InfoLabel_PlayingLiveRadio()
-
-        if navActive:
-            ret = LCD_MODE.LCD_MODE_NAVIGATION
-        elif screenSaver:
-            ret = LCD_MODE.LCD_MODE_SCREENSAVER
-        elif playingPVRTV:
-            ret = LCD_MODE.LCD_MODE_PVRTV
-        elif playingPVRRadio:
-            ret = LCD_MODE.LCD_MODE_PVRRADIO
-        elif playingTVShow:
-            ret = LCD_MODE.LCD_MODE_TVSHOW
-        elif playingVideo:
-            ret = LCD_MODE.LCD_MODE_VIDEO
-        elif playingMusic:
-            ret = LCD_MODE.LCD_MODE_MUSIC
-
-        return ret
 
     def HandleConnectLCD(self):
         ret = True
@@ -133,7 +100,7 @@ class XBMCLCDproc():
                 if settingsChanged:
                     self._LCDproc.UpdateGUISettings()
 
-                self._LCDproc.Render(self.GetLCDMode(), settingsChanged)
+                self._LCDproc.Render(settingsChanged)
 
             # refresh after configured rate
             time.sleep(1.0 / float(self._Settings.getRefreshRate()))

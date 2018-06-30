@@ -103,6 +103,9 @@ class LcdBase():
     # class instances
     self.m_Settings = settings
 
+    # initialize InfoLabels
+    InfoLabel_Initialize()
+
 # @abstractmethod
   def _concrete_method(self):
     pass
@@ -457,6 +460,36 @@ class LcdBase():
 
     self.CloseSocket()
 
+  # GetLCDMode():
+  # returns mode identifier based on currently playing media/active navigation
+  def GetLCDMode(self):
+    ret = LCD_MODE.LCD_MODE_GENERAL
+
+    navActive = InfoLabel_IsNavigationActive(self.m_Settings)
+    screenSaver = InfoLabel_IsScreenSaverActive()
+    playingVideo = InfoLabel_PlayingVideo()
+    playingTVShow = InfoLabel_PlayingTVShow()
+    playingMusic = InfoLabel_PlayingAudio()
+    playingPVRTV = InfoLabel_PlayingLiveTV()
+    playingPVRRadio = InfoLabel_PlayingLiveRadio()
+
+    if navActive:
+      ret = LCD_MODE.LCD_MODE_NAVIGATION
+    elif screenSaver:
+      ret = LCD_MODE.LCD_MODE_SCREENSAVER
+    elif playingPVRTV:
+      ret = LCD_MODE.LCD_MODE_PVRTV
+    elif playingPVRRadio:
+      ret = LCD_MODE.LCD_MODE_PVRRADIO
+    elif playingTVShow:
+      ret = LCD_MODE.LCD_MODE_TVSHOW
+    elif playingVideo:
+      ret = LCD_MODE.LCD_MODE_VIDEO
+    elif playingMusic:
+      ret = LCD_MODE.LCD_MODE_MUSIC
+
+    return ret
+
   def StripBBCode(self, strtext):
     regexbbcode = "\[(?P<tagname>[0-9a-zA-Z_\-]+?)[0-9a-zA-Z_\- ]*?\](?P<content>.*?)\[\/(?P=tagname)\]"
     # precompile and remember regex to make sure re's caching won't cause accidential recompilation
@@ -488,9 +521,10 @@ class LcdBase():
     # return last replace mangling
     return mangledline
 
-  def Render(self, mode, bForce):
+  def Render(self, bForce):
     outLine = 0
     inLine = 0
+    mode = self.GetLCDMode()
 
     self.HandleBacklight(mode)
 
