@@ -104,7 +104,7 @@ class LcdBase():
     self.m_Settings = settings
 
     # initialize InfoLabels
-    InfoLabel_Initialize()
+    self.m_InfoLabels = InfoLabels(self.m_Settings)
 
 # @abstractmethod
   def _concrete_method(self):
@@ -465,13 +465,13 @@ class LcdBase():
   def GetLCDMode(self):
     ret = LCD_MODE.LCD_MODE_GENERAL
 
-    navActive = InfoLabel_IsNavigationActive(self.m_Settings)
-    screenSaver = InfoLabel_IsScreenSaverActive()
-    playingVideo = InfoLabel_PlayingVideo()
-    playingTVShow = InfoLabel_PlayingTVShow()
-    playingMusic = InfoLabel_PlayingAudio()
-    playingPVRTV = InfoLabel_PlayingLiveTV()
-    playingPVRRadio = InfoLabel_PlayingLiveRadio()
+    navActive = self.m_InfoLabels.IsNavigationActive()
+    screenSaver = self.m_InfoLabels.IsScreenSaverActive()
+    playingVideo = self.m_InfoLabels.PlayingVideo()
+    playingTVShow = self.m_InfoLabels.PlayingTVShow()
+    playingMusic = self.m_InfoLabels.PlayingAudio()
+    playingPVRTV = self.m_InfoLabels.PlayingLiveTV()
+    playingPVRRadio = self.m_InfoLabels.PlayingLiveRadio()
 
     if navActive:
       ret = LCD_MODE.LCD_MODE_NAVIGATION
@@ -532,14 +532,14 @@ class LcdBase():
       #parse the progressbar infolabel by ourselfs!
       if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESS or self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_PROGRESSTIME:
         # get playtime and duration and convert into seconds
-        percent = InfoLabel_GetProgressPercent()
+        percent = self.m_InfoLabels.GetProgressPercent()
         pixelsWidth = self.SetProgressBar(percent, self.m_lcdMode[mode][inLine]['endx'])
         line = "p" + str(pixelsWidth)
       else:
         if self.m_lcdMode[mode][inLine]['type'] == LCD_LINETYPE.LCD_LINETYPE_ICONTEXT:
           self.SetPlayingStateIcon()
 
-        line = InfoLabel_GetInfoLabel(self.m_lcdMode[mode][inLine]['text'])
+        line = self.m_InfoLabels.GetInfoLabel(self.m_lcdMode[mode][inLine]['text'])
 
         if len(line) > 0:
           line = self.StripBBCode(line)
@@ -579,7 +579,7 @@ class LcdBase():
 
     if self.DoDimOnScreensaver(mode):
       doDim = True
-    elif not (InfoLabel_IsPlayerPlaying() and InfoLabel_IsPlayerPaused()) and (self.DoDimOnVideo(mode) or self.DoDimOnMusic(mode)):
+    elif not (self.m_InfoLabels.IsPlayerPlaying() and self.m_InfoLabels.IsPlayerPaused()) and (self.DoDimOnVideo(mode) or self.DoDimOnMusic(mode)):
       doDim = True
 
     if doDim:
@@ -601,18 +601,18 @@ class LcdBase():
     if isplaying:
       if isvideo:
         try:
-          iVideoRes = int(InfoLabel_GetInfoLabel("VideoPlayer.VideoResolution"))
+          iVideoRes = int(self.m_InfoLabels.GetInfoLabel("VideoPlayer.VideoResolution"))
         except:
           iVideoRes = int(0)
 
         try:
-          iScreenRes = int(InfoLabel_GetInfoLabel("System.ScreenHeight"))
+          iScreenRes = int(self.m_InfoLabels.GetInfoLabel("System.ScreenHeight"))
         except:
           iScreenRes = int(0)
 
-        if InfoLabel_PlayingLiveTV():
+        if self.m_InfoLabels.PlayingLiveTV():
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TV, True)
-        elif InfoLabel_IsInternetStream():
+        elif self.m_InfoLabels.IsInternetStream():
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_WEBCASTING, True)
         else:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MOVIE, True)
@@ -628,7 +628,7 @@ class LcdBase():
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_OUTFIT, True)
 
       elif isaudio:
-        if InfoLabel_IsInternetStream():
+        if self.m_InfoLabels.IsInternetStream():
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_WEBCASTING, True)
         else:
           self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUSIC, True)
@@ -636,17 +636,17 @@ class LcdBase():
     else: # not playing
 
       # Set active mode indicator based on current active window
-      iWindowID = InfoLabel_GetActiveWindowID()
+      iWindowID = self.m_InfoLabels.GetActiveWindowID()
 
-      if InfoLabel_IsWindowIDPVR(iWindowID):
+      if self.m_InfoLabels.IsWindowIDPVR(iWindowID):
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TV, True)
-      elif InfoLabel_IsWindowIDVideo(iWindowID):
+      elif self.m_InfoLabels.IsWindowIDVideo(iWindowID):
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MOVIE, True)
-      elif InfoLabel_IsWindowIDMusic(iWindowID):
+      elif self.m_InfoLabels.IsWindowIDMusic(iWindowID):
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUSIC, True)
-      elif InfoLabel_IsWindowIDPictures(iWindowID):
+      elif self.m_InfoLabels.IsWindowIDPictures(iWindowID):
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PHOTO, True)
-      elif InfoLabel_IsWindowIDWeather(iWindowID):
+      elif self.m_InfoLabels.IsWindowIDWeather(iWindowID):
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_WEATHER, True)
       else:
         self.m_cExtraIcons.ClearIconStates(LCD_EXTRAICONCATEGORIES.LCD_ICONCAT_MODES)
@@ -658,19 +658,19 @@ class LcdBase():
     iAudioChannels = 0
 
     if isplaying:
-      if InfoLabel_IsPassthroughAudio():
+      if self.m_InfoLabels.IsPassthroughAudio():
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, True)
       else:
         self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SPDIF, False)
 
       if isvideo:
-        strVideoCodec = str(InfoLabel_GetInfoLabel("VideoPlayer.VideoCodec")).lower()
-        strAudioCodec = str(InfoLabel_GetInfoLabel("VideoPlayer.AudioCodec")).lower()
-        iAudioChannels = InfoLabel_GetInfoLabel("VideoPlayer.AudioChannels")
+        strVideoCodec = str(self.m_InfoLabels.GetInfoLabel("VideoPlayer.VideoCodec")).lower()
+        strAudioCodec = str(self.m_InfoLabels.GetInfoLabel("VideoPlayer.AudioCodec")).lower()
+        iAudioChannels = self.m_InfoLabels.GetInfoLabel("VideoPlayer.AudioChannels")
       elif isaudio:
         strVideoCodec = ""
-        strAudioCodec = str(InfoLabel_GetInfoLabel("MusicPlayer.Codec")).lower()
-        iAudioChannels = InfoLabel_GetInfoLabel("MusicPlayer.Channels")
+        strAudioCodec = str(self.m_InfoLabels.GetInfoLabel("MusicPlayer.Codec")).lower()
+        iAudioChannels = self.m_InfoLabels.GetInfoLabel("MusicPlayer.Channels")
 
       if self.m_bWasStopped:
         self.m_bWasStopped = False
@@ -777,7 +777,7 @@ class LcdBase():
       self.m_bWasStopped = True
 
   def SetExtraInfoGeneric(self, ispaused):
-    if InfoLabel_IsMuted():
+    if self.m_InfoLabels.IsMuted():
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUTE, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_MUTE, False)
@@ -787,39 +787,39 @@ class LcdBase():
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PAUSE, False)
 
-    if InfoLabel_IsPVRRecording():
+    if self.m_InfoLabels.IsPVRRecording():
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_RECORD, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_RECORD, False)
 
-    if InfoLabel_IsPlaylistRandom():
+    if self.m_InfoLabels.IsPlaylistRandom():
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SHUFFLE, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_SHUFFLE, False)
 
-    if InfoLabel_IsPlaylistRepeatAny():
+    if self.m_InfoLabels.IsPlaylistRepeatAny():
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_REPEAT, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_REPEAT, False)
 
-    if InfoLabel_IsDiscInDrive():
+    if self.m_InfoLabels.IsDiscInDrive():
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_DISC_IN, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_DISC_IN, False)
 
-    if InfoLabel_IsScreenSaverActive():
+    if self.m_InfoLabels.IsScreenSaverActive():
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TIME, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_TIME, False)
 
-    if InfoLabel_WindowIsActive(WINDOW_IDS.WINDOW_DIALOG_VOLUME_BAR):
+    if self.m_InfoLabels.WindowIsActive(WINDOW_IDS.WINDOW_DIALOG_VOLUME_BAR):
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VOLUME, True)
       self.m_bVolumeChangeActive = True
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_VOLUME, False)
       self.m_bVolumeChangeActive = False
 
-    if InfoLabel_WindowIsActive(WINDOW_IDS.WINDOW_DIALOG_KAI_TOAST):
+    if self.m_InfoLabels.WindowIsActive(WINDOW_IDS.WINDOW_DIALOG_KAI_TOAST):
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ALARM, True)
     else:
       self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_ALARM, False)
@@ -828,14 +828,14 @@ class LcdBase():
     for i in range(1, LCD_EXTRABARS_MAX + 1):
       if self.m_extraBars[i] == "progress":
         if isplaying:
-          self.m_cExtraIcons.SetBar(i, (InfoLabel_GetProgressPercent() * 100))
+          self.m_cExtraIcons.SetBar(i, (self.m_InfoLabels.GetProgressPercent() * 100))
         else:
           self.m_cExtraIcons.SetBar(i, 0)
       elif self.m_extraBars[i] == "volume":
-        self.m_cExtraIcons.SetBar(i, InfoLabel_GetVolumePercent())
+        self.m_cExtraIcons.SetBar(i, self.m_InfoLabels.GetVolumePercent())
       elif self.m_extraBars[i] == "volumehidden":
         if self.m_bVolumeChangeActive:
-          self.m_cExtraIcons.SetBar(i, InfoLabel_GetVolumePercent())
+          self.m_cExtraIcons.SetBar(i, self.m_InfoLabels.GetVolumePercent())
         else:
           self.m_cExtraIcons.SetBar(i, 0)
       elif self.m_extraBars[i] == "menu":
@@ -849,11 +849,11 @@ class LcdBase():
         self.m_cExtraIcons.SetBar(i, 0)
 
   def SetExtraInformation(self):
-    bPaused = InfoLabel_IsPlayerPaused()
-    bPlaying = InfoLabel_IsPlayerPlaying()
+    bPaused = self.m_InfoLabels.IsPlayerPaused()
+    bPlaying = self.m_InfoLabels.IsPlayerPlaying()
 
-    bIsVideo = InfoLabel_PlayingVideo()
-    bIsAudio = InfoLabel_PlayingAudio()
+    bIsVideo = self.m_InfoLabels.PlayingVideo()
+    bIsAudio = self.m_InfoLabels.PlayingAudio()
 
     self.m_cExtraIcons.SetIconState(LCD_EXTRAICONS.LCD_EXTRAICON_PLAYING,
       bPlaying and not (bPaused and self.m_bDisablePlayIndicatorOnPause))

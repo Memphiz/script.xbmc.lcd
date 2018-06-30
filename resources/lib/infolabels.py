@@ -31,222 +31,223 @@ import xbmcgui
 
 from .settings import *
 
-# interesting XBMC GUI Window IDs (no defines seem to exist for this)
+# interesting Kodi GUI Window IDs (no defines seem to exist for this)
 class WINDOW_IDS:
-  WINDOW_WEATHER               = 12600
-  WINDOW_PVR                   = 10601
-  WINDOW_PVR_MAX               = 10699
-  WINDOW_VIDEOS                = 10006
-  WINDOW_VIDEO_FILES           = 10024
-  WINDOW_VIDEO_NAV             = 10025
-  WINDOW_VIDEO_PLAYLIST        = 10028
-  WINDOW_MUSIC                 = 10005
-  WINDOW_MUSIC_PLAYLIST        = 10500
-  WINDOW_MUSIC_FILES           = 10501
-  WINDOW_MUSIC_NAV             = 10502
-  WINDOW_MUSIC_PLAYLIST_EDITOR = 10503
-  WINDOW_PICTURES              = 10002
-  WINDOW_DIALOG_VOLUME_BAR     = 10104
-  WINDOW_DIALOG_KAI_TOAST      = 10107
+    WINDOW_WEATHER               = 12600
+    WINDOW_PVR                   = 10601
+    WINDOW_PVR_MAX               = 10699
+    WINDOW_VIDEOS                = 10006
+    WINDOW_VIDEO_FILES           = 10024
+    WINDOW_VIDEO_NAV             = 10025
+    WINDOW_VIDEO_PLAYLIST        = 10028
+    WINDOW_MUSIC                 = 10005
+    WINDOW_MUSIC_PLAYLIST        = 10500
+    WINDOW_MUSIC_FILES           = 10501
+    WINDOW_MUSIC_NAV             = 10502
+    WINDOW_MUSIC_PLAYLIST_EDITOR = 10503
+    WINDOW_PICTURES              = 10002
+    WINDOW_DIALOG_VOLUME_BAR     = 10104
+    WINDOW_DIALOG_KAI_TOAST      = 10107
 
-global g_InfoLabel_oldMenu
-global g_InfoLabel_oldSubMenu
-global g_InfoLabel_navTimer
+class InfoLabels():
 
-def InfoLabel_Initialize():
-  global g_InfoLabel_oldMenu
-  global g_InfoLabel_oldSubMenu
-  global g_InfoLabel_navTimer
+    ########
+    # ctor
+    def __init__(self, settings):
+        # take note of Settings instance
+        self._settings = settings
 
-  g_InfoLabel_oldMenu = ""
-  g_InfoLabel_oldSubMenu = ""
-  g_InfoLabel_navTimer = time.time()
+        # init members
+        self._nav_oldmenu = ""
+        self._nav_oldsubmenu = ""
+        self._navtimer = time.time()
 
-def InfoLabel_GetInfoLabel(strLabel):
-  ret = xbmc.getInfoLabel(strLabel)
-  # pre-py3 compat
-  if sys.version_info.major < 3:
-    return ret.decode("utf-8")
-  return ret
+        # pre-py3 compat
+        self._py2compat = False
+        if sys.version_info.major < 3:
+            self._py2compat = True
 
-def InfoLabel_GetBool(strBool):
-  return xbmc.getCondVisibility(strBool)
+    def GetInfoLabel(self, strLabel):
+        ret = xbmc.getInfoLabel(strLabel)
+        # pre-py3 compat
+        if self._py2compat:
+            return ret.decode("utf-8")
+        return ret
 
-def InfoLabel_GetActiveWindowID():
-  return int(xbmcgui.getCurrentWindowId())
+    def GetBool(self, strBool):
+        return xbmc.getCondVisibility(strBool)
 
-def InfoLabel_timeToSecs(timeAr):
-  # initialise return
-  currentSecs = 0
+    def GetActiveWindowID(self):
+        return int(xbmcgui.getCurrentWindowId())
 
-  arLen = len(timeAr)
-  if arLen == 1:
-    currentSecs = int(timeAr[0])
-  elif arLen == 2:
-    currentSecs = int(timeAr[0]) * 60 + int(timeAr[1])
-  elif arLen == 3:
-    currentSecs = int(timeAr[0]) * 60 * 60 + int(timeAr[1]) * 60 + int(timeAr[2])
+    def timeToSecs(self, timeAr):
+    # initialise return
+        currentSecs = 0
 
-  return currentSecs
+        arLen = len(timeAr)
+        if arLen == 1:
+            currentSecs = int(timeAr[0])
+        elif arLen == 2:
+            currentSecs = int(timeAr[0]) * 60 + int(timeAr[1])
+        elif arLen == 3:
+            currentSecs = int(timeAr[0]) * 60 * 60 + int(timeAr[1]) * 60 + int(timeAr[2])
 
-def InfoLabel_WindowIsActive(WindowID):
-  return InfoLabel_GetBool("Window.IsActive(" + str(WindowID) + ")")
+        return currentSecs
 
-def InfoLabel_PlayingVideo():
-  return InfoLabel_GetBool("Player.HasVideo")
+    def WindowIsActive(self, WindowID):
+        return self.GetBool("Window.IsActive(" + str(WindowID) + ")")
 
-def InfoLabel_PlayingTVShow():
-  if InfoLabel_PlayingVideo() and len(InfoLabel_GetInfoLabel("VideoPlayer.TVShowTitle")):
-    return True
-  else:
-    return False
+    def PlayingVideo(self):
+        return self.GetBool("Player.HasVideo")
 
-def InfoLabel_PlayingAudio():
-  return InfoLabel_GetBool("Player.HasAudio")
+    def PlayingTVShow(self):
+        if self.PlayingVideo() and len(self.GetInfoLabel("VideoPlayer.TVShowTitle")):
+            return True
 
-def InfoLabel_PlayingLiveTV():
-  return InfoLabel_GetBool("PVR.IsPlayingTV")
+        return False
 
-def InfoLabel_PlayingLiveRadio():
-  return InfoLabel_GetBool("PVR.IsPlayingRadio")
+    def PlayingAudio(self):
+        return self.GetBool("Player.HasAudio")
 
-def InfoLabel_GetSystemTime():
-  # apply some split magic for 12h format here, as "hh:mm:ss"
-  # makes up for format guessing inside XBMC - fix for post-frodo at
-  # https://github.com/xbmc/xbmc/pull/2321
-  ret = "0" + InfoLabel_GetInfoLabel("System.Time(hh:mm:ss)").split(" ")[0]
-  return ret[-8:]
+    def PlayingLiveTV(self):
+        return self.GetBool("PVR.IsPlayingTV")
 
-def InfoLabel_GetPlayerTime():
-  if InfoLabel_PlayingLiveTV() or InfoLabel_PlayingLiveRadio():
-    return InfoLabel_GetInfoLabel("PVR.EpgEventElapsedTime")
+    def PlayingLiveRadio(self):
+        return self.GetBool("PVR.IsPlayingRadio")
 
-  return InfoLabel_GetInfoLabel("Player.Time")
+    def GetSystemTime(self):
+        # apply some split magic for 12h format here, as "hh:mm:ss"
+        # makes up for format guessing inside XBMC - fix for post-frodo at
+        # https://github.com/xbmc/xbmc/pull/2321
+        ret = "0" + self.GetInfoLabel("System.Time(hh:mm:ss)").split(" ")[0]
+        return ret[-8:]
 
-def InfoLabel_GetPlayerDuration():
-  if InfoLabel_PlayingLiveTV() or InfoLabel_PlayingLiveRadio():
-    return InfoLabel_GetInfoLabel("PVR.EpgEventDuration")
+    def GetPlayerTime(self):
+        if self.PlayingLiveTV() or self.PlayingLiveRadio():
+            return self.GetInfoLabel("PVR.EpgEventElapsedTime")
 
-  return InfoLabel_GetInfoLabel("Player.Duration")
+        return self.GetInfoLabel("Player.Time")
 
-def InfoLabel_IsPlayerPlaying():
-  return InfoLabel_GetBool("Player.HasMedia")
+    def GetPlayerDuration(self):
+        if self.PlayingLiveTV() or self.PlayingLiveRadio():
+            return self.GetInfoLabel("PVR.EpgEventDuration")
 
-def InfoLabel_IsPlayerPaused():
-  return InfoLabel_GetBool("Player.Paused")
+        return self.GetInfoLabel("Player.Duration")
 
-def InfoLabel_IsPlayerForwarding():
-  return InfoLabel_GetBool("Player.Forwarding")
+    def IsPlayerPlaying(self):
+        return self.GetBool("Player.HasMedia")
 
-def InfoLabel_IsPlayerRewinding():
-  return InfoLabel_GetBool("Player.Rewinding")
+    def IsPlayerPaused(self):
+        return self.GetBool("Player.Paused")
 
-def InfoLabel_IsInternetStream():
-  return InfoLabel_GetBool("Player.IsInternetStream")
+    def IsPlayerForwarding(self):
+        return self.GetBool("Player.Forwarding")
 
-def InfoLabel_IsPassthroughAudio():
-  return InfoLabel_GetBool("Player.Passthrough")
+    def IsPlayerRewinding(self):
+        return self.GetBool("Player.Rewinding")
 
-def InfoLabel_IsPVRRecording():
-  return InfoLabel_GetBool("PVR.IsRecording")
+    def IsInternetStream(self):
+        return self.GetBool("Player.IsInternetStream")
 
-def InfoLabel_IsPlaylistRandom():
-  return InfoLabel_GetBool("Playlist.IsRandom")
+    def IsPassthroughAudio(self):
+        return self.GetBool("Player.Passthrough")
 
-def InfoLabel_IsPlaylistRepeatAll():
-  return InfoLabel_GetBool("Playlist.IsRepeat")
+    def IsPVRRecording(self):
+        return self.GetBool("PVR.IsRecording")
 
-def InfoLabel_IsPlaylistRepeatOne():
-  return InfoLabel_GetBool("Playlist.IsRepeatOne")
+    def IsPlaylistRandom(self):
+        return self.GetBool("Playlist.IsRandom")
 
-def InfoLabel_IsPlaylistRepeatAny():
-  return (InfoLabel_IsPlaylistRepeatAll() | InfoLabel_IsPlaylistRepeatOne())
+    def IsPlaylistRepeatAll(self):
+        return self.GetBool("Playlist.IsRepeat")
 
-def InfoLabel_IsDiscInDrive():
-  return InfoLabel_GetBool("System.HasMediaDVD")
+    def IsPlaylistRepeatOne(self):
+        return self.GetBool("Playlist.IsRepeatOne")
 
-def InfoLabel_IsScreenSaverActive():
-  return InfoLabel_GetBool("System.ScreenSaverActive")
+    def IsPlaylistRepeatAny(self):
+        return (self.IsPlaylistRepeatAll() | self.IsPlaylistRepeatOne())
 
-def InfoLabel_IsMuted():
-  return InfoLabel_GetBool("Player.Muted")
+    def IsDiscInDrive(self):
+        return self.GetBool("System.HasMediaDVD")
 
-def InfoLabel_GetVolumePercent():
-  volumedb = float(InfoLabel_GetInfoLabel("Player.Volume").replace(",", ".").replace(" dB", ""))
-  return (100 * (60.0 + volumedb) / 60)
+    def IsScreenSaverActive(self):
+        return self.GetBool("System.ScreenSaverActive")
 
-def InfoLabel_GetPlayerTimeSecs():
-  currentTimeAr = InfoLabel_GetPlayerTime().split(":")
-  if currentTimeAr[0] == "":
-    return 0
+    def IsMuted(self):
+        return self.GetBool("Player.Muted")
 
-  return InfoLabel_timeToSecs(currentTimeAr)
+    def GetVolumePercent(self):
+        volumedb = float(self.GetInfoLabel("Player.Volume").replace(",", ".").replace(" dB", ""))
+        return (100 * (60.0 + volumedb) / 60)
 
-def InfoLabel_GetPlayerDurationSecs():
-  currentDurationAr = InfoLabel_GetPlayerDuration().split(":")
-  if currentDurationAr[0] == "":
-    return 0
+    def GetPlayerTimeSecs(self):
+        currentTimeAr = self.GetPlayerTime().split(":")
+        if currentTimeAr[0] == "":
+            return 0
 
-  return InfoLabel_timeToSecs(currentDurationAr)
+        return self.timeToSecs(currentTimeAr)
 
-def InfoLabel_GetProgressPercent():
-  tCurrent = InfoLabel_GetPlayerTimeSecs()
-  tTotal = InfoLabel_GetPlayerDurationSecs()
+    def GetPlayerDurationSecs(self):
+        currentDurationAr = self.GetPlayerDuration().split(":")
+        if currentDurationAr[0] == "":
+            return 0
 
-  if float(tTotal) == 0.0:
-    return 0
+        return self.timeToSecs(currentDurationAr)
 
-  return float(tCurrent)/float(tTotal)
+    def GetProgressPercent(self):
+        tCurrent = self.GetPlayerTimeSecs()
+        tTotal = self.GetPlayerDurationSecs()
 
-def InfoLabel_IsNavigationActive(settings):
-  global g_InfoLabel_oldMenu
-  global g_InfoLabel_oldSubMenu
-  global g_InfoLabel_navTimer
+        if float(tTotal) == 0.0:
+            return 0
 
-  ret = False
+        return float(tCurrent)/float(tTotal)
 
-  navtimeout = settings.getNavTimeout()
-  menu = InfoLabel_GetInfoLabel("$INFO[System.CurrentWindow]")
-  subMenu = InfoLabel_GetInfoLabel("$INFO[System.CurrentControl]")
+    def IsNavigationActive(self):
+        ret = False
 
-  if menu != g_InfoLabel_oldMenu or subMenu != g_InfoLabel_oldSubMenu or (g_InfoLabel_navTimer + navtimeout) > time.time():
-    ret = True
-    if menu != g_InfoLabel_oldMenu or subMenu != g_InfoLabel_oldSubMenu:
-      g_InfoLabel_navTimer = time.time()
-    g_InfoLabel_oldMenu = menu
-    g_InfoLabel_oldSubMenu = subMenu
+        navtimeout = self._settings.getNavTimeout()
+        menu = self.GetInfoLabel("$INFO[System.CurrentWindow]")
+        subMenu = self.GetInfoLabel("$INFO[System.CurrentControl]")
 
-  return ret
+        if menu != self._nav_oldmenu or subMenu != self._nav_oldsubmenu or (self._navtimer + navtimeout) > time.time():
+            ret = True
+            if menu != self._nav_oldmenu or subMenu != self._nav_oldsubmenu:
+                self._navtimer = time.time()
+            self._nav_oldmenu = menu
+            self._nav_oldsubmenu = subMenu
 
-def InfoLabel_IsWindowIDPVR(iWindowID):
-  if iWindowID >= WINDOW_IDS.WINDOW_PVR and iWindowID <= WINDOW_IDS.WINDOW_PVR_MAX:
-    return True
+        return ret
 
-  return False
+    def IsWindowIDPVR(self, iWindowID):
+        if iWindowID >= WINDOW_IDS.WINDOW_PVR and iWindowID <= WINDOW_IDS.WINDOW_PVR_MAX:
+            return True
 
-def InfoLabel_IsWindowIDVideo(iWindowID):
-  if iWindowID in [WINDOW_IDS.WINDOW_VIDEOS, WINDOW_IDS.WINDOW_VIDEO_FILES,
-                   WINDOW_IDS.WINDOW_VIDEO_NAV, WINDOW_IDS.WINDOW_VIDEO_PLAYLIST]:
-    return True
+        return False
 
-  return False
+    def IsWindowIDVideo(self, iWindowID):
+        if iWindowID in [WINDOW_IDS.WINDOW_VIDEOS, WINDOW_IDS.WINDOW_VIDEO_FILES,
+                         WINDOW_IDS.WINDOW_VIDEO_NAV, WINDOW_IDS.WINDOW_VIDEO_PLAYLIST]:
+            return True
 
-def InfoLabel_IsWindowIDMusic(iWindowID):
-  if iWindowID in [WINDOW_IDS.WINDOW_MUSIC, WINDOW_IDS.WINDOW_MUSIC_PLAYLIST,
-                   WINDOW_IDS.WINDOW_MUSIC_FILES, WINDOW_IDS.WINDOW_MUSIC_NAV,
-                   WINDOW_IDS.WINDOW_MUSIC_PLAYLIST_EDITOR]:
-    return True
+        return False
 
-  return False
+    def IsWindowIDMusic(self, iWindowID):
+        if iWindowID in [WINDOW_IDS.WINDOW_MUSIC, WINDOW_IDS.WINDOW_MUSIC_PLAYLIST,
+                         WINDOW_IDS.WINDOW_MUSIC_FILES, WINDOW_IDS.WINDOW_MUSIC_NAV,
+                         WINDOW_IDS.WINDOW_MUSIC_PLAYLIST_EDITOR]:
+            return True
 
-def InfoLabel_IsWindowIDPictures(iWindowID):
-  if iWindowID == WINDOW_IDS.WINDOW_PICTURES:
-    return True
+        return False
 
-  return False
+    def IsWindowIDPictures(self, iWindowID):
+        if iWindowID == WINDOW_IDS.WINDOW_PICTURES:
+            return True
 
-def InfoLabel_IsWindowIDWeather(iWindowID):
-  if iWindowID == WINDOW_IDS.WINDOW_WEATHER:
-    return True
+        return False
 
-  return False
+    def IsWindowIDWeather(self, iWindowID):
+        if iWindowID == WINDOW_IDS.WINDOW_WEATHER:
+            return True
+
+        return False

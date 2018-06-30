@@ -423,12 +423,12 @@ class LCDProc(LcdBase):
   def GetBigDigitTime(self, mode):
       ret = ""
 
-      if InfoLabel_IsPlayerPlaying():
-        if not (mode == LCD_MODE.LCD_MODE_SCREENSAVER and InfoLabel_IsPlayerPaused()):
-          ret = InfoLabel_GetPlayerTime()[-self.m_iBigDigits:]
+      if self.m_InfoLabels.IsPlayerPlaying():
+        if not (mode == LCD_MODE.LCD_MODE_SCREENSAVER and self.m_InfoLabels.IsPlayerPaused()):
+          ret = self.m_InfoLabels.GetPlayerTime()[-self.m_iBigDigits:]
 
       if ret == "": # no usable timestring, e.g. not playing anything
-        strSysTime = InfoLabel_GetSystemTime()
+        strSysTime = self.m_InfoLabels.GetSystemTime()
 
         if self.m_iBigDigits >= 8: # return h:m:s
           ret = strSysTime
@@ -492,10 +492,10 @@ class LCDProc(LcdBase):
     return self.m_iProgressBarWidth
 
   def SetPlayingStateIcon(self):
-    bPlaying = InfoLabel_IsPlayerPlaying()
-    bPaused = InfoLabel_IsPlayerPaused()
-    bForwarding = InfoLabel_IsPlayerForwarding()
-    bRewinding = InfoLabel_IsPlayerRewinding()
+    bPlaying = self.m_InfoLabels.IsPlayerPlaying()
+    bPaused = self.m_InfoLabels.IsPlayerPaused()
+    bForwarding = self.m_InfoLabels.IsPlayerForwarding()
+    bRewinding = self.m_InfoLabels.IsPlayerRewinding()
 
     self.m_bstrIconName = b"STOP"
 
@@ -537,8 +537,8 @@ class LCDProc(LcdBase):
     if iLine < 0 or iLine >= int(self.m_iRows):
       return
 
-    plTime = InfoLabel_GetPlayerTime()
-    plDuration = InfoLabel_GetPlayerDuration()
+    plTime = self.m_InfoLabels.GetPlayerTime()
+    plDuration = self.m_InfoLabels.GetPlayerDuration()
     ln = iLine + 1
     bExtraForce = False
     drawLineText = False
