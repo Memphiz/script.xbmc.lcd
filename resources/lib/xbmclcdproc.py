@@ -93,7 +93,7 @@ class XBMCLCDproc():
     # RunLCD():
     # Main loop, triggers data inquiry and rendering, handles setting changes and connection issues
     def RunLCD(self):
-        while not self._xbmcMonitor.abortRequested():
+        while not self._xbmcMonitor.waitForAbort(1.0 / float(self._Settings.getRefreshRate())):
             if self.HandleConnectLCD():
                 settingsChanged = self._Settings.didSettingsChange()
 
@@ -101,8 +101,5 @@ class XBMCLCDproc():
                     self._LCDproc.UpdateGUISettings()
 
                 self._LCDproc.Render(settingsChanged)
-
-            # refresh after configured rate
-            time.sleep(1.0 / float(self._Settings.getRefreshRate()))
 
         self._LCDproc.Shutdown()
