@@ -49,14 +49,10 @@ LOGWARNING = xbmc.LOGWARNING
 class WINDOW_IDS:
     WINDOW_WEATHER               = 12600
     WINDOW_PVR                   = 10601
-    WINDOW_PVR_MAX               = 10699
-    WINDOW_VIDEOS                = 10006
-    WINDOW_VIDEO_FILES           = 10024
+    WINDOW_PVR_MAX               = 10799
     WINDOW_VIDEO_NAV             = 10025
     WINDOW_VIDEO_PLAYLIST        = 10028
-    WINDOW_MUSIC                 = 10005
     WINDOW_MUSIC_PLAYLIST        = 10500
-    WINDOW_MUSIC_FILES           = 10501
     WINDOW_MUSIC_NAV             = 10502
     WINDOW_MUSIC_PLAYLIST_EDITOR = 10503
     WINDOW_PICTURES              = 10002

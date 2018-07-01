@@ -209,15 +209,13 @@ class InfoLabels():
         return False
 
     def IsWindowIDVideo(self, iWindowID):
-        if iWindowID in [WINDOW_IDS.WINDOW_VIDEOS, WINDOW_IDS.WINDOW_VIDEO_FILES,
-                         WINDOW_IDS.WINDOW_VIDEO_NAV, WINDOW_IDS.WINDOW_VIDEO_PLAYLIST]:
+        if iWindowID in [WINDOW_IDS.WINDOW_VIDEO_NAV, WINDOW_IDS.WINDOW_VIDEO_PLAYLIST]:
             return True
 
         return False
 
     def IsWindowIDMusic(self, iWindowID):
-        if iWindowID in [WINDOW_IDS.WINDOW_MUSIC, WINDOW_IDS.WINDOW_MUSIC_PLAYLIST,
-                         WINDOW_IDS.WINDOW_MUSIC_FILES, WINDOW_IDS.WINDOW_MUSIC_NAV,
+        if iWindowID in [WINDOW_IDS.WINDOW_MUSIC_PLAYLIST, WINDOW_IDS.WINDOW_MUSIC_NAV,
                          WINDOW_IDS.WINDOW_MUSIC_PLAYLIST_EDITOR]:
             return True
 
