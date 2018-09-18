@@ -6,7 +6,7 @@
   <extension point="xbmc.service" library="main.py"/>
   <extension point="xbmc.addon.metadata">
     <language></language>
-    <summary>Kodi/XBMC LCDproc</summary>
+    <summary lang="en_GB">Kodi/XBMC LCDproc</summary>
     <description lang="en_GB">Displays configurable information e.g. about playing media or Kodi status on any LC/VF-display driven by LCDproc, and acts as direct drop-in replacement to the LCD/VFD-feature previously available in Kodi/XBMC's core. Supports additional display elements (icons, bars) on SoundGraph iMON LCD and Targa/Futaba mdm166a VFD hardware. Requires a properly configured and running LCDd either locally or somewhere on the network.</description>
     <description lang="de_DE">Zeigt konfigurierbare Informationen z.B. über aktuelle Wiedergabe oder den Kodi Status auf beliebigen von LCDproc angesteuerten LC/VF-Displays, ersetzt die zuvor im Kodi/XBMC-Kern enthaltene LCD/VFD-Funktion. Unterstützt zusätzliche Elemente (Icons, Balken) von SoundGraph iMON LCD und Targa/Futaba mdm166a VFD Hardware. Benötigt einen konfigurierten, laufenden LCDd auf dem lokalen System oder im Netzwerk.</description>
     <description lang="fr_FR">Affiche des informations définies par configuration telles que le média en cours de lecture, l'état de Kodi... et ce sur tout type d'afficheur LC/VF géré par LCDProc. Remplace la fonctionnalité LCD/VFD précédemment disponible par défaut dans Kodi/XBMC. Gère des éléments supplémentaires (icônes, barres) sur les écrans SoundGraph iMON LCD et Targa/Futaba mdm166a VFD. Nécessite un serveur LCDd correctement configuré et disponible localement ou sur le réseau.</description>
