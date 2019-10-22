@@ -45,17 +45,8 @@ class InfoLabels():
         self._nav_oldsubmenu = ""
         self._navtimer = time.time()
 
-        # pre-py3 compat
-        self._py2compat = False
-        if sys.version_info.major < 3:
-            self._py2compat = True
-
     def GetInfoLabel(self, strLabel):
-        ret = xbmc.getInfoLabel(strLabel)
-        # pre-py3 compat
-        if self._py2compat:
-            return ret.decode("utf-8", errors="ignore")
-        return ret
+        return xbmc.getInfoLabel(strLabel)
 
     def GetBool(self, strBool):
         return xbmc.getCondVisibility(strBool)
