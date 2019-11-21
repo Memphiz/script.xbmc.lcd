@@ -26,6 +26,7 @@
     </assets>
     <news>3.90.0
 - XBMC LCDproc for Kodi Matrix (Python 3)
+- Allow LCDproc protocol version 0.4
 </news>
   </extension>
 </addon>
