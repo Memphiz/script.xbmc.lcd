@@ -179,7 +179,7 @@ class LcdBase():
       else:
         try:
           shutil.copy2(__lcddefaultxml__, __lcdxml__)
-          log(LOGNOTICE, "Initialised LCD.xml from defaults")
+          log(LOGINFO, "Initialised LCD.xml from defaults")
           ret = True
         except:
           log(LOGERROR, "Failed to copy LCD defaults!")
@@ -234,7 +234,7 @@ class LcdBase():
 
     bHaveSkin = False
 
-    log(LOGNOTICE, "Loading settings from %s" % (xmlFile))
+    log(LOGINFO, "Loading settings from %s" % (xmlFile))
 
     try:
       doc = xmltree.parse(xmlFile)
@@ -453,7 +453,7 @@ class LcdBase():
       self.m_lcdMode[i] = []			#clear list
 
   def Shutdown(self):
-    log(LOGNOTICE, "Shutting down")
+    log(LOGINFO, "Shutting down")
 
     if self.m_Settings.getDimOnShutdown():
       self.SetBackLight(0)
