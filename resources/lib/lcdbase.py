@@ -29,7 +29,7 @@ import time
 from xml.etree import ElementTree as xmltree
 from array import array
 
-import xbmc
+import xbmcvfs
 import xbmcgui
 
 from .common import *
@@ -38,8 +38,8 @@ from .extraicons import *
 from .infolabels import *
 from .charset_hd44780 import *
 
-__lcdxml__        = xbmc.translatePath(os.path.join("special://masterprofile", "LCD.xml"))
-__lcddefaultxml__ = xbmc.translatePath(os.path.join(KODI_ADDON_ROOTPATH, "resources", "LCD.xml.defaults"))
+__lcdxml__        = xbmcvfs.translatePath(os.path.join("special://masterprofile", "LCD.xml"))
+__lcddefaultxml__ = xbmcvfs.translatePath(os.path.join(KODI_ADDON_ROOTPATH, "resources", "LCD.xml.defaults"))
 
 class LCD_MODE:
   LCD_MODE_GENERAL     = 0
